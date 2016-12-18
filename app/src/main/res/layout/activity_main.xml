@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="org.xing.android.MainActivity">
+
+    <EditText
+        android:background="@drawable/boder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/input"
+        android:layout_marginRight="30dp" />
+
+    <TextView
+        android:text="历史记录"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:id="@+id/history"
+        android:layout_marginTop="11dp"
+        android:layout_below="@+id/input"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ListView
+        android:background="@drawable/boder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/history"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="50dp"
+        android:id="@+id/historylist" />
+
+    <Button
+        android:text="暂停"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/end"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/begin"
+        android:layout_toEndOf="@+id/begin"
+        android:layout_marginLeft="46dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginRight="20dp" />
+
+    <Button
+        android:text="开始"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/begin"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/history"
+        android:layout_toEndOf="@+id/history"
+        android:layout_marginLeft="20dp" />
+
+    <Button
+        android:id="@+id/stateButton"
+        android:layout_height="wrap_content"
+        android:background="@drawable/grey"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/input"
+        android:layout_width="22dp" />
+
+    <ProgressBar
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="wrap_content"
+        android:id="@+id/recordDynamic"
+        android:max="2000"
+        android:progress="0"
+        android:visibility="visible"
+        android:alpha="50"
+        android:layout_height="3dp"
+        android:layout_above="@+id/history"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/input"
+        android:layout_alignEnd="@+id/input"
+        android:indeterminate="false" />
+
+
+</RelativeLayout>
