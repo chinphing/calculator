@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="1、这是一款纯语音输入的计算器，数学表达式直接用口语表达的方式输入即可进行计算，简单快速，不用点击一堆按钮。\n2、麦克风图标绿色表示可以说话，灰色表示暂停。为了省电量，10秒内没有语音输入就暂停工作，麦克风显示为灰色，点击'开始'按钮即可重新工作。\n3、支持加减乘除混合运算，直接用平时的表达方式即可完成输入，比如：4.3+2*5.1，说出：四点三加上二乘以五点一，即可得到结果。\n4、支持根号、开方、平方、立方、n次方，比如：3^3.2+2.3，说出：三的三点二次方加上二点三，即可计算。最后表达式用pow(3, 3.2)函数来表示3的3.2次方"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/textView"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:textSize="18sp" />
+</LinearLayout>

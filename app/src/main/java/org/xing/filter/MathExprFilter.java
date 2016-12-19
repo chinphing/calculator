@@ -152,8 +152,7 @@ public class MathExprFilter implements ExprFilter {
 		if(operator!= null && operator.equals("/")) {
 			str.append("(");
 		}
-		
-		
+
 		if(operator != null) {
 			if(operator.equals("^")) {
 				str.append("pow(");

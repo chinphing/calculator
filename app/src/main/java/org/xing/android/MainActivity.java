@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private Calculator calculator;
 
+    EditText inputText;
+
     private ProgressBar recordDynamic;
 
     private Button stateButton;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onClick(View v) {
                 startListening();
+                inputText.setText("请说话");
             }
         });
 
@@ -62,8 +65,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onClick(View v) {
                 stopListening();
+                inputText.setText("已暂停");
             }
         });
+
+        inputText = (EditText) this.findViewById(R.id.input);
 
         recordDynamic = (ProgressBar) this.findViewById(R.id.recordDynamic);
         stateButton = (Button) this.findViewById(R.id.stateButton);
@@ -74,14 +80,14 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         startListening();
     }
 
-    public void startListening() {
+    public synchronized void startListening() {
         if(isListening) return;
 
         speechRecognizer.startListening(new Intent());
         isListening = true;
     }
 
-    public void stopListening() {
+    public synchronized void stopListening() {
         speechRecognizer.cancel();
         isListening = false;
         stateButton.setBackgroundResource(R.mipmap.input_sleep);
@@ -111,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onError(int error){
         stopListening();
 
-        EditText inputText = (EditText) this.findViewById(R.id.input);
         StringBuilder sb = new StringBuilder();
         switch (error) {
             case SpeechRecognizer.ERROR_AUDIO:
@@ -119,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 startListening();
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                sb.append("没有语音输入，暂时休眠");
+                sb.append("没有语音输入，暂停工作");
                 break;
             case SpeechRecognizer.ERROR_CLIENT:
                 sb.append("其它客户端错误");
@@ -153,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     public void onResults(Bundle results){
-        EditText inputText = (EditText) this.findViewById(R.id.input);
         ArrayList<String> nbest = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         StringBuilder expr = new StringBuilder();
         for(String w : nbest) {
@@ -168,10 +172,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
             historyData.add(0, mathExpr + "=" + text);
             historyList.setAdapter(new ArrayAdapter<String>(
-                    this, android.R.layout.simple_expandable_list_item_1, historyData));
-            inputText.setText(expr+"->"+mathExpr+"="+text);
+                    this, R.layout.list_text_view, historyData));
+            inputText.setText(text);
         } else {
-            inputText.setText("遗憾：'"+expr+"'无效表达式，无法计算！");
+            inputText.setText("遗憾：'"+expr+"'无效表达式！");
         }
 
         startListening();
