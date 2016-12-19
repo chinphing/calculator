@@ -84,11 +84,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void stopListening() {
         speechRecognizer.cancel();
         isListening = false;
-        stateButton.setBackgroundResource(R.drawable.grey);
+        stateButton.setBackgroundResource(R.mipmap.input_sleep);
     }
 
     public void onReadyForSpeech(Bundle params){
-        stateButton.setBackgroundResource(R.drawable.green);
+        stateButton.setBackgroundResource(R.mipmap.input_ready);
     }
 
     public void onBeginningOfSpeech(){
@@ -104,12 +104,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     public void onEndOfSpeech(){
-        stateButton.setBackgroundResource(R.drawable.grey);
+        stateButton.setBackgroundResource(R.mipmap.input_sleep);
         isListening = false;
     }
 
     public void onError(int error){
-        isListening = false;
+        stopListening();
 
         EditText inputText = (EditText) this.findViewById(R.id.input);
         StringBuilder sb = new StringBuilder();
@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                 sb.append("没有语音输入，暂时休眠");
-                stopListening();
                 break;
             case SpeechRecognizer.ERROR_CLIENT:
                 sb.append("其它客户端错误");
