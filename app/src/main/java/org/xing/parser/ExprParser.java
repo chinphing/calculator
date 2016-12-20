@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class ExprParser extends Parser{
-	private Pattern splitPattern = Pattern.compile("[\\+\\-\\*\\/\\^×加减乘除]");
+	private Pattern splitPattern = Pattern.compile("[\\+\\-\\*\\/\\^×加减乘除\\|]");
 	
 	private FieldParser fieldParser;
 	
@@ -23,6 +23,8 @@ public class ExprParser extends Parser{
 	}
 	
 	public void parse(String expr) {
+		expr = expr.replace("括号", "|");
+		
 		StringBuilder strEval = new StringBuilder();
 		StringBuilder strRead = new StringBuilder();
 		if(expr != null) {
@@ -40,7 +42,19 @@ public class ExprParser extends Parser{
 					if(operatorMap.containsKey(c)) {
 						evalChar = operatorMap.get(c);
 						strEval.append(evalChar);
-					} else {
+					} else if(c == '|') {
+						if(strEval.length() > 0) {
+							 char prevChar = strEval.charAt(strEval.length()-1);
+							 if(prevChar == ')' || (prevChar >= '0' && prevChar<= '9')) {
+								 evalChar = ")";
+							 }else {
+								 evalChar = "(";
+							 }
+						}else {
+							evalChar = "(";
+						}
+						strEval.append(evalChar);
+					}else {
 						evalChar = String.valueOf(c);
 						strEval.append(c);
 					}
@@ -52,8 +66,14 @@ public class ExprParser extends Parser{
 					}else {
 						strRead.append(evalChar);
 					}
+					
 				}
 				
+			}
+			//如果是最后一个，一定是右括号
+			while(splitCharIndex++ < expr.length()) {
+				strEval.append(")");
+				strRead.append(")");
 			}
 		}
 		
@@ -108,6 +128,8 @@ public class ExprParser extends Parser{
         chnMap.put("十五乘以三", "15*3");
         chnMap.put("15×3", "15*3");
         chnMap.put("十五分之三", "(3/15)");
+        chnMap.put("3.5乘以括号一点三五加三十五点二零括号乘以2", "3.5*(1.35+35.20)*2");
+        chnMap.put("十五分之三", "(3/15)");
         chnMap.put("一点三五加三十五点二零", "1.35+35.20");
         chnMap.put("零点二四减去二点五三", "0.24-2.53");
         chnMap.put("零点二四乘以二点五三", "0.24*2.53");
@@ -115,6 +137,7 @@ public class ExprParser extends Parser{
         chnMap.put("零点二四除以五分之三点二", "0.24/(3.2/5)");
         chnMap.put("一百一加一万零一百", "110+10100");
         chnMap.put("一百一加一万一", "110+11000");
+        chnMap.put("括号零点二四乘以括号二点五三+三点五括号括号加括号零点二四乘以括号二点五三+三点五括号括号", "(0.24*(2.53+3.5))+(0.24*(2.53+3.5))");
         chnMap.put("一百零一减去一万零一百", "101-10100");
         chnMap.put("一百零一乘一万零一百", "101*10100");
         chnMap.put("一百零一除以一万零一百点五六", "101/10100.56");
