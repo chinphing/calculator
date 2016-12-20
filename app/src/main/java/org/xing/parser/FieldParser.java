@@ -40,30 +40,30 @@ public class FieldParser  extends Parser{
 		Tupple childTupple = null;
 		
 		//指数函数
-		if(field.endsWith("开方") || field.endsWith("平方根")){
+		if(field.endsWith("的开方") || field.endsWith("的平方根")){
 			if(field.endsWith("根")) {
-				childField = field.substring(0, field.length()-3);
+				childField = field.substring(0, field.length()-4);
 			} else {
-				childField = field.substring(0, field.length()-2);
+				childField = field.substring(0, field.length()-3);
 			}
 			childTupple = innerParse(childField);
 			strEval.append("pow("+childTupple.eval+", 0.5)");
-			strRead.append(childTupple.read+"^0.5)");
-		} else if (field.endsWith("立方根")) {
-			childField = field.substring(0, field.length()-3);
+			strRead.append(childTupple.read+"^0.5");
+		} else if (field.endsWith("的立方根")) {
+			childField = field.substring(0, field.length()-4);
 			childTupple = innerParse(childField);
 			strEval.append("pow("+childTupple.eval+", 1/3)");
-			strRead.append(childTupple.read+"^(1/3))");
-		}else if (field.endsWith("平方")) {
-			childField = field.substring(0, field.length()-2);
+			strRead.append(childTupple.read+"^(1/3)");
+		}else if (field.endsWith("的平方")) {
+			childField = field.substring(0, field.length()-3);
 			childTupple = innerParse(childField);
 			strEval.append("pow("+childTupple.eval+", 2)");
-			strRead.append(childTupple.read+"^2)");
-		}else if (field.endsWith("立方")) {
-			childField = field.substring(0, field.length()-2);
+			strRead.append(childTupple.read+"^2");
+		}else if (field.endsWith("的立方")) {
+			childField = field.substring(0, field.length()-3);
 			childTupple = innerParse(childField);
 			strEval.append("pow("+childTupple.eval+", 3)");
-			strRead.append(childTupple.read+"^3)");
+			strRead.append(childTupple.read+"^3");
 		}else if (field.endsWith("次方")) {
 			String[] tempFields = field.split("的");
 				
@@ -79,7 +79,7 @@ public class FieldParser  extends Parser{
 			childField = field.substring(2);
 			childTupple = innerParse(childField);
 			strEval.append("pow("+childTupple.eval+", 0.5)");
-			strRead.append(childTupple.read+"^0.5)");
+			strRead.append(childTupple.read+"^0.5");
 		}
 		//三角函数
 		else if (field.startsWith("sin")) {
@@ -228,6 +228,8 @@ public class FieldParser  extends Parser{
         chnMap.put("二点五三的平方", "pow(2.53, 2)");
         chnMap.put("二点五三的开方", "pow(2.53, 0.5)");
         chnMap.put("二点五三的五次方", "pow(2.53, 5)");
+        
+        chnMap.put("四的负四分之三次方的平方", "pow(pow(4, (3/-4)), 2)");
         
         int correctNum = 0;
         int wrongNum = 0;

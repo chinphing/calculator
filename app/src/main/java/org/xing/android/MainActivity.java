@@ -164,7 +164,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 sb.append("网络连接连接超时");
                 break;
         }
-        inputText.setText(sb.toString());
+        if(sb.length() > 0) {
+            inputText.setText(sb.toString());
+        }
     }
 
     public void onResults(Bundle results){
