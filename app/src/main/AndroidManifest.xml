@@ -17,26 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
 
-        <meta-data android:name="com.baidu.speech.APP_ID" android:value="999999"/>
-        <meta-data android:name="com.baidu.speech.API_KEY" android:value="8MAxI5o7VjKSZOKeBzS4XtxO"/>
-        <meta-data android:name="com.baidu.speech.SECRET_KEY" android:value="Ge5GXVdGQpaxOmLzc8fOM8309ATCz9Ha"/>
+        <meta-data android:name="com.baidu.speech.APP_ID" android:value="9080060"/>
+        <meta-data android:name="com.baidu.speech.API_KEY" android:value="TgEpVmjjELkIf3FKc1gj2jsj"/>
+        <meta-data android:name="com.baidu.speech.SECRET_KEY" android:value="87c4d13cf12a83191e4b4ec23d98530e"/>
         <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false" ></service>
-        <activity
-            android:name="com.baidu.voicerecognition.android.ui.BaiduASRDigitalDialog"
-            android:configChanges="orientation|keyboardHidden|screenLayout"
-            android:theme="@android:style/Theme.Dialog"
-            android:exported="false"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="com.baidu.action.RECOGNIZE_SPEECH" ></action>
-                <category android:name="android.intent.category.DEFAULT" ></category>
-            </intent-filter>
-        </activity>
 
-        <activity android:name="org.xing.android.MainActivity" >
+        <!-- 橫屏切换不会导致Activity重新生成 -->
+        <activity android:name="org.xing.android.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

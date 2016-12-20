@@ -1,17 +1,16 @@
 package org.xing.android;
 
+import android.content.ComponentName;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.content.res.Configuration;
+import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.content.ComponentName;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -39,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private ListView historyList;
     private LinkedList<String> historyData;
 
+    private int noInputCount = 0;
+    private int maxNoInputCount = 5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         beginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startListening();
-                inputText.setText("请说话");
+                startListening(true);
+                inputText.setText(R.string.tips);
             }
         });
 
@@ -77,14 +79,22 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         historyData = new LinkedList<String>();
         historyList = (ListView) this.findViewById(R.id.historylist);
 
-        startListening();
+        startListening(true);
     }
 
-    public synchronized void startListening() {
-        if(isListening) return;
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+    }
 
+    public synchronized void startListening(boolean resetInputCount) {
+        if(isListening) return;
         speechRecognizer.startListening(new Intent());
         isListening = true;
+        if(resetInputCount) {
+            noInputCount = 0;
+        }
     }
 
     public synchronized void stopListening() {
@@ -120,38 +130,38 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         StringBuilder sb = new StringBuilder();
         switch (error) {
             case SpeechRecognizer.ERROR_AUDIO:
-                sb.append("音频问题");
-                startListening();
+                sb.append("麦克风可能已损坏");
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                sb.append("没有语音输入，暂停工作");
+                noInputCount ++;
+                if(noInputCount >= maxNoInputCount) {
+                    sb.append("暂停工作，点击'开始'按钮重新工作");
+                } else {
+                    startListening(false);
+                }
                 break;
             case SpeechRecognizer.ERROR_CLIENT:
-                sb.append("其它客户端错误");
-                startListening();
+                sb.append("客户端错误");
                 break;
             case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
                 sb.append("权限不足");
-                startListening();
                 break;
             case SpeechRecognizer.ERROR_NETWORK:
-                sb.append("网络问题");
-                startListening();
+                sb.append("请检查网络连接");
                 break;
             case SpeechRecognizer.ERROR_NO_MATCH:
-                sb.append("没有匹配的识别结果");
-                startListening();
+                sb.append("未能识别");
+                startListening(true);
                 break;
             case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
                 sb.append("引擎忙");
                 break;
             case SpeechRecognizer.ERROR_SERVER:
-                sb.append("服务端错误");
-                startListening();
+                sb.append("未能识别");
+                startListening(true);
                 break;
             case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
-                sb.append("连接超时");
-                startListening();
+                sb.append("网络连接连接超时");
                 break;
         }
         inputText.setText(sb.toString());
@@ -163,22 +173,23 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         for(String w : nbest) {
             expr.append(w);
         }
-        String mathExpr = calculator.getMathExpr(expr.toString());
+
         Double evalResult = calculator.eval(expr.toString());
+        String readExpr = calculator.getReadExpr();
 
         if(!Double.isNaN(evalResult)) {
             String text = String.format("%.8f", evalResult);
             text = text.replaceAll("(\\.)?0*$", "");
 
-            historyData.add(0, mathExpr + "=" + text);
+            historyData.add(0, readExpr + "=" + text);
             historyList.setAdapter(new ArrayAdapter<String>(
                     this, R.layout.list_text_view, historyData));
-            inputText.setText(text);
+            inputText.setText(expr+"->"+readExpr+"="+text);
         } else {
             inputText.setText("遗憾：'"+expr+"'无效表达式！");
         }
 
-        startListening();
+        startListening(true);
     }
 
     public void onPartialResults(Bundle partialResults){
