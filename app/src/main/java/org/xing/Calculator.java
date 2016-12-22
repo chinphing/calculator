@@ -1,11 +1,15 @@
 package org.xing;
 
-import net.sourceforge.jeval.Evaluator;
-
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.xing.filter.CorrectionExprFilter;
 import org.xing.filter.ExprFilter;
 import org.xing.filter.RedundantExprFilter;
-import org.xing.parser.ExprParser;
+import org.xing.parser.CalculatorEvalVisitor;
+import org.xing.parser.CalculatorExprVisitor;
+import org.xing.parser.grammer.calculatorLexer;
+import org.xing.parser.grammer.calculatorParser;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -22,39 +26,20 @@ public class Calculator {
 	 */
 	private double lastResult;
 	
-	/**
-	 * 表达式计算对象
+	/*
+	 * 上次计算的表达式
 	 */
-	private Evaluator evaluator;
-	
-	private Map<String, Integer> commandMap;
-	
+	private String lastReadExpr;
 	
 	/**
 	 * 表达式过滤器列表，包括纠错、多余字符过滤以及数字转换等
 	 */
 	private List<ExprFilter> filters;
 	
-	/**
-	 * 语法解析器
-	 */
-	private ExprParser parser;
-	
 	public Calculator() {
 		setLastResult(0.0);
-		evaluator = new Evaluator();
-		
-		commandMap = new HashMap<String, Integer>();
-		commandMap.put("空", 0);
-		commandMap.put("开方", 1);
-		commandMap.put("平方", 2);
-		commandMap.put("立方", 3);
-		commandMap.put("平方根", 4);
-		commandMap.put("立方根", 5);
 		
 		filters = new LinkedList<ExprFilter>();
-		
-		parser = new ExprParser();
 	}
 	
 	public void addFilter(ExprFilter filter) {
@@ -70,26 +55,36 @@ public class Calculator {
 	}
 
 	public String getReadExpr() {
-		return parser.getReadExpr();
-	}
-	
-	public String getEvalExpr() {
-		return parser.getEvalExpr();
+		return lastReadExpr;
 	}
 	
 	public double eval(String expr)  {
-		double result = Double.NaN;
-		for(ExprFilter filter : filters) {
-			expr = filter.call(expr);
-		}
-		
-		try{
-			parser.parse(expr);
-			String resStr = evaluator.evaluate(parser.getEvalExpr());
-			result = Double.parseDouble(resStr);
-			lastResult = result;
-		}catch(Exception ex) {
-			
+		Double result = Double.NaN;
+		String readExpr = null;
+
+		try {
+			for (ExprFilter filter : filters) {
+				expr = filter.call(expr);
+			}
+
+			ANTLRInputStream input = new ANTLRInputStream(expr);
+			calculatorLexer lexer = new calculatorLexer(input);
+			CommonTokenStream tokens = new CommonTokenStream(lexer);
+			calculatorParser parser = new calculatorParser(tokens);
+			ParseTree tree = parser.expression();
+
+			CalculatorEvalVisitor evalVisitor = new CalculatorEvalVisitor();
+			result = evalVisitor.visit(tree);
+
+			CalculatorExprVisitor exprVisitor = new CalculatorExprVisitor();
+			readExpr = exprVisitor.visit(tree);
+
+			if (!result.isNaN()) {
+				lastResult = result;
+				lastReadExpr = readExpr;
+			}
+		}catch (Exception ex){
+			ex.printStackTrace();
 		}
 		
 		return result;
@@ -97,7 +92,7 @@ public class Calculator {
 
 	public static Calculator createDefault() {
 		String allowedChars =
-				"0123456789.零一二三四五六七八九点+-*/加减乘除×括号根号开方的平次负个十百千万亿立分之sincostanlglogln正弦余弦正切对数";
+				"0123456789.零一二三四五六七八九点负个十百千万亿+-*/括号加减乘除÷×根号开方的平方次方立方分之sincostanlglogln反正弦反余弦反正切对数()|^";
 
 		Calculator calc = new Calculator();
 		calc.addFilter(new CorrectionExprFilter());
@@ -108,12 +103,29 @@ public class Calculator {
 	
 	
 	public static void testEval() {
+		/*
+         * sin(0.64) = 0.59719544136239205188354623920793
+         * cos(0.64) = 0.80209575788429261358611077926032
+         * tan(0.64) = 0.74454382222096388598945981115854
+         * lg(0.64) = -0.19382002601611282871756663165304
+         * ln(0.64) = -0.44628710262841951153259018061967
+         * log(0.64) = 0.30102999566398119521373889472449
+         */
 
 		Calculator calc = createDefault();
 		
 		Map<String, String> chnMap = new HashMap<String, String>();
+		
+        chnMap.put("sin12", "-0.536573");
+		chnMap.put("1加上三十五点二", "36.2");
+        chnMap.put("1减10", "-9");
+        chnMap.put("log(3点2加15)^2除2乘以3", "26.282218");
+        chnMap.put("15*3", "45");
+        chnMap.put("(12)", "12");
+        chnMap.put("-12", "-12");
         chnMap.put("一加三十五", "36");
         chnMap.put("一减十", "-9");
+        chnMap.put("百分之一", "0.01");
         chnMap.put("十五除以二", "7.5");
         chnMap.put("十五乘以三", "45");
         chnMap.put("15×3", "45");
@@ -140,35 +152,50 @@ public class Calculator {
         chnMap.put("一百一加一万零一百", "10210");
         chnMap.put("一百一加一万一", "11110");
         chnMap.put("一百零一减去一万零一百", "-9999");
+        chnMap.put("二^2", "4");
+        
+        //小数，函数，分数 测试
         chnMap.put("零点二四加sin五分之三点二", "0.837195");
         chnMap.put("零点二四减cos五分之三点二", "-0.562096");
         chnMap.put("零点二四乘tan五分之三点二", "0.178691");
         chnMap.put("零点二四加lg五分之三点二", "0.0461800");
         chnMap.put("零点二四减ln五分之三点二", "0.686287");
         chnMap.put("零点二四乘log五分之三点二", "-0.154525");
-        /*
-         * sin(0.64) = 0.59719544136239205188354623920793
-         * cos(0.64) = 0.80209575788429261358611077926032
-         * tan(0.64) = 0.74454382222096388598945981115854
-         * 10为底的对数：lg(0.64) = -0.19382002601611282871756663165304
-         * 自然对数：ln(0.64) = -0.44628710262841951153259018061967
-         * 2为底的对数：log(0.64) = 0.30102999566398119521373889472449
-         */
+        
+		//函数，小数，分数，幂运算 混合测试
         chnMap.put("零点二四加sin五分之三点二的三点二次方", "0.432120");
         chnMap.put("零点二四减cos五分之三点二的三点二次方", "-0.253769");
         chnMap.put("零点二四乘tan五分之三点二的三点二次方", "0.093381");
-        chnMap.put("零点二四加lg五分之三点二的三点二次方", "0.245244");
-        chnMap.put("零点二四减ln五分之三点二的三点二次方", "-0.164357");
-        chnMap.put("零点二四乘log五分之三点二的三点二次方", "0.005149");
-         
+        
+        chnMap.put("零点二四加lg五分之一百三点二的三点二次方", "2.640244");
+        chnMap.put("零点二四减ln五分之一百三点二的三点二次方", "-34.381491");
+        chnMap.put("零点二四乘log五分之一百三点二的三点二次方", "26.848222");
+        
+        chnMap.put("零点二四加lg(五分之一百三点二的三点二次方)", "4.447071");
+        chnMap.put("零点二四减ln(五分之一百三点二的三点二次方)", "-9.447139");
+        chnMap.put("零点二四乘log(五分之一百三点二的三点二次方)", "3.354140");
+        
+        //括号测试
+        chnMap.put("括号1+3乘以括号1+2括号括号", "10.0");
+        chnMap.put("|1+3乘以括号1+2|括号", "10.0");
+        chnMap.put("log|1+3乘以括号1+2|括号", "3.321928");
+        
         int correctNum = 0;
         int wrongNum = 0;
         for(String expr : chnMap.keySet()) {
         	double value = Double.parseDouble(chnMap.get(expr));
-        	double result = calc.eval(expr);
-        	System.out.printf("%s\n\t%.6f\n", calc.getEvalExpr(), result);
+        	
+        	double result = Double.NaN;
+        	try{
+        		result = calc.eval(expr);
+        	}catch(Exception ex) {
+        		System.err.println(expr);
+        		ex.printStackTrace();
+        	}
+        	
+        	System.out.printf("%s\n%s\n\t%.6f\n", expr, calc.getReadExpr(), result);
         	if(Double.isNaN(result) || Math.abs(result - value) > 1e-6) {
-        		System.err.println("错误："+expr+", "+value+", 错误结果："+result);
+        		System.err.println("错误："+expr+", "+value+", 错误结果："+result+"\n");
         		wrongNum ++;
         	} else {
         		correctNum ++;
@@ -180,6 +207,5 @@ public class Calculator {
 	
 	public static void main(String[] argv) {
 		testEval();
-		
 	}
 }
