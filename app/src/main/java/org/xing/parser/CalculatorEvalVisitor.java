@@ -65,35 +65,27 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 	public Double visitChinaPowExpression(
 			calculatorParser.ChinaPowExpressionContext ctx) { 
 		Double result = Double.NaN;
-		if(ctx.getChild(0) instanceof TerminalNode) {
-			int type = ((TerminalNode)ctx.getChild(0)).getSymbol().getType();
-			if(type == calculatorParser.GENHAO) {
-				result = Math.pow(visit(ctx.getChild(1)), 0.5);
-			} else {
-				System.err.println("未处理的终端节点:visitChinaPowExpression");
-			}
-		}else {
-			int index = 0;
-			while(index < ctx.getChildCount()) {
-				result = visit(ctx.getChild(index));
-				if(ctx.getChild(index+2) instanceof TerminalNode) {
-					int type = ((TerminalNode)ctx.getChild(2)).getSymbol().getType();
-					if(type == calculatorParser.PINGFANG) {
-						result = Math.pow(result, 2);
-					}else if(type == calculatorParser.LIFANG){
-						result = Math.pow(result, 3);
-					}else if(type == calculatorParser.KAIFANG){
-						result = Math.pow(result, 0.5);
-					}else {
-						System.err.println("未处理的终端节点:visitChinaPowExpression");
-					}
-					index += 3;
-				}else {
-					Double pow = visit(ctx.getChild(index+2));
-					result = Math.pow(result, pow);
-					System.out.println(result);
-					index += 4; 
+
+		int index = 0;
+		result = visit(ctx.getChild(index++));
+		while (index < ctx.getChildCount()) {
+			if (ctx.getChild(index + 1) instanceof TerminalNode) {
+				int type = ((TerminalNode) ctx.getChild(index + 1)).getSymbol()
+						.getType();
+				if (type == calculatorParser.PINGFANG) {
+					result = Math.pow(result, 2);
+				} else if (type == calculatorParser.LIFANG) {
+					result = Math.pow(result, 3);
+				} else if (type == calculatorParser.KAIFANG) {
+					result = Math.pow(result, 0.5);
+				} else {
+					System.err.println("未处理的终端节点:visitChinaPowExpression");
 				}
+				index += 2;
+			} else {
+				Double pow = visit(ctx.getChild(index + 1));
+				result = Math.pow(result, pow);
+				index += 3;
 			}
 		}
 		return result;
@@ -107,7 +99,7 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 			}else {
 				return visit(ctx.expression());
 			}
-		} else {
+		}else {
 			return visit(ctx.getChild(0));
 		}
 	}
@@ -147,6 +139,9 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 			break;
 		case "ln":
 			result = Math.log(exprValue);
+			break;
+		case "根号":
+			result = Math.pow(exprValue, 0.5);
 			break;
 		default:
 			System.err.println("Not supported function '"+funcname+"'");

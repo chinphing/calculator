@@ -46,8 +46,7 @@ powExpression
    ;
    
 chinaPowExpression 
-   : (GENHAO atom)
-   | atom DE ( (atom CIFANG) | PINGFANG | LIFANG | KAIFANG)* 
+   : atom ( DE  ((atom CIFANG) | PINGFANG | LIFANG | KAIFANG))* 
    ;
 
 atom
@@ -72,6 +71,7 @@ funcname
    | LOG
    | LN
    | LG
+   | GENHAO
    ;
 
 number
@@ -120,7 +120,11 @@ LOG
 LG
    : 'lg'
    ;
-
+   
+GENHAO
+   : '根号'
+   ;
+   
 KUOHAO
    : '|' | '括号'
    ;
@@ -141,7 +145,7 @@ PLUS
 
 
 MINUS
-   : '-' | '减'('去')?
+   : '-' | '负' | '减'('去')?
    ;
 
 
@@ -158,10 +162,6 @@ FRAC
    : '分之'
    ;
 
-GENHAO
-   : '根号'
-   ;
-   
 PINGFANG
    : '平方'
    ;

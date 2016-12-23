@@ -92,7 +92,7 @@ public class Calculator {
 
 	public static Calculator createDefault() {
 		String allowedChars =
-				"0123456789.零一二三四五六七八九点负个十百千万亿+-*/括号加减乘除÷×根号开方的平方次方立方分之sincostanlglogln反正弦反余弦反正切对数()|^";
+				"0123456789.零一二三四五六七八九点负个十百千万亿+-*/括号加上减去乘除÷×根号开方的平方次方立方分之sincostanlglogln反正弦反余弦反正切对数()|^";
 
 		Calculator calc = new Calculator();
 		calc.addFilter(new CorrectionExprFilter());

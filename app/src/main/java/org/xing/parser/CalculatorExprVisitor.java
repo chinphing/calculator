@@ -71,34 +71,27 @@ public class CalculatorExprVisitor extends calculatorBaseVisitor<String>{
 	public String visitChinaPowExpression(
 			calculatorParser.ChinaPowExpressionContext ctx) { 
 		StringBuilder result = new StringBuilder();
-		if(ctx.getChild(0) instanceof TerminalNode) {
-			int type = ((TerminalNode)ctx.getChild(0)).getSymbol().getType();
-			if(type == calculatorParser.GENHAO) {
-				result.append(visit(ctx.getChild(1))+ "^0.5");
-			} else {
-				System.err.println("未处理的终端节点:visitChinaPowExpression");
-			}
-		}else {
-			int index = 0;
-			while(index < ctx.getChildCount()) {
-				result.append(visit(ctx.getChild(index)));
-				if(ctx.getChild(index+2) instanceof TerminalNode) {
-					int type = ((TerminalNode)ctx.getChild(2)).getSymbol().getType();
-					if(type == calculatorParser.PINGFANG) {
-						result.append("^2");
-					}else if(type == calculatorParser.LIFANG){
-						result.append("^3");
-					}else if(type == calculatorParser.KAIFANG){
-						result.append("^0.5");
-					}else {
-						System.err.println("未处理的终端节点:visitChinaPowExpression");
-					}
-					index += 3;
-				}else {
-					String pow = visit(ctx.getChild(index+2));
-					result.append("^"+pow);
-					index += 4; 
+
+		int index = 0;
+		result.append(visit(ctx.getChild(index++)));
+		while (index < ctx.getChildCount()) {
+			if (ctx.getChild(index + 1) instanceof TerminalNode) {
+				int type = ((TerminalNode) ctx.getChild(index + 1)).getSymbol()
+						.getType();
+				if (type == calculatorParser.PINGFANG) {
+					result.append("^2");
+				} else if (type == calculatorParser.LIFANG) {
+					result.append("^3");
+				} else if (type == calculatorParser.KAIFANG) {
+					result.append("^0.5");
+				} else {
+					System.err.println("未处理的终端节点:visitChinaPowExpression");
 				}
+				index += 2;
+			} else {
+				String pow = visit(ctx.getChild(index + 1));
+				result.append("^" + pow);
+				index += 3;
 			}
 		}
 		return result.toString();
@@ -112,7 +105,7 @@ public class CalculatorExprVisitor extends calculatorBaseVisitor<String>{
 			}else {
 				return "("+visit(ctx.expression())+")";
 			}
-		} else {
+		}else {
 			return visit(ctx.getChild(0));
 		}
 	}
@@ -121,7 +114,9 @@ public class CalculatorExprVisitor extends calculatorBaseVisitor<String>{
 	public String visitFunc(calculatorParser.FuncContext ctx) {
 		String funcname = ctx.funcname().getText();
 		String expr = visit(ctx.getChild(1));
-		
+		if(funcname.equals("根号")) {
+			return expr+"^0.5";
+		}
 		return funcname+"("+expr+")";
 	}
 
@@ -134,6 +129,9 @@ public class CalculatorExprVisitor extends calculatorBaseVisitor<String>{
 	public String visitNumber(calculatorParser.NumberContext ctx) {
 		try{
 			numParser.parse(ctx.getText());
+			if(numParser.getReadExpr().startsWith("-")) {
+				numParser.setReadExpr("("+numParser.getReadExpr()+")");
+			}
 			return numParser.getReadExpr();
 		}catch(Exception ex) { 
 			return null;
