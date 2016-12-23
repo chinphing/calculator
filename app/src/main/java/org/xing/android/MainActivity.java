@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         StringBuilder sb = new StringBuilder();
         switch (error) {
             case SpeechRecognizer.ERROR_AUDIO:
-                sb.append("麦克风可能已损坏");
+                sb.append("录音设备未授权");
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                 noInputCount ++;
@@ -186,7 +186,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             historyData.add(0, readExpr + "=" + text);
             historyList.setAdapter(new ArrayAdapter<String>(
                     this, R.layout.list_text_view, historyData));
-            inputText.setText(expr+"->"+readExpr+"="+text);
+            //inputText.setText(expr+"->"+readExpr+"="+text);
+            inputText.setText(text);
         } else {
             inputText.setText("遗憾：'"+expr+"'无效表达式！");
         }
