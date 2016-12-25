@@ -79,15 +79,15 @@ public class Calculator {
 			CalculatorExprVisitor exprVisitor = new CalculatorExprVisitor();
 			readExpr = exprVisitor.visit(tree);
 
-			if (!result.isNaN()) {
+			if(result != null && !result.isNaN()) {
 				lastResult = result;
 				lastReadExpr = readExpr;
 			}
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
-		
-		return result;
+
+		return result != null? result:Double.NaN;
 	}
 
 	public static Calculator createDefault() {
