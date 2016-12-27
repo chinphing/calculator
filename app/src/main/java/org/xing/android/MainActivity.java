@@ -15,10 +15,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.baidu.speech.VoiceRecognitionService;
+import com.umeng.analytics.MobclickAgent;
 
 import org.xing.Calculator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener{
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
         isListening = false;
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(
@@ -80,6 +84,18 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         historyList = (ListView) this.findViewById(R.id.historylist);
 
         startListening(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override
@@ -148,20 +164,25 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 break;
             case SpeechRecognizer.ERROR_NETWORK:
                 sb.append("请检查网络连接");
+                MobclickAgent.onEvent(this, "errorNetwork");
                 break;
             case SpeechRecognizer.ERROR_NO_MATCH:
                 sb.append("未能识别");
+                MobclickAgent.onEvent(this, "failMatch");
                 startListening(true);
                 break;
             case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
                 sb.append("引擎忙");
+                MobclickAgent.onEvent(this, "busy");
                 break;
             case SpeechRecognizer.ERROR_SERVER:
                 sb.append("未能识别");
                 startListening(true);
+                MobclickAgent.onEvent(this, "failServer");
                 break;
             case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
                 sb.append("网络连接连接超时");
+                MobclickAgent.onEvent(this, "errorNetworkTimeout");
                 break;
         }
         if(sb.length() > 0) {
@@ -176,9 +197,21 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             expr.append(w);
         }
 
+        //结算结果
         Double evalResult = calculator.eval(expr.toString());
-        String readExpr = calculator.getReadExpr();
+        String readExpr = null;
+        if(evalResult != null && (!evalResult.isNaN())) {
+            readExpr = calculator.getReadExpr();
+        }
 
+        //百度统计代码
+        HashMap<String, String> info = new HashMap<>();
+        info.put("result", evalResult.toString());
+        info.put("expr", expr.toString());
+        info.put("readExpr", readExpr == null? "null":readExpr);
+        MobclickAgent.onEvent(this, "result", info);
+
+        //界面上显示结果
         if(!Double.isNaN(evalResult)) {
             String text = String.format("%.8f", evalResult);
             text = text.replaceAll("(\\.)?0*$", "");
@@ -186,8 +219,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             historyData.add(0, readExpr + "=" + text);
             historyList.setAdapter(new ArrayAdapter<String>(
                     this, R.layout.list_text_view, historyData));
-            inputText.setText(expr+"->"+readExpr+"="+text);
-            //inputText.setText(text);
+            //inputText.setText(expr+"->"+readExpr+"="+text);
+            inputText.setText(text);
         } else {
             inputText.setText("遗憾：'"+expr+"'无效表达式！");
         }

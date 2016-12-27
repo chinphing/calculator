@@ -4,10 +4,10 @@
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -17,10 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
 
+        <!--百度语音识别设置-->
         <meta-data android:name="com.baidu.speech.APP_ID" android:value="9080060"/>
         <meta-data android:name="com.baidu.speech.API_KEY" android:value="TgEpVmjjELkIf3FKc1gj2jsj"/>
         <meta-data android:name="com.baidu.speech.SECRET_KEY" android:value="87c4d13cf12a83191e4b4ec23d98530e"/>
         <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false" ></service>
+
+        <!--友盟统计-->
+        <meta-data android:value="586213d5ae1bf81811000768" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="baidu market" android:name="UMENG_CHANNEL"/>
 
         <!-- 橫屏切换不会导致Activity重新生成 -->
         <activity android:name="org.xing.android.MainActivity"
