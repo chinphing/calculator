@@ -59,6 +59,7 @@ atom
 
 func
    : funcname atom
+   | number funcnameEx atom
    ;
 
 funcname
@@ -72,6 +73,12 @@ funcname
    | LN
    | LG
    | GENHAO
+   | DUISHU
+   ;
+   
+funcnameEx
+   : DUISHU
+   | GENHAO
    ;
 
 number
@@ -79,32 +86,32 @@ number
    ;
 
 COS
-   : 'cos'
+   : 'cos' | '余弦'
    ;
 
 
 SIN
-   : 'sin'
+   : 'sin' | '正弦'
    ;
 
 
 TAN
-   : 'tan'
+   : 'tan' | '正切'
    ;
 
 
 ACOS
-   : 'acos'
+   : 'acos' | '反余弦'
    ;
 
 
 ASIN
-   : 'asin'
+   : 'asin' | '反正弦'
    ;
 
 
 ATAN
-   : 'atan'
+   : 'atan' | '反正切'
    ;
 
 
@@ -119,6 +126,10 @@ LOG
    
 LG
    : 'lg'
+   ;
+   
+DUISHU
+   : '对数'
    ;
    
 GENHAO

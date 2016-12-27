@@ -53,6 +53,12 @@ public interface calculatorVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFuncname(calculatorParser.FuncnameContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link calculatorParser#funcnameEx}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncnameEx(calculatorParser.FuncnameExContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link calculatorParser#number}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

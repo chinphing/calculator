@@ -3,6 +3,9 @@ package org.xing.parser;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.xing.parser.grammer.calculatorBaseVisitor;
 import org.xing.parser.grammer.calculatorParser;
+import org.xing.parser.grammer.calculatorParser.FuncContext;
+import org.xing.parser.grammer.calculatorParser.FuncnameContext;
+import org.xing.parser.grammer.calculatorParser.FuncnameExContext;
 
 public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 	private NumberParser numParser;
@@ -105,54 +108,55 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 	}
 
 	@Override
-	public Double visitFunc(calculatorParser.FuncContext ctx) {
-		String funcname = ctx.funcname().getText();
-		Double exprValue = visit(ctx.getChild(1));
-
+	public Double visitFunc(FuncContext ctx) {
 		Double result = Double.NaN;
-		if(exprValue.isNaN()) return result;
-		
-		switch(funcname) {
-		case "sin":
-			result = Math.sin(exprValue);
-			break;
-		case "cos":
-			result = Math.cos(exprValue);
-		break;
-		case "tan":
-			result = Math.tan(exprValue);
-			break;
-		case "asin":
-			result = Math.asin(exprValue);
-			break;
-		case "acos":
-			result = Math.acos(exprValue);
-			break;
-		case "atan":
-			result = Math.atan(exprValue);
-			break;
-		case "lg":
-			result = Math.log10(exprValue);
-			break;
-		case "log":
-			result = Math.log(exprValue) / Math.log(2);
-			break;
-		case "ln":
-			result = Math.log(exprValue);
-			break;
-		case "根号":
-			result = Math.pow(exprValue, 0.5);
-			break;
-		default:
-			System.err.println("Not supported function '"+funcname+"'");
-			break;
+		if(ctx.getChildCount() == 3) {
+			FuncnameExContext func = ctx.funcnameEx();
+			Double firstNum = visit(ctx.getChild(0));
+			Double secondNum = visit(ctx.getChild(2));
+			if(func.DUISHU() != null) {
+				result = Math.log(secondNum) / Math.log(firstNum);
+			}else if(func.GENHAO() != null) {
+				result = Math.pow(secondNum, 1/firstNum);
+			}
+		} else {
+			FuncnameContext func = ctx.funcname();
+			Double exprValue = visit(ctx.getChild(1));
+
+			if(exprValue.isNaN()) return result;
+			
+			if(func.SIN() != null) {
+				result = Math.sin(exprValue);
+			}else if(func.COS() != null) {
+				result = Math.cos(exprValue);
+			}else if(func.TAN() != null) {
+				result = Math.tan(exprValue);
+			}else if(func.ASIN() != null) {
+				result = Math.asin(exprValue);
+			}else if(func.ACOS() != null) {
+				result = Math.acos(exprValue);
+			}else if(func.ATAN() != null) {
+				result = Math.atan(exprValue);
+			}else if(func.LG() != null) {
+				result = Math.log10(exprValue);
+			}else if(func.LOG() != null) {
+				result =  Math.log(exprValue) / Math.log(2);
+			}else if(func.LN() != null) {
+				result =  Math.log(exprValue);
+			}else if(func.GENHAO() != null) {
+				result =  Math.pow(exprValue, 0.5);
+			}else if(func.DUISHU() != null) {
+				result =  Math.log(exprValue);
+			}else{
+				System.err.println("Not supported function '"+ctx.funcname()+"'");
+			}	
 		}
 		
 		return result;
 	}
 
 	@Override
-	public Double visitFuncname(calculatorParser.FuncnameContext ctx) {
+	public Double visitFuncname(FuncnameContext ctx) {
 		return Double.NaN;
 	}
 

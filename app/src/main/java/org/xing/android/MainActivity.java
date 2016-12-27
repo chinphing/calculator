@@ -186,8 +186,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             historyData.add(0, readExpr + "=" + text);
             historyList.setAdapter(new ArrayAdapter<String>(
                     this, R.layout.list_text_view, historyData));
-            //inputText.setText(expr+"->"+readExpr+"="+text);
-            inputText.setText(text);
+            inputText.setText(expr+"->"+readExpr+"="+text);
+            //inputText.setText(text);
         } else {
             inputText.setText("遗憾：'"+expr+"'无效表达式！");
         }
