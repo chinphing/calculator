@@ -23,7 +23,9 @@ import org.xing.logger.Log;
 import org.xing.utils.DeviceUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener{
 
@@ -199,23 +201,27 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
     }
 
-    public void onResults(Bundle results){
+    private String buildExpr(Bundle results) {
         ArrayList<String> nbest = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         StringBuilder expr = new StringBuilder();
         for(String w : nbest) {
             expr.append(w);
         }
+        return expr.toString();
+    }
 
-        //结算结果
-        Double evalResult = calculator.eval(expr.toString());
-        String readExpr = null;
-        if(evalResult != null && (!evalResult.isNaN())) {
-            readExpr = calculator.getReadExpr();
-        }
+    private void recordEvaluation(String userId, String result,
+                                  String inputExpr, String readExpr, int type) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("result", result);
+        params.put("inputExpr", inputExpr);
+        params.put("readExpr", readExpr == null? "null":readExpr);
+        params.put("type", 0);
+        evalLog.recordEvaluation(params);
+    }
 
-        evalLog.recordEvaluation(uniqueId, evalResult.toString(), expr.toString(),
-                    readExpr == null? "null":readExpr);
-
+    private void showResult(String expr, Double evalResult, String readExpr) {
         //界面上显示结果
         if(!Double.isNaN(evalResult)) {
             String text = String.format("%.8f", evalResult);
@@ -229,6 +235,23 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         } else {
             inputText.setText("遗憾：'"+expr+"'无效表达式！");
         }
+
+    }
+
+    public void onResults(Bundle results){
+        String expr = buildExpr(results);
+
+        //结算结果
+        String readExpr = null;
+        Double evalResult = calculator.eval(expr.toString());
+        if(evalResult != null && (!evalResult.isNaN())) {
+            readExpr = calculator.getReadExpr();
+        }
+
+        this.recordEvaluation(uniqueId, evalResult.toString(),
+                expr.toString(), readExpr, 0);
+
+        showResult(expr.toString(), evalResult, readExpr);
 
         startListening(true);
     }

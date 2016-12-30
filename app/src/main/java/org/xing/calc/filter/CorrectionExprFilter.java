@@ -21,13 +21,18 @@ public class CorrectionExprFilter implements ExprFilter {
 		correctionCharMap.put('父', "负");
 		correctionCharMap.put('副', "负");
 
+		correctionCharMap.put('家', "加");
+
 		correctionCharMap.put('灵', "0");
 		correctionCharMap.put('壹', "1");
 		correctionCharMap.put('耳', "2");
 		correctionCharMap.put('而', "2");
 		correctionCharMap.put('贰', "2");
+		correctionCharMap.put('两', "二");
+		correctionCharMap.put('俩', "二");
 		correctionCharMap.put('山', "3");
 		correctionCharMap.put('叁', "3");
+		correctionCharMap.put('仨', "三");
 		correctionCharMap.put('是', "4");
 		correctionCharMap.put('肆', "4");
 		correctionCharMap.put('士', "4");

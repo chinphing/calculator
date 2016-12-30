@@ -37,14 +37,14 @@ public class HttpUtil {
         return newstr;
     }
 	
-    public static String formPostParams(Map<String, String> params, String charset, String secret)
+    public static String formPostParams(Map<String, Object> params, String charset, String secret)
             throws UnsupportedEncodingException {
         StringBuilder str = new StringBuilder();
         
         Vector<String> fields = new Vector<>();
-        for(Map.Entry<String, String> en : params.entrySet()) {
+        for(Map.Entry<String, Object> en : params.entrySet()) {
         	fields.add(URLEncoder.encode(en.getKey(), charset)+
-        			"="+URLEncoder.encode(en.getValue(), charset));
+        			"="+URLEncoder.encode(en.getValue().toString(), charset));
         }
         
         Collections.sort(fields);
@@ -67,7 +67,7 @@ public class HttpUtil {
         return str.toString();
     }
 
-    public static String doPost(String urlString, Map<String, String> params, String charset) {
+    public static String doPost(String urlString, Map<String, Object> params, String charset) {
         StringBuilder result = new StringBuilder();
         String secret = "862369397363725329";
         try{

@@ -1,5 +1,6 @@
 package org.xing.logger;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,12 +19,11 @@ public class AsyncLog implements Log {
     }
 
     @Override
-    public boolean recordEvaluation(final String userId, final String result,
-                                    final String inputExpr,final String readExpr) {
+    public boolean recordEvaluation(final Map<String, Object> params) {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
-                syncLog.recordEvaluation(userId, result, inputExpr, readExpr);
+                syncLog.recordEvaluation(params);
             }
         });
         return true;
