@@ -21,6 +21,7 @@ import org.xing.calc.Calculator;
 import org.xing.logger.AsyncLog;
 import org.xing.logger.Log;
 import org.xing.utils.DeviceUtil;
+import org.xing.utils.NumberUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -224,8 +225,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private void showResult(String expr, Double evalResult, String readExpr) {
         //界面上显示结果
         if(!Double.isNaN(evalResult)) {
-            String text = String.format("%.8f", evalResult);
-            text = text.replaceAll("(\\.)?0*$", "");
+            String text = NumberUtil.format(evalResult, 8);
 
             historyData.add(0, readExpr + "=" + text);
             historyList.setAdapter(new ArrayAdapter<String>(

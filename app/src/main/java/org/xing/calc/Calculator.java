@@ -10,6 +10,7 @@ import org.xing.calc.parser.CalculatorEvalVisitor;
 import org.xing.calc.parser.CalculatorExprVisitor;
 import org.xing.calc.parser.grammer.calculatorLexer;
 import org.xing.calc.parser.grammer.calculatorParser;
+import org.xing.utils.NumberUtil;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -117,9 +118,9 @@ public class Calculator {
 			}
 
 			if(expr.length() > 0 && continuousInputTag.contains(expr.charAt(0))) {
-				expr = Double.toString(this.lastResult)+expr;
+				expr = NumberUtil.format(this.lastResult, 8)+expr;
 			}else if(continuousFuncTag.contains(expr)) {
-				expr = expr + Double.toString(this.lastResult);
+				expr = expr + NumberUtil.format(this.lastResult, 8);
 			}
 			
 			result = innerEval(expr);
