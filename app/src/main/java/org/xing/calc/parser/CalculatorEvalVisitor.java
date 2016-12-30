@@ -1,11 +1,11 @@
-package org.xing.parser;
+package org.xing.calc.parser;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.xing.parser.grammer.calculatorBaseVisitor;
-import org.xing.parser.grammer.calculatorParser;
-import org.xing.parser.grammer.calculatorParser.FuncContext;
-import org.xing.parser.grammer.calculatorParser.FuncnameContext;
-import org.xing.parser.grammer.calculatorParser.FuncnameExContext;
+import org.xing.calc.parser.grammer.calculatorBaseVisitor;
+import org.xing.calc.parser.grammer.calculatorParser;
+import org.xing.calc.parser.grammer.calculatorParser.FuncContext;
+import org.xing.calc.parser.grammer.calculatorParser.FuncnameContext;
+import org.xing.calc.parser.grammer.calculatorParser.FuncnameExContext;
 
 public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 	private NumberParser numParser;

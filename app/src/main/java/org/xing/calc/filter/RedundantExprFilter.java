@@ -1,4 +1,4 @@
-package org.xing.filter;
+package org.xing.calc.filter;
 
 import java.util.HashSet;
 import java.util.Set;

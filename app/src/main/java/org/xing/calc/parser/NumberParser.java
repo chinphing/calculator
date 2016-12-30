@@ -1,9 +1,7 @@
-package org.xing.parser;
+package org.xing.calc.parser;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.xing.filter.MathExprFilter;
 
 public class NumberParser extends Parser {
 	private Map<Character, String> chineseToMathMap; 

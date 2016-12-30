@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">星星声控计算器</string>
     <string name="tips">语音图标为绿色开始讲话</string>
+
+    <string name="recordUrl">http://xingxing.zysoft.com/index.php</string>
 </resources>

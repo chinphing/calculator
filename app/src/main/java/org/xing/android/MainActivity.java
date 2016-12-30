@@ -17,29 +17,36 @@ import android.widget.ProgressBar;
 import com.baidu.speech.VoiceRecognitionService;
 import com.umeng.analytics.MobclickAgent;
 
-import org.xing.Calculator;
+import org.xing.calc.Calculator;
+import org.xing.logger.AsyncLog;
+import org.xing.logger.Log;
+import org.xing.utils.DeviceUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener{
 
     private boolean isListening;
-
     private SpeechRecognizer speechRecognizer;
 
+    private String uniqueId;
     private Calculator calculator;
+    private Log evalLog;
 
-    EditText inputText;
-
+    private EditText inputText;
     private ProgressBar recordDynamic;
-
     private Button stateButton;
 
+    /*
+    历史记录
+     */
     private ListView historyList;
     private LinkedList<String> historyData;
 
+    /*
+    空闲状态计数，达到maxNoInputCount暂时停止工作
+     */
     private int noInputCount = 0;
     private int maxNoInputCount = 5;
 
@@ -55,7 +62,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 this, new ComponentName(this, VoiceRecognitionService.class));
         speechRecognizer.setRecognitionListener(this);
 
+        uniqueId = DeviceUtil.getUniqueId(this);
         calculator = Calculator.createDefault();
+        evalLog = AsyncLog.createAsyncHttpLog(this.getString(R.string.recordUrl));
 
         Button beginButton = (Button) this.findViewById(R.id.begin);
         beginButton.setOnClickListener(new View.OnClickListener() {
@@ -204,12 +213,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             readExpr = calculator.getReadExpr();
         }
 
-        //百度统计代码
-        HashMap<String, String> info = new HashMap<>();
-        info.put("result", evalResult.toString());
-        info.put("expr", expr.toString());
-        info.put("readExpr", readExpr == null? "null":readExpr);
-        MobclickAgent.onEvent(this, "result", info);
+        evalLog.recordEvaluation(uniqueId, evalResult.toString(), expr.toString(),
+                    readExpr == null? "null":readExpr);
 
         //界面上显示结果
         if(!Double.isNaN(evalResult)) {

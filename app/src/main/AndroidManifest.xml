@@ -25,7 +25,7 @@
 
         <!--友盟统计-->
         <meta-data android:value="586213d5ae1bf81811000768" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="baidu market" android:name="UMENG_CHANNEL"/>
+        <meta-data android:value="yingyongbao" android:name="UMENG_CHANNEL"/>
 
         <!-- 橫屏切换不会导致Activity重新生成 -->
         <activity android:name="org.xing.android.MainActivity"

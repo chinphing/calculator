@@ -1,4 +1,4 @@
-package org.xing.parser;
+package org.xing.calc.parser;
 
 public abstract class Parser {
 

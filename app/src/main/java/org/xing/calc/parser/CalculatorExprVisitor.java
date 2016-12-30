@@ -1,11 +1,11 @@
-package org.xing.parser;
+package org.xing.calc.parser;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.xing.parser.grammer.calculatorBaseVisitor;
-import org.xing.parser.grammer.calculatorParser;
-import org.xing.parser.grammer.calculatorParser.FuncnameContext;
-import org.xing.parser.grammer.calculatorParser.FuncnameExContext;
+import org.xing.calc.parser.grammer.calculatorBaseVisitor;
+import org.xing.calc.parser.grammer.calculatorParser;
+import org.xing.calc.parser.grammer.calculatorParser.FuncnameContext;
+import org.xing.calc.parser.grammer.calculatorParser.FuncnameExContext;
 
 public class CalculatorExprVisitor extends calculatorBaseVisitor<String>{
 	private NumberParser numParser;
@@ -121,7 +121,7 @@ public class CalculatorExprVisitor extends calculatorBaseVisitor<String>{
 			if(firstNum == null || secondNum == null) return null;
 			
 			if(func.DUISHU() != null) {
-				return "ln(" + secondNum + ")/ln(" + firstNum + ")";
+				return "(ln(" + secondNum + ")/ln(" + firstNum + "))";
 			}else if(func.GENHAO() != null) {
 				return secondNum+"^(1/"+firstNum+")";
 			}

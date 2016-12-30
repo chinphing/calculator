@@ -1,15 +1,15 @@
-package org.xing;
+package org.xing.calc;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.xing.filter.CorrectionExprFilter;
-import org.xing.filter.ExprFilter;
-import org.xing.filter.RedundantExprFilter;
-import org.xing.parser.CalculatorEvalVisitor;
-import org.xing.parser.CalculatorExprVisitor;
-import org.xing.parser.grammer.calculatorLexer;
-import org.xing.parser.grammer.calculatorParser;
+import org.xing.calc.filter.CorrectionExprFilter;
+import org.xing.calc.filter.ExprFilter;
+import org.xing.calc.filter.RedundantExprFilter;
+import org.xing.calc.parser.CalculatorEvalVisitor;
+import org.xing.calc.parser.CalculatorExprVisitor;
+import org.xing.calc.parser.grammer.calculatorLexer;
+import org.xing.calc.parser.grammer.calculatorParser;
 
 import java.util.HashMap;
 import java.util.LinkedList;
