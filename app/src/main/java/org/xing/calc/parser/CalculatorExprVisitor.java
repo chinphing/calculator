@@ -8,7 +8,7 @@ import org.xing.calc.parser.grammer.calculatorParser.FuncnameContext;
 import org.xing.calc.parser.grammer.calculatorParser.FuncnameExContext;
 
 public class CalculatorExprVisitor extends calculatorBaseVisitor<String>{
-	private NumberParser numParser;
+	protected NumberParser numParser;
 	public CalculatorExprVisitor() {
 		numParser = new NumberParser();
 	}

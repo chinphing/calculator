@@ -8,6 +8,7 @@ import org.xing.calc.filter.ExprFilter;
 import org.xing.calc.filter.RedundantExprFilter;
 import org.xing.calc.parser.CalculatorEvalVisitor;
 import org.xing.calc.parser.CalculatorExprVisitor;
+import org.xing.calc.parser.CalculatorMathjaxExprVisitor;
 import org.xing.calc.parser.grammer.calculatorLexer;
 import org.xing.calc.parser.grammer.calculatorParser;
 import org.xing.utils.NumberUtil;
@@ -98,7 +99,7 @@ public class Calculator {
 		CalculatorEvalVisitor evalVisitor = new CalculatorEvalVisitor();
 		result = evalVisitor.visit(tree);
 
-		CalculatorExprVisitor exprVisitor = new CalculatorExprVisitor();
+		CalculatorExprVisitor exprVisitor = new CalculatorMathjaxExprVisitor();
 		readExpr = exprVisitor.visit(tree);
 
 		if (result != null && !result.isNaN()) {

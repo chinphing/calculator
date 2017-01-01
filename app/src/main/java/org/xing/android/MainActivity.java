@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         historyData = new LinkedList<String>();
         historyList = (WebView) this.findViewById(R.id.historylist);
+        historyList.setBackgroundColor(0);
         historyList.getSettings().setJavaScriptEnabled(true);
         historyList.getSettings().setAppCacheEnabled(true);
         historyList.loadUrl("file:///android_asset/history.html");
@@ -229,7 +230,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if(!Double.isNaN(evalResult)) {
             String text = NumberUtil.format(evalResult, 8);
 
-            historyData.add(0, readExpr + "=" + text);
+            String item = readExpr + "=" + text;
+            historyData.add(0, item);
+            historyList.loadUrl("javascript:addItem('"+item+"')");
             /*
             historyList.setAdapter(new ArrayAdapter<String>(
                     this, R.layout.list_text_view, historyData));
