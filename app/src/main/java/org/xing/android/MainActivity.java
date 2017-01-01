@@ -8,10 +8,9 @@ import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.baidu.speech.VoiceRecognitionService;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     /*
     历史记录
      */
-    private ListView historyList;
+    private WebView historyList;
     private LinkedList<String> historyData;
 
     /*
@@ -93,7 +92,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         stateButton = (Button) this.findViewById(R.id.stateButton);
 
         historyData = new LinkedList<String>();
-        historyList = (ListView) this.findViewById(R.id.historylist);
+        historyList = (WebView) this.findViewById(R.id.historylist);
+        historyList.getSettings().setJavaScriptEnabled(true);
+        historyList.getSettings().setAppCacheEnabled(true);
+        historyList.loadUrl("file:///android_asset/history.html");
 
         startListening(true);
     }
@@ -228,8 +230,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             String text = NumberUtil.format(evalResult, 8);
 
             historyData.add(0, readExpr + "=" + text);
+            /*
             historyList.setAdapter(new ArrayAdapter<String>(
                     this, R.layout.list_text_view, historyData));
+            */
             //inputText.setText(expr+"->"+readExpr+"="+text);
             inputText.setText(text);
         } else {

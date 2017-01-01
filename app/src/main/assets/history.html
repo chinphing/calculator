@@ -1,0 +1,51 @@
+<html>
+<head>
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+    <style>
+        body {
+            color: #fff;
+            background: #202020;
+            margin: 0;
+            padding: 0;
+        }
+        ol {
+             list-style:none;
+        }
+    </style>
+
+	<!--'&#92;&#40;'左侧显示，'$$'中间显示 -->
+    <ol id="list">
+
+    </ol>
+
+	<script type="text/javascript">  
+		MathJax.Hub.Config({  
+			extensions: ["tex2jax.js"],  
+			jax: ["input/TeX", "output/HTML-CSS"],  
+			tex2jax: {  
+				inlineMath: [["\\(", "\\)"]],  
+				displayMath: [["$$", "$$"],["\\[", "\\]"]],  
+				processEscapes: true  
+			},  
+			"HTML-CSS": { availableFonts: ["TeX"] }  
+		});
+	</script>
+    <script>
+        function addItem(item) {
+            var li = document.createElement("li");
+            var textNode=document.createTextNode("$$"+item+"$$");
+            li.appendChild(textNode);
+            var list = document.getElementById("list");
+            if(list.childNodes.length > 0) {
+                list.appendChild(li);
+            } else {
+                list[0].insertBefore(li);
+            }
+        }
+        addItem("2*2=4");
+        addItem("2^2=4");
+    </script>
+</body>
+</html>
