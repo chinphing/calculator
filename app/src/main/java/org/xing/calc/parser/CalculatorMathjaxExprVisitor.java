@@ -55,7 +55,11 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
     public String visitAtom(calculatorParser.AtomContext ctx) {
         if(ctx.getChildCount() == 3) {
             if(ctx.FRAC() != null) {
-                return "\\\\frac{"+visit(ctx.getChild(2))+"}{"+visit(ctx.getChild(0))+"}";
+                if(ctx.FRAC().getText().equals("分之")) {
+                    return "\\\\frac{"+visit(ctx.getChild(2))+"}{"+visit(ctx.getChild(0))+"}";
+                }else {
+                    return "\\\\frac{"+visit(ctx.getChild(0))+"}{"+visit(ctx.getChild(2))+"}";
+                }
             }else {
                 return "("+visit(ctx.expression())+")";
             }

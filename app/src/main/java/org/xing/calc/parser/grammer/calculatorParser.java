@@ -1,10 +1,13 @@
-// Generated from src/org/xing/parser/grammer/calculator.g4 by ANTLR 4.6
+// Generated from src/org/xing/calc/parser/grammer/calculator.g4 by ANTLR 4.6
 package org.xing.calc.parser.grammer;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class calculatorParser extends Parser {
@@ -29,7 +32,7 @@ public class calculatorParser extends Parser {
 
 	private static final String[] _LITERAL_NAMES = {
 		null, null, null, null, null, null, null, "'ln'", "'log'", "'lg'", "'对数'", 
-		"'根号'", null, "'('", "')'", null, null, null, null, "'分之'", "'平方'", "'立方'", 
+		"'根号'", null, "'('", "')'", null, null, null, null, null, "'平方'", "'立方'", 
 		"'次方'", "'开方'", "'的'", null, null, "'^'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
@@ -268,7 +271,7 @@ public class calculatorParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(34);
-				atom();
+				atom(0);
 				setState(39);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
@@ -278,7 +281,7 @@ public class calculatorParser extends Parser {
 					setState(35);
 					match(POW);
 					setState(36);
-					atom();
+					atom(0);
 					}
 					}
 					setState(41);
@@ -353,7 +356,7 @@ public class calculatorParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(45);
-			atom();
+			atom(0);
 			setState(57);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -383,7 +386,7 @@ public class calculatorParser extends Parser {
 					{
 					{
 					setState(47);
-					atom();
+					atom(0);
 					setState(48);
 					match(CIFANG);
 					}
@@ -430,13 +433,9 @@ public class calculatorParser extends Parser {
 	}
 
 	public static class AtomContext extends ParserRuleContext {
-		public List<NumberContext> number() {
-			return getRuleContexts(NumberContext.class);
+		public NumberContext number() {
+			return getRuleContext(NumberContext.class,0);
 		}
-		public NumberContext number(int i) {
-			return getRuleContext(NumberContext.class,i);
-		}
-		public TerminalNode FRAC() { return getToken(calculatorParser.FRAC, 0); }
 		public TerminalNode LPAREN() { return getToken(calculatorParser.LPAREN, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
@@ -449,6 +448,13 @@ public class calculatorParser extends Parser {
 		public FuncContext func() {
 			return getRuleContext(FuncContext.class,0);
 		}
+		public List<AtomContext> atom() {
+			return getRuleContexts(AtomContext.class);
+		}
+		public AtomContext atom(int i) {
+			return getRuleContext(AtomContext.class,i);
+		}
+		public TerminalNode FRAC() { return getToken(calculatorParser.FRAC, 0); }
 		public AtomContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -461,59 +467,81 @@ public class calculatorParser extends Parser {
 	}
 
 	public final AtomContext atom() throws RecognitionException {
-		AtomContext _localctx = new AtomContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_atom);
+		return atom(0);
+	}
+
+	private AtomContext atom(int _p) throws RecognitionException {
+		ParserRuleContext _parentctx = _ctx;
+		int _parentState = getState();
+		AtomContext _localctx = new AtomContext(_ctx, _parentState);
+		AtomContext _prevctx = _localctx;
+		int _startState = 8;
+		enterRecursionRule(_localctx, 8, RULE_atom, _p);
 		try {
-			setState(74);
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(71);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 			case 1:
-				enterOuterAlt(_localctx, 1);
 				{
-				setState(60);
+				setState(61);
 				number();
 				}
 				break;
 			case 2:
-				enterOuterAlt(_localctx, 2);
 				{
-				setState(61);
-				number();
 				setState(62);
-				match(FRAC);
-				setState(63);
-				number();
-				}
-				break;
-			case 3:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(65);
 				match(LPAREN);
-				setState(66);
+				setState(63);
 				expression();
-				setState(67);
+				setState(64);
 				match(RPAREN);
 				}
 				break;
-			case 4:
-				enterOuterAlt(_localctx, 4);
+			case 3:
 				{
-				setState(69);
+				setState(66);
 				match(KUOHAO);
-				setState(70);
+				setState(67);
 				expression();
-				setState(71);
+				setState(68);
 				match(KUOHAO);
 				}
 				break;
-			case 5:
-				enterOuterAlt(_localctx, 5);
+			case 4:
 				{
-				setState(73);
+				setState(70);
 				func();
 				}
 				break;
+			}
+			_ctx.stop = _input.LT(-1);
+			setState(78);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
+			while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					if ( _parseListeners!=null ) triggerExitRuleEvent();
+					_prevctx = _localctx;
+					{
+					{
+					_localctx = new AtomContext(_parentctx, _parentState);
+					pushNewRecursionContext(_localctx, _startState, RULE_atom);
+					setState(73);
+					if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
+					setState(74);
+					match(FRAC);
+					setState(75);
+					atom(5);
+					}
+					} 
+				}
+				setState(80);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -522,7 +550,7 @@ public class calculatorParser extends Parser {
 			_errHandler.recover(this, re);
 		}
 		finally {
-			exitRule();
+			unrollRecursionContexts(_parentctx);
 		}
 		return _localctx;
 	}
@@ -555,7 +583,7 @@ public class calculatorParser extends Parser {
 		FuncContext _localctx = new FuncContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_func);
 		try {
-			setState(83);
+			setState(88);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case COS:
@@ -571,22 +599,22 @@ public class calculatorParser extends Parser {
 			case GENHAO:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(76);
+				setState(81);
 				funcname();
-				setState(77);
-				atom();
+				setState(82);
+				atom(0);
 				}
 				break;
 			case MINUS:
 			case DIGIT:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(79);
+				setState(84);
 				number();
-				setState(80);
+				setState(85);
 				funcnameEx();
-				setState(81);
-				atom();
+				setState(86);
+				atom(0);
 				}
 				break;
 			default:
@@ -634,7 +662,7 @@ public class calculatorParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(85);
+			setState(90);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << COS) | (1L << SIN) | (1L << TAN) | (1L << ACOS) | (1L << ASIN) | (1L << ATAN) | (1L << LN) | (1L << LOG) | (1L << LG) | (1L << DUISHU) | (1L << GENHAO))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -678,7 +706,7 @@ public class calculatorParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(87);
+			setState(92);
 			_la = _input.LA(1);
 			if ( !(_la==DUISHU || _la==GENHAO) ) {
 			_errHandler.recoverInline(this);
@@ -724,56 +752,69 @@ public class calculatorParser extends Parser {
 		enterRule(_localctx, 16, RULE_number);
 		int _la;
 		try {
+			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(90);
+			setState(95);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==MINUS) {
 				{
-				setState(89);
+				setState(94);
 				match(MINUS);
 				}
 			}
 
-			setState(93); 
+			setState(98); 
 			_errHandler.sync(this);
-			_la = _input.LA(1);
+			_alt = 1;
 			do {
-				{
-				{
-				setState(92);
-				match(DIGIT);
-				}
-				}
-				setState(95); 
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			} while ( _la==DIGIT );
-			setState(103);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==POINT) {
-				{
-				setState(97);
-				match(POINT);
-				setState(99); 
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-				do {
+				switch (_alt) {
+				case 1:
 					{
 					{
-					setState(98);
+					setState(97);
 					match(DIGIT);
 					}
 					}
-					setState(101); 
-					_errHandler.sync(this);
-					_la = _input.LA(1);
-				} while ( _la==DIGIT );
+					break;
+				default:
+					throw new NoViableAltException(this);
 				}
+				setState(100); 
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,10,_ctx);
+			} while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER );
+			setState(108);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
+			case 1:
+				{
+				setState(102);
+				match(POINT);
+				setState(104); 
+				_errHandler.sync(this);
+				_alt = 1;
+				do {
+					switch (_alt) {
+					case 1:
+						{
+						{
+						setState(103);
+						match(DIGIT);
+						}
+						}
+						break;
+					default:
+						throw new NoViableAltException(this);
+					}
+					setState(106); 
+					_errHandler.sync(this);
+					_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
+				} while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER );
+				}
+				break;
 			}
-
 			}
 		}
 		catch (RecognitionException re) {
@@ -787,34 +828,50 @@ public class calculatorParser extends Parser {
 		return _localctx;
 	}
 
+	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
+		switch (ruleIndex) {
+		case 4:
+			return atom_sempred((AtomContext)_localctx, predIndex);
+		}
+		return true;
+	}
+	private boolean atom_sempred(AtomContext _localctx, int predIndex) {
+		switch (predIndex) {
+		case 0:
+			return precpred(_ctx, 4);
+		}
+		return true;
+	}
+
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3 l\4\2\t\2\4\3\t\3"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3 q\4\2\t\2\4\3\t\3"+
 		"\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\3\2\3\2\3\2\7"+
 		"\2\30\n\2\f\2\16\2\33\13\2\3\3\3\3\3\3\7\3 \n\3\f\3\16\3#\13\3\3\4\3\4"+
 		"\3\4\7\4(\n\4\f\4\16\4+\13\4\3\4\5\4.\n\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5"+
 		"\3\5\5\58\n\5\7\5:\n\5\f\5\16\5=\13\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6"+
-		"\3\6\3\6\3\6\3\6\3\6\3\6\5\6M\n\6\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7V\n\7"+
-		"\3\b\3\b\3\t\3\t\3\n\5\n]\n\n\3\n\6\n`\n\n\r\n\16\na\3\n\3\n\6\nf\n\n"+
-		"\r\n\16\ng\5\nj\n\n\3\n\2\2\13\2\4\6\b\n\f\16\20\22\2\6\3\2\21\22\3\2"+
-		"\23\24\3\2\3\r\3\2\f\rs\2\24\3\2\2\2\4\34\3\2\2\2\6-\3\2\2\2\b/\3\2\2"+
-		"\2\nL\3\2\2\2\fU\3\2\2\2\16W\3\2\2\2\20Y\3\2\2\2\22\\\3\2\2\2\24\31\5"+
-		"\4\3\2\25\26\t\2\2\2\26\30\5\4\3\2\27\25\3\2\2\2\30\33\3\2\2\2\31\27\3"+
-		"\2\2\2\31\32\3\2\2\2\32\3\3\2\2\2\33\31\3\2\2\2\34!\5\6\4\2\35\36\t\3"+
-		"\2\2\36 \5\6\4\2\37\35\3\2\2\2 #\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"\5\3"+
-		"\2\2\2#!\3\2\2\2$)\5\n\6\2%&\7\35\2\2&(\5\n\6\2\'%\3\2\2\2(+\3\2\2\2)"+
-		"\'\3\2\2\2)*\3\2\2\2*.\3\2\2\2+)\3\2\2\2,.\5\b\5\2-$\3\2\2\2-,\3\2\2\2"+
-		".\7\3\2\2\2/;\5\n\6\2\60\67\7\32\2\2\61\62\5\n\6\2\62\63\7\30\2\2\638"+
-		"\3\2\2\2\648\7\26\2\2\658\7\27\2\2\668\7\31\2\2\67\61\3\2\2\2\67\64\3"+
-		"\2\2\2\67\65\3\2\2\2\67\66\3\2\2\28:\3\2\2\29\60\3\2\2\2:=\3\2\2\2;9\3"+
-		"\2\2\2;<\3\2\2\2<\t\3\2\2\2=;\3\2\2\2>M\5\22\n\2?@\5\22\n\2@A\7\25\2\2"+
-		"AB\5\22\n\2BM\3\2\2\2CD\7\17\2\2DE\5\2\2\2EF\7\20\2\2FM\3\2\2\2GH\7\16"+
-		"\2\2HI\5\2\2\2IJ\7\16\2\2JM\3\2\2\2KM\5\f\7\2L>\3\2\2\2L?\3\2\2\2LC\3"+
-		"\2\2\2LG\3\2\2\2LK\3\2\2\2M\13\3\2\2\2NO\5\16\b\2OP\5\n\6\2PV\3\2\2\2"+
-		"QR\5\22\n\2RS\5\20\t\2ST\5\n\6\2TV\3\2\2\2UN\3\2\2\2UQ\3\2\2\2V\r\3\2"+
-		"\2\2WX\t\4\2\2X\17\3\2\2\2YZ\t\5\2\2Z\21\3\2\2\2[]\7\22\2\2\\[\3\2\2\2"+
-		"\\]\3\2\2\2]_\3\2\2\2^`\7\37\2\2_^\3\2\2\2`a\3\2\2\2a_\3\2\2\2ab\3\2\2"+
-		"\2bi\3\2\2\2ce\7\33\2\2df\7\37\2\2ed\3\2\2\2fg\3\2\2\2ge\3\2\2\2gh\3\2"+
-		"\2\2hj\3\2\2\2ic\3\2\2\2ij\3\2\2\2j\23\3\2\2\2\16\31!)-\67;LU\\agi";
+		"\3\6\3\6\3\6\5\6J\n\6\3\6\3\6\3\6\7\6O\n\6\f\6\16\6R\13\6\3\7\3\7\3\7"+
+		"\3\7\3\7\3\7\3\7\5\7[\n\7\3\b\3\b\3\t\3\t\3\n\5\nb\n\n\3\n\6\ne\n\n\r"+
+		"\n\16\nf\3\n\3\n\6\nk\n\n\r\n\16\nl\5\no\n\n\3\n\2\3\n\13\2\4\6\b\n\f"+
+		"\16\20\22\2\6\3\2\21\22\3\2\23\24\3\2\3\r\3\2\f\rx\2\24\3\2\2\2\4\34\3"+
+		"\2\2\2\6-\3\2\2\2\b/\3\2\2\2\nI\3\2\2\2\fZ\3\2\2\2\16\\\3\2\2\2\20^\3"+
+		"\2\2\2\22a\3\2\2\2\24\31\5\4\3\2\25\26\t\2\2\2\26\30\5\4\3\2\27\25\3\2"+
+		"\2\2\30\33\3\2\2\2\31\27\3\2\2\2\31\32\3\2\2\2\32\3\3\2\2\2\33\31\3\2"+
+		"\2\2\34!\5\6\4\2\35\36\t\3\2\2\36 \5\6\4\2\37\35\3\2\2\2 #\3\2\2\2!\37"+
+		"\3\2\2\2!\"\3\2\2\2\"\5\3\2\2\2#!\3\2\2\2$)\5\n\6\2%&\7\35\2\2&(\5\n\6"+
+		"\2\'%\3\2\2\2(+\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*.\3\2\2\2+)\3\2\2\2,.\5\b"+
+		"\5\2-$\3\2\2\2-,\3\2\2\2.\7\3\2\2\2/;\5\n\6\2\60\67\7\32\2\2\61\62\5\n"+
+		"\6\2\62\63\7\30\2\2\638\3\2\2\2\648\7\26\2\2\658\7\27\2\2\668\7\31\2\2"+
+		"\67\61\3\2\2\2\67\64\3\2\2\2\67\65\3\2\2\2\67\66\3\2\2\28:\3\2\2\29\60"+
+		"\3\2\2\2:=\3\2\2\2;9\3\2\2\2;<\3\2\2\2<\t\3\2\2\2=;\3\2\2\2>?\b\6\1\2"+
+		"?J\5\22\n\2@A\7\17\2\2AB\5\2\2\2BC\7\20\2\2CJ\3\2\2\2DE\7\16\2\2EF\5\2"+
+		"\2\2FG\7\16\2\2GJ\3\2\2\2HJ\5\f\7\2I>\3\2\2\2I@\3\2\2\2ID\3\2\2\2IH\3"+
+		"\2\2\2JP\3\2\2\2KL\f\6\2\2LM\7\25\2\2MO\5\n\6\7NK\3\2\2\2OR\3\2\2\2PN"+
+		"\3\2\2\2PQ\3\2\2\2Q\13\3\2\2\2RP\3\2\2\2ST\5\16\b\2TU\5\n\6\2U[\3\2\2"+
+		"\2VW\5\22\n\2WX\5\20\t\2XY\5\n\6\2Y[\3\2\2\2ZS\3\2\2\2ZV\3\2\2\2[\r\3"+
+		"\2\2\2\\]\t\4\2\2]\17\3\2\2\2^_\t\5\2\2_\21\3\2\2\2`b\7\22\2\2a`\3\2\2"+
+		"\2ab\3\2\2\2bd\3\2\2\2ce\7\37\2\2dc\3\2\2\2ef\3\2\2\2fd\3\2\2\2fg\3\2"+
+		"\2\2gn\3\2\2\2hj\7\33\2\2ik\7\37\2\2ji\3\2\2\2kl\3\2\2\2lj\3\2\2\2lm\3"+
+		"\2\2\2mo\3\2\2\2nh\3\2\2\2no\3\2\2\2o\23\3\2\2\2\17\31!)-\67;IPZafln";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -1,4 +1,4 @@
-// Generated from src/org/xing/parser/grammer/calculator.g4 by ANTLR 4.6
+// Generated from src/org/xing/calc/parser/grammer/calculator.g4 by ANTLR 4.6
 package org.xing.calc.parser.grammer;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 

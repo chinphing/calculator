@@ -98,7 +98,12 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 	public Double visitAtom(calculatorParser.AtomContext ctx) {
 		if(ctx.getChildCount() == 3) {
 			if(ctx.FRAC() != null) {
-				return visit(ctx.getChild(2)) / visit(ctx.getChild(0));
+				if(ctx.FRAC().getText().equals("分之")) {
+					return visit(ctx.getChild(2)) / visit(ctx.getChild(0));
+				}else {
+					//分数用'/'表示，这是语音识别的结果导致的，它偶尔自动把分数转化成了'/'
+					return visit(ctx.getChild(0)) / visit(ctx.getChild(2));
+				}
 			}else {
 				return visit(ctx.expression());
 			}

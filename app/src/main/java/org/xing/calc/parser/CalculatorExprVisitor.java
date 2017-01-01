@@ -1,5 +1,7 @@
 package org.xing.calc.parser;
 
+import java.util.Stack;
+
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.xing.calc.parser.grammer.calculatorBaseVisitor;
@@ -11,6 +13,36 @@ public class CalculatorExprVisitor extends calculatorBaseVisitor<String>{
 	protected NumberParser numParser;
 	public CalculatorExprVisitor() {
 		numParser = new NumberParser();
+	}
+	
+	private boolean bracketsLeggal(String expr) {
+		Stack<Character> brackets = new Stack<>();
+		for(int i=0;i<expr.length();i++) {
+			Character c = expr.charAt(i);
+			if(c == '(') {
+				brackets.add(c);
+			} else if(c== ')') {
+				if((!brackets.empty()) && brackets.peek() == '(') {
+					brackets.pop();
+				}else {
+					return false;
+				}
+			}
+		}
+		
+		if(brackets.empty()) return true;
+		return false;
+	}
+	
+	private String trimBrackets(String expr) {
+		if(expr == null) return null;
+		
+		if(expr.startsWith("(") && expr.endsWith(")")) {
+			String substr = expr.substring(1, expr.length()-1);
+			if(bracketsLeggal(substr)) return substr;
+		}
+		
+		return expr;
 	}
 	
 	@Override
@@ -103,7 +135,12 @@ public class CalculatorExprVisitor extends calculatorBaseVisitor<String>{
 	public String visitAtom(calculatorParser.AtomContext ctx) {
 		if(ctx.getChildCount() == 3) {
 			if(ctx.FRAC() != null) {
-				return "("+visit(ctx.getChild(2)) + "/" + visit(ctx.getChild(0))+")";
+				if(ctx.FRAC().getText().equals("分之")) {
+					return "("+visit(ctx.getChild(2)) + "/" + visit(ctx.getChild(0))+")";
+				}else {
+					//分数用'/'表示，这是语音识别的结果导致的，它偶尔自动把分数转化成了'/'
+					return "("+visit(ctx.getChild(0)) + "/" + visit(ctx.getChild(2))+")";
+				}
 			}else {
 				return "("+visit(ctx.expression())+")";
 			}
