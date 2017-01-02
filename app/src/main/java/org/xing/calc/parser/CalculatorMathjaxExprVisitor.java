@@ -9,12 +9,52 @@ import org.xing.calc.parser.grammer.calculatorParser;
 
 public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
 
+    public enum AtomType{
+        PosNumber, NegNumber, Sqrt, Frac, Brack, Pow, Mixed
+    }
+
+    public static AtomType getAtomType(String expr) {
+
+        if(expr.startsWith("-")) {
+            return AtomType.NegNumber;
+        }else if(expr.startsWith("\\\\sqrt")) {
+            return AtomType.Sqrt;
+        }else if(expr.startsWith("\\\\frac")) {
+            return AtomType.Frac;
+        }else if(expr.startsWith("(") && expr.endsWith(")")) {
+            return AtomType.Brack;
+        }else if(expr.contains("^")) {
+            return AtomType.Pow;
+        }else if(expr.contains("+") || expr.contains("-")
+                    || expr.contains("÷") || expr.contains("×") ) {
+            return AtomType.Mixed;
+        }
+        return AtomType.PosNumber;
+    }
+
+    public String[] getBrackExpr(String expr) {
+        String brackResult = expr;
+        String nonbrackResult = expr;
+        AtomType atomType = getAtomType(expr);
+        if(atomType == AtomType.NegNumber || atomType == AtomType.Frac
+                || atomType == AtomType.Pow || atomType == AtomType.Sqrt
+                || atomType == AtomType.Mixed) {
+            brackResult = "("+expr + ")";
+        }else if(atomType == AtomType.Brack) {
+            nonbrackResult = super.trimBrackets(expr);
+        }
+
+        return new String[] {brackResult, nonbrackResult};
+    }
+
     @Override
     public String visitPowExpression(calculatorParser.PowExpressionContext ctx) {
         String result = visit(ctx.getChild(0));
         if(ctx.getChildCount() > 1) {
             for(int i=2;i<ctx.getChildCount();i+=2) {
-                result = "{"+result +"}^{"+visit(ctx.getChild(i))+"}";
+                AtomType type = getAtomType(result);
+                String[] brackExpr = getBrackExpr(result);
+                result = "{"+brackExpr[0]+"}^{"+visit(ctx.getChild(i))+"}";
             }
         }
 
@@ -29,22 +69,24 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
         String result = visit(ctx.getChild(index++));
 
         while (index < ctx.getChildCount()) {
+            String[] brackExpr = getBrackExpr(result);
+
             if (ctx.getChild(index + 1) instanceof TerminalNode) {
                 int type = ((TerminalNode) ctx.getChild(index + 1)).getSymbol()
                         .getType();
                 if (type == calculatorParser.PINGFANG) {
-                    result = "{"+result+"}^2";
+                    result = "{"+brackExpr[0]+"}^2";
                 } else if (type == calculatorParser.LIFANG) {
-                    result = "{"+result+"}^3";
+                    result = "{"+brackExpr[0]+"}^3";
                 } else if (type == calculatorParser.KAIFANG) {
-                    result = "\\\\sqrt{"+result+"}";
+                    result = "\\\\sqrt{"+brackExpr[1]+"}";
                 } else {
                     System.err.println("未处理的终端节点:visitChinaPowExpression");
                 }
                 index += 2;
             } else {
                 String pow = visit(ctx.getChild(index + 1));
-                result = "{"+result+"}^{" + pow+"}";
+                result = "{"+brackExpr[0]+"}^{" + pow+"}";
                 index += 3;
             }
         }
@@ -55,13 +97,32 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
     public String visitAtom(calculatorParser.AtomContext ctx) {
         if(ctx.getChildCount() == 3) {
             if(ctx.FRAC() != null) {
+                String expr0 = visit(ctx.getChild(0));
+                String expr2 = visit(ctx.getChild(2));
+
+                //对于负的分数特殊处理
+                String negTag  = "";
+                boolean neg0 = expr0.startsWith("-");
+                boolean neg2 = expr2.startsWith("-");
+                if(neg0 != neg2) {
+                    if(neg0) {
+                        expr0 = expr0.substring(1);
+                    }else {
+                        expr2 = expr2.substring(1);
+                    }
+                    negTag = "-";
+                }
+
+                String[] brackExpr0 = getBrackExpr(expr0);
+                String[] brackExpr2 = getBrackExpr(expr2);
                 if(ctx.FRAC().getText().equals("分之")) {
-                    return "\\\\frac{"+visit(ctx.getChild(2))+"}{"+visit(ctx.getChild(0))+"}";
+                    return negTag+"\\\\frac{"+brackExpr2[1]+"}{"+brackExpr0[1]+"}";
                 }else {
-                    return "\\\\frac{"+visit(ctx.getChild(0))+"}{"+visit(ctx.getChild(2))+"}";
+                    return negTag+"\\\\frac{"+brackExpr0[1]+"}{"+brackExpr2[1]+"}";
                 }
             }else {
-                return "("+visit(ctx.expression())+")";
+                String[] brackExpr = getBrackExpr(visit(ctx.expression()));
+                return "("+brackExpr[1]+")";
             }
         }else {
             return visit(ctx.getChild(0));
@@ -76,38 +137,41 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
             String secondNum = visit(ctx.getChild(2));
             if(firstNum == null || secondNum == null) return null;
 
+            String[] brackFirstNum = getBrackExpr(firstNum);
+            String[] brackSecondNum = getBrackExpr(secondNum);
             if(func.DUISHU() != null) {
-                return "log_{"+firstNum+"}"+secondNum;
+                return "log_{"+brackFirstNum[0]+"}"+brackSecondNum[0];
             }else if(func.GENHAO() != null) {
-                return "\\\\sqrt["+firstNum+"]{"+secondNum+"}";
+                return "\\\\sqrt["+brackFirstNum[0]+"]{"+brackSecondNum[1]+"}";
             }
         } else {
             String expr = visit(ctx.getChild(1));
             calculatorParser.FuncnameContext func = ctx.funcname();
             if(expr == null) return null;
 
+            String[] brackExpr = getBrackExpr(expr);
             if(func.SIN() != null) {
-                return "sin("+expr+")";
+                return "sin("+brackExpr[1]+")";
             }else if(func.COS() != null) {
-                return "cos("+expr+")";
+                return "cos("+brackExpr[1]+")";
             }else if(func.TAN() != null) {
-                return "tan("+expr+")";
+                return "tan("+brackExpr[1]+")";
             }else if(func.ASIN() != null) {
-                return "asin("+expr+")";
+                return "asin("+brackExpr[1]+")";
             }else if(func.ACOS() != null) {
-                return "acos("+expr+")";
+                return "acos("+brackExpr[1]+")";
             }else if(func.ATAN() != null) {
-                return "atan("+expr+")";
+                return "atan("+brackExpr[1]+")";
             }else if(func.LG() != null) {
-                return "lg("+expr+")";
+                return "lg("+brackExpr[1]+")";
             }else if(func.LOG() != null) {
-                return "log("+expr+")";
+                return "log("+brackExpr[1]+")";
             }else if(func.LN() != null) {
-                return "ln("+expr+")";
+                return "ln("+brackExpr[1]+")";
             }else if(func.GENHAO() != null) {
-                return "\\\\sqrt{"+expr+"}";
+                return "\\\\sqrt{"+brackExpr[1]+"}";
             }else if(func.DUISHU() != null) {
-                return "ln("+expr+")";
+                return "ln("+brackExpr[1]+")";
             }else{
                 System.err.println("Not supported function '"+ctx.funcname()+"'");
             }

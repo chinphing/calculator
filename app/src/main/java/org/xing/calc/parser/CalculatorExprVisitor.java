@@ -34,7 +34,7 @@ public class CalculatorExprVisitor extends calculatorBaseVisitor<String>{
 		return false;
 	}
 	
-	private String trimBrackets(String expr) {
+	protected String trimBrackets(String expr) {
 		if(expr == null) return null;
 		
 		if(expr.startsWith("(") && expr.endsWith(")")) {
