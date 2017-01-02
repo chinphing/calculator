@@ -1,5 +1,6 @@
 package org.xing.calc.parser;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.xing.calc.parser.grammer.calculatorParser;
 
@@ -48,11 +49,63 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
     }
 
     @Override
+    public String visitExpression(calculatorParser.ExpressionContext ctx) {
+        StringBuilder result = new StringBuilder();
+        for(int i=0;i<ctx.getChildCount();i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if(child instanceof TerminalNode) {
+                int type = ((TerminalNode) child).getSymbol().getType();
+                if(type == calculatorParser.PLUS) {
+                    result.append("+");
+                } else {
+                    result.append("-");
+                }
+            }else {
+                String expr = visit(child);
+                AtomType atomType = getAtomType(expr);
+                if(atomType == AtomType.NegNumber && result.length() > 0) {
+                    result.append("("+expr+")");
+                }else {
+                    result.append(expr);
+                }
+            }
+        }
+        return result.toString();
+    }
+
+    @Override
+    public String visitMultiplyingExpression(
+            calculatorParser.MultiplyingExpressionContext ctx) {
+        StringBuilder result = new StringBuilder();
+        for(int i=0;i<ctx.getChildCount();i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if(child instanceof TerminalNode) {
+                int type = ((TerminalNode) child).getSymbol().getType();
+                if(type == calculatorParser.DIV) {
+                    result.append("÷");
+                } else {
+                    result.append("×");
+                }
+            }else {
+                String expr = visit(child);
+                AtomType atomType = getAtomType(expr);
+                if(atomType == AtomType.NegNumber && result.length() > 0) {
+                    result.append("("+expr+")");
+                }else {
+                    result.append(expr);
+                }
+            }
+        }
+        return result.toString();
+    }
+
+    @Override
     public String visitPowExpression(calculatorParser.PowExpressionContext ctx) {
         String result = visit(ctx.getChild(0));
         if(ctx.getChildCount() > 1) {
             for(int i=2;i<ctx.getChildCount();i+=2) {
-                AtomType type = getAtomType(result);
                 String[] brackExpr = getBrackExpr(result);
                 result = "{"+brackExpr[0]+"}^{"+visit(ctx.getChild(i))+"}";
             }
