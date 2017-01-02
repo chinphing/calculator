@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             readExpr = calculator.getReadExpr();
         }
 
-        this.recordEvaluation(uniqueId, evalResult.toString(),
+        this.recordEvaluation(uniqueId, NumberUtil.format(evalResult, 8),
                 expr.toString(), readExpr, 0);
 
         showResult(expr.toString(), evalResult, readExpr);
