@@ -7,8 +7,8 @@ android {
         applicationId "org.xing.android"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 4
-        versionName "1.1.1"
+        versionCode 5
+        versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -46,4 +46,5 @@ dependencies {
     compile files('libs/antlr-runtime-4.6.jar')
     compile files('libs/utdid4all-1.0.4.jar')
     compile files('libs/umeng-analytics-v6.0.7.jar')
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
