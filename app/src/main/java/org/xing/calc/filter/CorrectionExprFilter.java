@@ -101,6 +101,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		correctionCharMap.put('武', "5");
 		correctionCharMap.put('舞', "5");
 		correctionCharMap.put('污', "5");
+		correctionCharMap.put('吴', "5");
 		correctionCharMap.put('溜', "6");
 		correctionCharMap.put('陆', "6");
 		correctionCharMap.put('料', "6");
