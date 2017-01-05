@@ -2,18 +2,27 @@ package org.xing.android;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.baidu.speech.VoiceRecognitionService;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
 import com.umeng.analytics.MobclickAgent;
 
 import org.xing.calc.Calculator;
@@ -27,7 +36,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements RecognitionListener{
+import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
+
+public class MainActivity extends AppCompatActivity implements RecognitionListener {
 
     private boolean isListening;
     private SpeechRecognizer speechRecognizer;
@@ -94,11 +105,35 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         historyData = new LinkedList<String>();
         historyList = (WebView) this.findViewById(R.id.historylist);
         historyList.setBackgroundColor(0);
+        WebView.setWebContentsDebuggingEnabled(true);
         historyList.getSettings().setJavaScriptEnabled(true);
         historyList.getSettings().setAppCacheEnabled(true);
+        if(isFirstStart()) {
+            historyList.loadUrl("javascript:var isFirstStart = true;");
+        }
         historyList.loadUrl("file:///android_asset/history.html");
 
         startListening(true);
+    }
+
+    private boolean isFirstStart() {
+        String VERSION_KEY = "version";
+        PackageInfo info = null;
+
+        try {
+            info = getPackageManager().getPackageInfo(this.getApplicationContext().getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int currentVersion = info.versionCode;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int lastVersion = prefs.getInt(VERSION_KEY, 0);
+        if (currentVersion > lastVersion) {
+            prefs.edit().putInt(VERSION_KEY, currentVersion).commit();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -114,16 +149,15 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
     public synchronized void startListening(boolean resetInputCount) {
-        if(isListening) return;
+        if (isListening) return;
         speechRecognizer.startListening(new Intent());
         isListening = true;
-        if(resetInputCount) {
+        if (resetInputCount) {
             noInputCount = 0;
         }
     }
@@ -134,28 +168,28 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         stateButton.setBackgroundResource(R.mipmap.input_sleep);
     }
 
-    public void onReadyForSpeech(Bundle params){
+    public void onReadyForSpeech(Bundle params) {
         stateButton.setBackgroundResource(R.mipmap.input_ready);
     }
 
-    public void onBeginningOfSpeech(){
+    public void onBeginningOfSpeech() {
 
     }
 
-    public void onRmsChanged(float rmsdB)    {
-        recordDynamic.setProgress((int)rmsdB);
+    public void onRmsChanged(float rmsdB) {
+        recordDynamic.setProgress((int) rmsdB);
     }
 
-    public void onBufferReceived(byte[] buffer){
+    public void onBufferReceived(byte[] buffer) {
 
     }
 
-    public void onEndOfSpeech(){
+    public void onEndOfSpeech() {
         stateButton.setBackgroundResource(R.mipmap.input_sleep);
         isListening = false;
     }
 
-    public void onError(int error){
+    public void onError(int error) {
         stopListening();
 
         StringBuilder sb = new StringBuilder();
@@ -164,8 +198,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 sb.append("录音设备未授权");
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                noInputCount ++;
-                if(noInputCount >= maxNoInputCount) {
+                noInputCount++;
+                if (noInputCount >= maxNoInputCount) {
                     sb.append("暂停工作，点击'开始'按钮重新工作");
                 } else {
                     startListening(false);
@@ -200,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 MobclickAgent.onEvent(this, "errorNetworkTimeout");
                 break;
         }
-        if(sb.length() > 0) {
+        if (sb.length() > 0) {
             inputText.setText(sb.toString());
         }
     }
@@ -208,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private String buildExpr(Bundle results) {
         ArrayList<String> nbest = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         StringBuilder expr = new StringBuilder();
-        for(String w : nbest) {
+        for (String w : nbest) {
             expr.append(w);
         }
         return expr.toString();
@@ -220,19 +254,19 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         params.put("userId", userId);
         params.put("result", result);
         params.put("inputExpr", inputExpr);
-        params.put("readExpr", readExpr == null? "null":readExpr);
+        params.put("readExpr", readExpr == null ? "null" : readExpr);
         params.put("type", 0);
         evalLog.recordEvaluation(params);
     }
 
     private void showResult(String expr, Double evalResult, String readExpr) {
         //界面上显示结果
-        if(!Double.isNaN(evalResult)) {
+        if (!Double.isNaN(evalResult)) {
             String text = NumberUtil.format(evalResult, 8);
 
             String item = readExpr + "=" + text;
             historyData.add(0, item);
-            historyList.loadUrl("javascript:addItem('"+item+"')");
+            historyList.loadUrl("javascript:addItem('" + item + "')");
             /*
             historyList.setAdapter(new ArrayAdapter<String>(
                     this, R.layout.list_text_view, historyData));
@@ -240,18 +274,18 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             //inputText.setText(expr+"->"+readExpr+"="+text);
             inputText.setText(text);
         } else {
-            inputText.setText("遗憾：'"+expr+"'无效表达式！");
+            inputText.setText("遗憾：'" + expr + "'无效表达式！");
         }
 
     }
 
-    public void onResults(Bundle results){
+    public void onResults(Bundle results) {
         String expr = buildExpr(results);
 
         //结算结果
         String readExpr = null;
         Double evalResult = calculator.eval(expr.toString());
-        if(evalResult != null && (!evalResult.isNaN())) {
+        if (evalResult != null && (!evalResult.isNaN())) {
             readExpr = calculator.getReadExpr();
         }
 
@@ -263,11 +297,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         startListening(true);
     }
 
-    public void onPartialResults(Bundle partialResults){
+    public void onPartialResults(Bundle partialResults) {
 
     }
 
-    public void onEvent(int eventType, Bundle params){
+    public void onEvent(int eventType, Bundle params) {
 
     }
 }

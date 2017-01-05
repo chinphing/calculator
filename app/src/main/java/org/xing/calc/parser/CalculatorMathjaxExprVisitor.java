@@ -11,7 +11,7 @@ import org.xing.calc.parser.grammer.calculatorParser;
 public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
 
     public enum AtomType{
-        PosNumber, NegNumber, Sqrt, Frac, Brack, Pow, Mixed
+        PosNumber, NegNumber, Sqrt, Frac, Log, Brack, Pow, Mixed
     }
 
     public static AtomType getAtomType(String expr) {
@@ -22,6 +22,8 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
             return AtomType.Sqrt;
         }else if(expr.startsWith("\\\\frac")) {
             return AtomType.Frac;
+        }else if(expr.startsWith("log")) {
+            return AtomType.Log;
         }else if(expr.startsWith("(") && expr.endsWith(")")) {
             return AtomType.Brack;
         }else if(expr.contains("^")) {
@@ -38,8 +40,8 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
         String nonbrackResult = expr;
         AtomType atomType = getAtomType(expr);
         if(atomType == AtomType.NegNumber || atomType == AtomType.Frac
-                || atomType == AtomType.Pow || atomType == AtomType.Sqrt
-                || atomType == AtomType.Mixed) {
+                || atomType == AtomType.Pow || atomType == AtomType.Log
+                || atomType == AtomType.Sqrt || atomType == AtomType.Mixed) {
             brackResult = "("+expr + ")";
         }else if(atomType == AtomType.Brack) {
             nonbrackResult = super.trimBrackets(expr);
@@ -84,9 +86,9 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
             if(child instanceof TerminalNode) {
                 int type = ((TerminalNode) child).getSymbol().getType();
                 if(type == calculatorParser.DIV) {
-                    result.append("÷");
+                    result.append("/");
                 } else {
-                    result.append("×");
+                    result.append("*");
                 }
             }else {
                 String expr = visit(child);

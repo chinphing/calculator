@@ -1,54 +1,185 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+    <link rel="stylesheet" href="./js/KaTeX/katex.min.css" />
+    <script src="./js/KaTeX/katex.min.js"></script>
+
 </head>
 <body>
-    <style>
+<style>
         body {
             color: #fff;
             background: #202020;
             margin: 0;
             padding: 0;
         }
-        ul {
+
+        a {
+            color: #fff;
+        }
+
+        .history ul {
              list-style:none;
-             padding:10px;
+             padding : 0px;
+             -webkit-margin-before: -0.1em;
+             font-size : 100%;
+        }
+
+        .history li {
+            margin: 10px;
+        }
+
+        .example {
+            display  : none;
+        }
+
+        .example li {
+            margin: 10px;
+        }
+        .example h3 {
+            margin: 10px;
+        }
+
+        .help {
+            display : none;
         }
     </style>
 
-    <ul id="list">
-
+<div id="example" class = "example">
+    <h3>输入示例：</h3>
+    <ul>
+        <li><latex>200+3*2</latex>  <p>读：二百加三乘二</p></li>
+        <li><latex>(2+3)/2</latex>  <p>读：括号二加三括号除二</p></li>
+        <li><latex>\frac{1+3}{3}</latex> <p>读：三分之括号一加三括号</p></li>
+        <li><latex>{4}^{-0.5}</latex> <p>读：四的负零点五次方</p></li>
+        <li><latex>\sqrt[13]{18}</latex> <p>读：五根号十八</p></li>
+        <li><latex>sin(0.1)</latex> <p>读：正弦三点一五</p></li>
+        <li><latex>log_{3}4</latex> <p>读：三对数四</p></li>
     </ul>
+</div >
 
-	<script type="text/javascript">  
-		MathJax.Hub.Config({  
-			extensions: ["tex2jax.js"],  
-			jax: ["input/TeX", "output/HTML-CSS"],  
-			tex2jax: {  
-				inlineMath: [["\\(", "\\)"],["$", "$"]],
-				displayMath: [["$$", "$$"],["\\[", "\\]"]],  
-				processEscapes: true  
-			},
-			displayAlign: "left" ,
-			displayIndent: "0em",
-			messageStyle: "none",
-			"HTML-CSS": { availableFonts: ["TeX"] }  
-		});
-	</script>
-    <script>
+<div id = "help" class = "help">
+    <h3>说明文档：</h3>
+    <ul>
+        <li>
+            <h4><a href="###" onclick="openShutManager('help-item0')">数字</a></h4>
+            <p id="help-item0" style="display:none">
+                这里面放的是box的内容.
+            </p>
+        </li>
+        <li>
+            <h4><a href="###" onclick="openShutManager('help-item1')">混合四则运算</a></h4>
+            <p id="help-item1" style="display:none">
+                这里面放的是box的内容.
+            </p>
+        </li>
+        <li>
+            <h4><a href="###" onclick="openShutManager('help-item2')">分数</a></h4>
+            <p id="help-item2" style="display:none">
+                这里面放的是box的内容.
+            </p>
+        </li>
+        <li>
+            <h4><a href="###" onclick="openShutManager('help-item3')">括号</a></h4>
+            <p id="help-item3" style="display:none">
+                这里面放的是box的内容.
+            </p>
+        </li>
+        <li>
+            <h4><a href="###" onclick="openShutManager('help-item4')">幂运算</a></h4>
+            <p id="help-item4" style="display:none">
+                这里面放的是box的内容.
+            </p>
+        </li>
+        <li>
+            <h4><a href="###" onclick="openShutManager('help-item5')">三角函数</a></h4>
+            <p id="help-item5" style="display:none">
+                这里面放的是box的内容.
+            </p>
+        </li>
+        <li>
+            <h4><a href="###" onclick="openShutManager('help-item6')">对数运算</a></h4>
+            <p id="help-item6" style="display:none">
+                这里面放的是box的内容.
+            </p>
+        </li>
+        <li>
+            <h4><a href="###" onclick="openShutManager('help-item7')">连续计算</a></h4>
+            <p id="help-item7" style="display:none">
+                这里面放的是box的内容.
+            </p>
+        </li>
+    </ul>
+</div>
+
+<div id="history" class = "history">
+    <ul id="list"></ul>
+</div>
+
+<script  type="text/javascript">
+        function hideDiv(targetId, hide) {
+            var target = document.getElementById(targetId);
+
+            if(hide) {
+                target.style.display = "none";
+            } else {
+                target.style.display = "block";
+            }
+        }
+
+        function hideExample(hide) {
+            hideDiv("example", hide)
+        }
+
+        function hideHelp(hide) {
+            hideDiv("help", hide)
+        }
+
+        function replaceMultiply(expr) {
+            return expr.replace(new RegExp(/\∗/g), "×").replace(new RegExp(/>\/</g), ">÷<");
+        }
+
         function addItem(item) {
+           hideExample(true);
+           hideHelp(true);
+
             var li = document.createElement("li");
-            var textNode=document.createTextNode("$$"+item+"$$");
-            li.appendChild(textNode);
+            li.innerHTML = replaceMultiply(katex.renderToString(item));
             var list = document.getElementById("list");
             if(list.childNodes == null || list.childNodes.length == 0) {
                 list.appendChild(li);
             } else {
                 list.insertBefore(li, list.childNodes[0]);
             }
-            MathJax.Hub.Typeset();
+        }
+
+        function openShutManager(targetId){
+            var targetObj = typeof targetId == "string" ? document.getElementById(targetId) : targetId;
+            if(targetObj.style.display!="none"){
+                targetObj.style.display="none";
+            } else {
+                targetObj.style.display="block";
+            }
+        }
+
+        function translateExpression(tagname) {
+            var latexExprs = document.getElementsByTagName(tagname);
+            for(var i=0;i<latexExprs.length;i++) {
+                var latexExpr = latexExprs[i];
+                var htmlExpr = katex.renderToString(latexExpr.innerHTML);
+                latexExpr.innerHTML = replaceMultiply(htmlExpr);
+            }
         }
     </script>
 
+<script type="text/javascript">
+        if(typeof(isFirstStart)!="undefined" && isFirstStart) {
+            hideExample(false);
+            translateExpression("latex");
+        }
+
+    </script>
 </body>
 </html>
