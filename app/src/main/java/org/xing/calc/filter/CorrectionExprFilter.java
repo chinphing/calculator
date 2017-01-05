@@ -105,6 +105,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		correctionCharMap.put('陆', "6");
 		correctionCharMap.put('料', "6");
 		correctionCharMap.put('乐', "6");
+		correctionCharMap.put('榴', "6");
 		correctionCharMap.put('期', "7");
 		correctionCharMap.put('柒', "7");
 		correctionCharMap.put('妻', "7");
@@ -124,6 +125,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		correctionCharMap.put('实', "十");
 		correctionCharMap.put('尸', "十");
 		correctionCharMap.put('时', "十");
+		correctionCharMap.put('石', "十");
 
 		correctionStringMap = new HashMap<String, String>();
 		correctionStringMap.put("鱼线", "余弦");
