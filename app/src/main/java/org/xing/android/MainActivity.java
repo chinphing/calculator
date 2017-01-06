@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
@@ -14,15 +13,11 @@ import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.baidu.speech.VoiceRecognitionService;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
 import com.umeng.analytics.MobclickAgent;
 
 import org.xing.calc.Calculator;
@@ -35,8 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
-import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener {
 
@@ -105,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         historyData = new LinkedList<String>();
         historyList = (WebView) this.findViewById(R.id.historylist);
         historyList.setBackgroundColor(0);
-        WebView.setWebContentsDebuggingEnabled(true);
         historyList.getSettings().setJavaScriptEnabled(true);
         historyList.getSettings().setAppCacheEnabled(true);
         if(isFirstStart()) {
