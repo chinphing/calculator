@@ -20,34 +20,38 @@
             color: #fff;
         }
 
-        .history ul {
+        #history ul {
              list-style:none;
              padding : 0px;
              -webkit-margin-before: -0.1em;
              font-size : 100%;
         }
 
-        .history li {
+        .list li {
             margin: 10px;
         }
 
-        .example {
+        .list h3 {
+            margin: 10px;
+        }
+
+        .hide-block {
             display  : none;
         }
 
-        .example li {
-            margin: 10px;
-        }
-        .example h3 {
-            margin: 10px;
-        }
+</style>
 
-        .help {
-            display : none;
-        }
-    </style>
+<div id="abstract" class="list hide-block">
+    <h3>功能简介：</h3>
+    <ul>
+        <li> 纯语音输入，复杂计算一句话解决。</li>
+        <li> 支持小数、负数、分数、带优先级的混合四则运算。</li>
+        <li> 支持括号、幂运算、三角函数、对数运算。</li>
+        <li> 支持连续计算，以及上述计算的无限嵌套组合。</li>
+    </ul>
+</div>
 
-<div id="example" class = "example">
+<div id="example" class = "list hide-block">
     <h3>输入示例：</h3>
     <ul>
         <li><latex>200+3*2.5</latex>  <p>读：二百加三乘二点五</p></li>
@@ -57,64 +61,12 @@
         <li><latex>\sqrt[5]{18}</latex> <p>读：五根号十八</p></li>
         <li><latex>sin(0.1)</latex> <p>读：正弦零点一</p></li>
         <li><latex>log_{3}4</latex> <p>读：三对数四</p></li>
+        <li><latex>{(log_{3}(4+3*2))}^{\frac{1}{4}}</latex> <p>读：三对数括号四加三乘二括号的四分之一次方</p></li>
+        <li><latex>\frac{3+\frac{1}{4}}{2}</latex> <p>读：二分之括号三加四分之一括号</p></li>
     </ul>
 </div >
 
-<div id = "help" class = "help">
-    <h3>说明文档：</h3>
-    <ul>
-        <li>
-            <h4><a href="###" onclick="openShutManager('help-item0')">数字</a></h4>
-            <p id="help-item0" style="display:none">
-                这里面放的是box的内容.
-            </p>
-        </li>
-        <li>
-            <h4><a href="###" onclick="openShutManager('help-item1')">混合四则运算</a></h4>
-            <p id="help-item1" style="display:none">
-                这里面放的是box的内容.
-            </p>
-        </li>
-        <li>
-            <h4><a href="###" onclick="openShutManager('help-item2')">分数</a></h4>
-            <p id="help-item2" style="display:none">
-                这里面放的是box的内容.
-            </p>
-        </li>
-        <li>
-            <h4><a href="###" onclick="openShutManager('help-item3')">括号</a></h4>
-            <p id="help-item3" style="display:none">
-                这里面放的是box的内容.
-            </p>
-        </li>
-        <li>
-            <h4><a href="###" onclick="openShutManager('help-item4')">幂运算</a></h4>
-            <p id="help-item4" style="display:none">
-                这里面放的是box的内容.
-            </p>
-        </li>
-        <li>
-            <h4><a href="###" onclick="openShutManager('help-item5')">三角函数</a></h4>
-            <p id="help-item5" style="display:none">
-                这里面放的是box的内容.
-            </p>
-        </li>
-        <li>
-            <h4><a href="###" onclick="openShutManager('help-item6')">对数运算</a></h4>
-            <p id="help-item6" style="display:none">
-                这里面放的是box的内容.
-            </p>
-        </li>
-        <li>
-            <h4><a href="###" onclick="openShutManager('help-item7')">连续计算</a></h4>
-            <p id="help-item7" style="display:none">
-                这里面放的是box的内容.
-            </p>
-        </li>
-    </ul>
-</div>
-
-<div id="history" class = "history">
+<div id="history" class = "list history">
     <ul id="list"></ul>
 </div>
 
@@ -137,13 +89,22 @@
             hideDiv("help", hide)
         }
 
+        function hideAbstract(hide) {
+            hideDiv("abstract", hide)
+        }
+
+        function hideAllList(hide) {
+           hideExample(true);
+           hideHelp(true);
+           hideAbstract(true);
+        }
+
         function replaceMultiply(expr) {
             return expr.replace(new RegExp(/\∗/g), "×").replace(new RegExp(/>\/</g), ">÷<");
         }
 
         function addItem(item) {
-           hideExample(true);
-           hideHelp(true);
+            hideAllList();
 
             var li = document.createElement("li");
             li.innerHTML = replaceMultiply(katex.renderToString(item));
@@ -152,15 +113,6 @@
                 list.appendChild(li);
             } else {
                 list.insertBefore(li, list.childNodes[0]);
-            }
-        }
-
-        function openShutManager(targetId){
-            var targetObj = typeof targetId == "string" ? document.getElementById(targetId) : targetId;
-            if(targetObj.style.display!="none"){
-                targetObj.style.display="none";
-            } else {
-                targetObj.style.display="block";
             }
         }
 
@@ -175,7 +127,12 @@
     </script>
 
 <script type="text/javascript">
+        /*在电脑上浏览器调试时候使用
+        */
+        //var isFirstStart = true;
+
         if(typeof(isFirstStart)!="undefined" && isFirstStart) {
+            hideAbstract(false);
             hideExample(false);
             translateExpression("latex");
         }
