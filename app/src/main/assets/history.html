@@ -90,9 +90,9 @@
             hideDiv("abstract", hide)
         }
 
-        function hideAllList() {
-           hideExample(true);
-           hideAbstract(true);
+        function hideAllList(hide) {
+           hideExample(hide);
+           hideAbstract(hide);
         }
 
         function replaceMultiply(expr) {
@@ -100,7 +100,7 @@
         }
 
         function addItem(item) {
-            hideAllList();
+            hideAllList(true);
 
             var li = document.createElement("li");
             li.innerHTML = replaceMultiply(katex.renderToString(item));
@@ -122,16 +122,8 @@
         }
     </script>
 
-<script type="text/javascript">
-        /*在电脑上浏览器调试时候使用
-        */
-        //var isFirstStart = true;
-
-        if(typeof(isFirstStart)!="undefined" && isFirstStart) {
-            hideAbstract(false);
-            hideExample(false);
-            translateExpression("latex");
-        }
+    <script type="text/javascript">
+        translateExpression("latex");
     </script>
 </body>
 </html>

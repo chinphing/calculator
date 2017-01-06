@@ -1,12 +1,15 @@
 package org.xing.android;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
@@ -56,6 +59,38 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private int noInputCount = 0;
     private int maxNoInputCount = 5;
 
+    /*
+    是否第一次启动
+     */
+    private boolean isFirstStart;
+
+    protected void showHelp() {
+        historyList.loadUrl("javascript:hideAllList(false);");
+        MobclickAgent.onEvent(this, "help");
+    }
+
+    protected void showTips(int delaySecond) {
+        //延迟10s弹出对话框，大致实在用户说了一句话之后弹出
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("小技巧");
+                builder.setMessage("还支持括号、分数、三角函数、对数、幂运算以及更复杂的嵌套，现在看说明吗？" +
+                        "以后也可以通过'示例''帮助''说明''怎么用'的命令打开说明。");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showHelp();
+                    }
+                });
+                builder.setNegativeButton("知道", null);
+                builder.show();
+            }
+        }, delaySecond*1000);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,9 +135,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         historyList.setBackgroundColor(0);
         historyList.getSettings().setJavaScriptEnabled(true);
         historyList.getSettings().setAppCacheEnabled(true);
-        if(isFirstStart()) {
-            historyList.loadUrl("javascript:var isFirstStart = true;");
-        }
+
+        isFirstStart = isFirstStart();
+        historyList.loadUrl("javascript:var isFirstStart="+isFirstStart+";");
         historyList.loadUrl("file:///android_asset/history.html");
 
         startListening(true);
@@ -274,18 +309,27 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onResults(Bundle results) {
         String expr = buildExpr(results);
 
-        //结算结果
-        String readExpr = null;
-        Double evalResult = calculator.eval(expr.toString());
-        if (evalResult != null && (!evalResult.isNaN())) {
-            readExpr = calculator.getReadExpr();
+        if(expr.contains("帮助") || expr.contains("示例")
+                || expr.contains("说明") || expr.contains("怎么用") ) {
+            showHelp();
+        } else {
+            //结算结果
+            String readExpr = null;
+            Double evalResult = calculator.eval(expr.toString());
+            if (evalResult != null && (!evalResult.isNaN())) {
+                readExpr = calculator.getReadExpr();
+            }
+
+            this.recordEvaluation(uniqueId, NumberUtil.format(evalResult, 8),
+                    expr.toString(), readExpr, 0);
+
+            showResult(expr.toString(), evalResult, readExpr);
+
+            if(isFirstStart) {
+                showTips(1);
+                isFirstStart = false;
+            }
         }
-
-        this.recordEvaluation(uniqueId, NumberUtil.format(evalResult, 8),
-                expr.toString(), readExpr, 0);
-
-        showResult(expr.toString(), evalResult, readExpr);
-
         startListening(true);
     }
 
