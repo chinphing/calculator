@@ -12,11 +12,11 @@ import static org.xing.calc.Calculator.createDefault;
 /**
  * Created by Administrator on 2017/1/8 0008.
  */
-public class CalculatorTest {
+public class CalculatorTest{
 
     @Test
     public void eval() throws Exception {
-        Calculator calc = createDefault();
+        Calculator calc = createDefault(null);
 
         Map<String, String> chnMap = new HashMap<String, String>();
         chnMap.put("sin12", "-0.536573");

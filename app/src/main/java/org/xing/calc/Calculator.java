@@ -13,6 +13,7 @@ import org.xing.calc.parser.grammer.calculatorLexer;
 import org.xing.calc.parser.grammer.calculatorParser;
 import org.xing.utils.NumberUtil;
 
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -130,13 +131,13 @@ public class Calculator {
 		return result;
 	}
 
-	public static Calculator createDefault() {
+	public static Calculator createDefault(InputStream tokenStream) {
 		String allowedChars =
-				"0123456789.零一二三四五六七八九点负个十百千万亿+-*/括号加上减去乘除÷×根号开方的平方次方立方分之sincostanlglogln反正弦反余弦反正切对数()|^";
+				"0123456789.零一二三四五六七八九点负个十百千万亿+-*/括号加上减去乘以除÷×根号开方的平方次方立方分之sincostanlglogln反正弦反余弦反正切对数()|^";
 		
 		Calculator calc = new Calculator();
 		calc.addFilter(new CorrectionExprFilter());
-		calc.addFilter(new RedundantExprFilter(allowedChars));
+		calc.addFilter(new RedundantExprFilter(allowedChars, tokenStream));
 
 		return calc;
 	}

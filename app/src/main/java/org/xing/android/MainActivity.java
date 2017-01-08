@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         speechRecognizer.setRecognitionListener(this);
 
         uniqueId = DeviceUtil.getUniqueId(this);
-        calculator = Calculator.createDefault();
+        calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
         evalLog = AsyncLog.createAsyncHttpLog(this.getString(R.string.recordUrl));
 
         Button beginButton = (Button) this.findViewById(R.id.begin);
