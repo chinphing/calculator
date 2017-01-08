@@ -13,11 +13,9 @@ import org.xing.calc.parser.grammer.calculatorLexer;
 import org.xing.calc.parser.grammer.calculatorParser;
 import org.xing.utils.NumberUtil;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -141,41 +139,5 @@ public class Calculator {
 		calc.addFilter(new RedundantExprFilter(allowedChars));
 
 		return calc;
-	}
-	
-	
-	public static void testEval() {
-		Calculator calc = createDefault();
-		
-		Map<String, String> chnMap = new HashMap<String, String>();
-        chnMap.put("sin12", "-0.536573");
-        
-        int correctNum = 0;
-        int wrongNum = 0;
-        for(String expr : chnMap.keySet()) {
-        	double value = Double.parseDouble(chnMap.get(expr));
-        	
-        	double result = Double.NaN;
-        	try{
-        		result = calc.eval(expr);
-        	}catch(Exception ex) {
-        		System.err.println(expr);
-        		ex.printStackTrace();
-        	}
-        	
-        	System.out.printf("%s\n%s\n\t%.6f\n", expr, calc.getReadExpr(), result);
-        	if(Double.isNaN(result) || Math.abs(result - value) > 1e-6) {
-        		System.out.println("错误："+expr+", "+value+", 错误结果："+result+"\n");
-        		wrongNum ++;
-        	} else {
-        		correctNum ++;
-        	}
-        }
-        
-        System.out.println("总计：\n\t正确 "+correctNum+", 错误 "+wrongNum);
-	}
-	
-	public static void main(String[] argv) {
-		testEval();
 	}
 }

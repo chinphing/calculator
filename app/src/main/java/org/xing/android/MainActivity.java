@@ -166,12 +166,14 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     @Override
     public void onResume() {
         super.onResume();
+        startListening(true);
         MobclickAgent.onResume(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        stopListening();
         MobclickAgent.onPause(this);
     }
 

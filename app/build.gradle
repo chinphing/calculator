@@ -12,8 +12,20 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            manifestPlaceholders = [bd_speech_appid : "999999",
+                                    bd_speech_key :"8MAxI5o7VjKSZOKeBzS4XtxO",
+                                    bd_speech_secret: "Ge5GXVdGQpaxOmLzc8fOM8309ATCz9Ha",
+                                    umeng_appkey : "none",
+                                    umeng_channel : "none"]
+        }
         release {
             minifyEnabled false
+            manifestPlaceholders = [bd_speech_appid : "9080060",
+                                    bd_speech_key :"TgEpVmjjELkIf3FKc1gj2jsj",
+                                    bd_speech_secret: "87c4d13cf12a83191e4b4ec23d98530e",
+                                    umeng_appkey : "586213d5ae1bf81811000768",
+                                    umeng_channel : "xing"]
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             // 自定义输出配置
             applicationVariants.all { variant ->
@@ -46,5 +58,4 @@ dependencies {
     compile files('libs/antlr-runtime-4.6.jar')
     compile files('libs/utdid4all-1.0.4.jar')
     compile files('libs/umeng-analytics-v6.0.7.jar')
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
