@@ -26,6 +26,7 @@ import com.umeng.analytics.MobclickAgent;
 import org.xing.calc.Calculator;
 import org.xing.logger.AsyncLog;
 import org.xing.logger.Log;
+import org.xing.update.UpdateManager;
 import org.xing.utils.DeviceUtil;
 import org.xing.utils.NumberUtil;
 
@@ -95,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        UpdateManager.checkUrl = this.getString(R.string.updateCheckUrl);
+        UpdateManager.update(this);
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 

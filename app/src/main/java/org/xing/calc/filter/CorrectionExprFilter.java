@@ -87,6 +87,7 @@ public class CorrectionExprFilter implements ExprFilter {
 
 		correctionStringMap.put("%", "/100");
 		correctionStringMap.put("％", "/100");
+		correctionStringMap.put("佳茵", "加一");
 		correctionStringMap.put("捡漏", "减六");
 		correctionStringMap.put("捡了", "减六");
 		correctionStringMap.put("图六", "除六");

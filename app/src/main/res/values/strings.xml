@@ -3,4 +3,5 @@
     <string name="tips">请讲话</string>
 
     <string name="recordUrl">http://xingxing.zysoft.com/evaluation.php</string>
+    <string name="updateCheckUrl">http://xingxing.zysoft.com/update/update.php</string>
 </resources>

@@ -54,6 +54,7 @@ dependencies {
     })
 
     testCompile 'junit:junit:4.12'
+    compile 'com.zhy:okhttputils:2.4.1'
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile files('libs/antlr-runtime-4.6.jar')
     compile files('libs/utdid4all-1.0.4.jar')
