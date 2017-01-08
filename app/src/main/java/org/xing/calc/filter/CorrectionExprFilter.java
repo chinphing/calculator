@@ -90,6 +90,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		correctionStringMap.put("捡漏", "减六");
 		correctionStringMap.put("捡了", "减六");
 		correctionStringMap.put("图六", "除六");
+		correctionStringMap.put("除了", "除六");
 		correctionStringMap.put("成龙", "乘六");
 		correctionStringMap.put("成了", "乘六");
 		correctionStringMap.put("天气", "减七");
