@@ -34,7 +34,7 @@ public class CalculatorTest{
 
 
         chnMap.put("1000+两千再加3000=多少", "6000");
-        chnMap.put("一百家1150家1480+两千+3600", "8330");
+        chnMap.put("一百加1150加1480+两千+3600", "8330");
 
 
         chnMap.put("对数0.54", "-0.616186");
@@ -128,6 +128,9 @@ public class CalculatorTest{
         chnMap.put("正弦六十度", "0.866025");
         chnMap.put("正弦三十度", "0.500000");
         chnMap.put("1000+两千再加3000=多少", "6000");
+        chnMap.put("派", "3.1415926");
+        chnMap.put("负派", "-3.141593");
+        chnMap.put("根号派", "1.772454");
 
         int correctNum = 0;
         int wrongNum = 0;

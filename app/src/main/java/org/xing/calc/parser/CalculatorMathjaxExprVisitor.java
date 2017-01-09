@@ -293,13 +293,21 @@ public class CalculatorMathjaxExprVisitor extends calculatorBaseVisitor<String> 
             String expr = ctx.getText();
             StringBuilder result = new StringBuilder();
             if(ctx.PAI() != null || ctx.DU() != null) {
-                numParser.parse(expr.substring(0, expr.length()-1));
-                result.append(numParser.getReadExpr());
-
-                if(ctx.PAI() != null) {
-                    result.append("\\\\pi");
+                if (ctx.DIGIT().isEmpty()) {
+                    if (ctx.MINUS() != null) {
+                        result.append("-\\\\pi");
+                    } else {
+                        result.append("\\\\pi");
+                    }
                 }else {
-                    result.append("\\\\degree");
+                    numParser.parse(expr.substring(0, expr.length() - 1));
+                    result.append(numParser.getReadExpr());
+
+                    if (ctx.PAI() != null) {
+                        result.append("\\\\pi");
+                    } else {
+                        result.append("\\\\degree");
+                    }
                 }
             } else {
                 numParser.parse(ctx.getText());

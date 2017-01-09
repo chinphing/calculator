@@ -176,6 +176,14 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 		try{
 			String expr = ctx.getText();
 			if(ctx.PAI() != null || ctx.DU() != null) {
+				if(ctx.DIGIT().isEmpty()) {
+					if(ctx.MINUS() != null) {
+						return -Math.PI;
+					}else {
+						return Math.PI;
+					}
+				}
+
 				numParser.parse(expr.substring(0, expr.length()-1));
 				Double result = Double.parseDouble(numParser.getEvalExpr());
 				if(ctx.PAI() != null) {

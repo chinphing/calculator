@@ -1,25 +1,13 @@
 // Generated from src/org/xing/calc/parser/grammer/calculator.g4 by ANTLR 4.6
 package org.xing.calc.parser.grammer;
-import org.antlr.v4.runtime.FailedPredicateException;
-import org.antlr.v4.runtime.NoViableAltException;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.RuleContext;
-import org.antlr.v4.runtime.RuntimeMetaData;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.Vocabulary;
-import org.antlr.v4.runtime.VocabularyImpl;
-import org.antlr.v4.runtime.atn.ATN;
-import org.antlr.v4.runtime.atn.ATNDeserializer;
-import org.antlr.v4.runtime.atn.ParserATNSimulator;
-import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.tree.ParseTreeVisitor;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
+import org.antlr.v4.runtime.tree.*;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class calculatorParser extends Parser {
@@ -393,6 +381,7 @@ public class calculatorParser extends Parser {
 				case KUOHAO:
 				case LPAREN:
 				case MINUS:
+				case PAI:
 				case DIGIT:
 					{
 					{
@@ -825,6 +814,7 @@ public class calculatorParser extends Parser {
 	}
 
 	public static class NumberContext extends ParserRuleContext {
+		public TerminalNode PAI() { return getToken(calculatorParser.PAI, 0); }
 		public TerminalNode MINUS() { return getToken(calculatorParser.MINUS, 0); }
 		public List<TerminalNode> DIGIT() { return getTokens(calculatorParser.DIGIT); }
 		public TerminalNode DIGIT(int i) {
@@ -832,7 +822,6 @@ public class calculatorParser extends Parser {
 		}
 		public TerminalNode POINT() { return getToken(calculatorParser.POINT, 0); }
 		public TerminalNode DU() { return getToken(calculatorParser.DU, 0); }
-		public TerminalNode PAI() { return getToken(calculatorParser.PAI, 0); }
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -862,34 +851,13 @@ public class calculatorParser extends Parser {
 				}
 			}
 
-			setState(114); 
+			setState(130);
 			_errHandler.sync(this);
-			_alt = 1;
-			do {
-				switch (_alt) {
-				case 1:
-					{
-					{
-					setState(113);
-					match(DIGIT);
-					}
-					}
-					break;
-				default:
-					throw new NoViableAltException(this);
-				}
-				setState(116); 
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
-			} while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER );
-			setState(124);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
-			case 1:
+			switch (_input.LA(1)) {
+			case DIGIT:
 				{
-				setState(118);
-				match(POINT);
-				setState(120); 
+				{
+				setState(114); 
 				_errHandler.sync(this);
 				_alt = 1;
 				do {
@@ -897,7 +865,7 @@ public class calculatorParser extends Parser {
 					case 1:
 						{
 						{
-						setState(119);
+						setState(113);
 						match(DIGIT);
 						}
 						}
@@ -905,30 +873,69 @@ public class calculatorParser extends Parser {
 					default:
 						throw new NoViableAltException(this);
 					}
-					setState(122); 
+					setState(116); 
 					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
+					_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
 				} while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER );
+				setState(124);
+				_errHandler.sync(this);
+				switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
+				case 1:
+					{
+					setState(118);
+					match(POINT);
+					setState(120); 
+					_errHandler.sync(this);
+					_alt = 1;
+					do {
+						switch (_alt) {
+						case 1:
+							{
+							{
+							setState(119);
+							match(DIGIT);
+							}
+							}
+							break;
+						default:
+							throw new NoViableAltException(this);
+						}
+						setState(122); 
+						_errHandler.sync(this);
+						_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
+					} while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER );
+					}
+					break;
+				}
+				setState(127);
+				_errHandler.sync(this);
+				switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
+				case 1:
+					{
+					setState(126);
+					_la = _input.LA(1);
+					if ( !(_la==DU || _la==PAI) ) {
+					_errHandler.recoverInline(this);
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
+						consume();
+					}
+					}
+					break;
+				}
+				}
 				}
 				break;
-			}
-			setState(127);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
-			case 1:
+			case PAI:
 				{
-				setState(126);
-				_la = _input.LA(1);
-				if ( !(_la==DU || _la==PAI) ) {
-				_errHandler.recoverInline(this);
-				}
-				else {
-					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
+				setState(129);
+				match(PAI);
 				}
 				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 			}
 		}
@@ -959,7 +966,7 @@ public class calculatorParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3%\u0084\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3%\u0087\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\3\2\3\2\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\3\3\3\3\3\7\3\"\n\3\f\3"+
 		"\16\3%\13\3\3\4\3\4\3\4\7\4*\n\4\f\4\16\4-\13\4\3\4\5\4\60\n\4\3\5\3\5"+
@@ -968,32 +975,33 @@ public class calculatorParser extends Parser {
 		"\6\3\7\3\7\3\7\3\7\3\7\5\7Z\n\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7b\n\7\3\b\3"+
 		"\b\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\5\no\n\n\3\13\5\13r\n\13\3\13\6"+
 		"\13u\n\13\r\13\16\13v\3\13\3\13\6\13{\n\13\r\13\16\13|\5\13\177\n\13\3"+
-		"\13\5\13\u0082\n\13\3\13\2\3\n\f\2\4\6\b\n\f\16\20\22\24\2\7\3\2\21\22"+
-		"\3\2\23\24\3\2\3\r\3\2\f\r\3\2\36\37\u0090\2\26\3\2\2\2\4\36\3\2\2\2\6"+
-		"/\3\2\2\2\b\61\3\2\2\2\nJ\3\2\2\2\fa\3\2\2\2\16c\3\2\2\2\20e\3\2\2\2\22"+
-		"n\3\2\2\2\24q\3\2\2\2\26\33\5\4\3\2\27\30\t\2\2\2\30\32\5\4\3\2\31\27"+
-		"\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\3\3\2\2\2\35\33"+
-		"\3\2\2\2\36#\5\6\4\2\37 \t\3\2\2 \"\5\6\4\2!\37\3\2\2\2\"%\3\2\2\2#!\3"+
-		"\2\2\2#$\3\2\2\2$\5\3\2\2\2%#\3\2\2\2&+\5\n\6\2\'(\7\"\2\2(*\5\n\6\2)"+
-		"\'\3\2\2\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2,\60\3\2\2\2-+\3\2\2\2.\60\5\b"+
-		"\5\2/&\3\2\2\2/.\3\2\2\2\60\7\3\2\2\2\61<\5\n\6\2\628\7\34\2\2\63\64\5"+
-		"\n\6\2\64\65\7\30\2\2\659\3\2\2\2\669\7\26\2\2\679\7\27\2\28\63\3\2\2"+
-		"\28\66\3\2\2\28\67\3\2\2\29;\3\2\2\2:\62\3\2\2\2;>\3\2\2\2<:\3\2\2\2<"+
-		"=\3\2\2\2=\t\3\2\2\2><\3\2\2\2?@\b\6\1\2@K\5\24\13\2AB\7\17\2\2BC\5\2"+
-		"\2\2CD\7\20\2\2DK\3\2\2\2EF\7\16\2\2FG\5\2\2\2GH\7\16\2\2HK\3\2\2\2IK"+
-		"\5\f\7\2J?\3\2\2\2JA\3\2\2\2JE\3\2\2\2JI\3\2\2\2KQ\3\2\2\2LM\f\6\2\2M"+
-		"N\7\25\2\2NP\5\n\6\7OL\3\2\2\2PS\3\2\2\2QO\3\2\2\2QR\3\2\2\2R\13\3\2\2"+
-		"\2SQ\3\2\2\2TU\5\16\b\2UV\5\n\6\2Vb\3\2\2\2WY\5\24\13\2XZ\7\34\2\2YX\3"+
-		"\2\2\2YZ\3\2\2\2Z[\3\2\2\2[\\\5\22\n\2\\b\3\2\2\2]^\5\24\13\2^_\5\20\t"+
-		"\2_`\5\n\6\2`b\3\2\2\2aT\3\2\2\2aW\3\2\2\2a]\3\2\2\2b\r\3\2\2\2cd\t\4"+
-		"\2\2d\17\3\2\2\2ef\t\5\2\2f\21\3\2\2\2go\7\31\2\2ho\7\32\2\2io\7\33\2"+
-		"\2jk\7\26\2\2ko\7\35\2\2lm\7\27\2\2mo\7\35\2\2ng\3\2\2\2nh\3\2\2\2ni\3"+
-		"\2\2\2nj\3\2\2\2nl\3\2\2\2o\23\3\2\2\2pr\7\22\2\2qp\3\2\2\2qr\3\2\2\2"+
-		"rt\3\2\2\2su\7$\2\2ts\3\2\2\2uv\3\2\2\2vt\3\2\2\2vw\3\2\2\2w~\3\2\2\2"+
-		"xz\7 \2\2y{\7$\2\2zy\3\2\2\2{|\3\2\2\2|z\3\2\2\2|}\3\2\2\2}\177\3\2\2"+
-		"\2~x\3\2\2\2~\177\3\2\2\2\177\u0081\3\2\2\2\u0080\u0082\t\6\2\2\u0081"+
-		"\u0080\3\2\2\2\u0081\u0082\3\2\2\2\u0082\25\3\2\2\2\22\33#+/8<JQYanqv"+
-		"|~\u0081";
+		"\13\5\13\u0082\n\13\3\13\5\13\u0085\n\13\3\13\2\3\n\f\2\4\6\b\n\f\16\20"+
+		"\22\24\2\7\3\2\21\22\3\2\23\24\3\2\3\r\3\2\f\r\3\2\36\37\u0094\2\26\3"+
+		"\2\2\2\4\36\3\2\2\2\6/\3\2\2\2\b\61\3\2\2\2\nJ\3\2\2\2\fa\3\2\2\2\16c"+
+		"\3\2\2\2\20e\3\2\2\2\22n\3\2\2\2\24q\3\2\2\2\26\33\5\4\3\2\27\30\t\2\2"+
+		"\2\30\32\5\4\3\2\31\27\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2"+
+		"\2\34\3\3\2\2\2\35\33\3\2\2\2\36#\5\6\4\2\37 \t\3\2\2 \"\5\6\4\2!\37\3"+
+		"\2\2\2\"%\3\2\2\2#!\3\2\2\2#$\3\2\2\2$\5\3\2\2\2%#\3\2\2\2&+\5\n\6\2\'"+
+		"(\7\"\2\2(*\5\n\6\2)\'\3\2\2\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2,\60\3\2\2"+
+		"\2-+\3\2\2\2.\60\5\b\5\2/&\3\2\2\2/.\3\2\2\2\60\7\3\2\2\2\61<\5\n\6\2"+
+		"\628\7\34\2\2\63\64\5\n\6\2\64\65\7\30\2\2\659\3\2\2\2\669\7\26\2\2\67"+
+		"9\7\27\2\28\63\3\2\2\28\66\3\2\2\28\67\3\2\2\29;\3\2\2\2:\62\3\2\2\2;"+
+		">\3\2\2\2<:\3\2\2\2<=\3\2\2\2=\t\3\2\2\2><\3\2\2\2?@\b\6\1\2@K\5\24\13"+
+		"\2AB\7\17\2\2BC\5\2\2\2CD\7\20\2\2DK\3\2\2\2EF\7\16\2\2FG\5\2\2\2GH\7"+
+		"\16\2\2HK\3\2\2\2IK\5\f\7\2J?\3\2\2\2JA\3\2\2\2JE\3\2\2\2JI\3\2\2\2KQ"+
+		"\3\2\2\2LM\f\6\2\2MN\7\25\2\2NP\5\n\6\7OL\3\2\2\2PS\3\2\2\2QO\3\2\2\2"+
+		"QR\3\2\2\2R\13\3\2\2\2SQ\3\2\2\2TU\5\16\b\2UV\5\n\6\2Vb\3\2\2\2WY\5\24"+
+		"\13\2XZ\7\34\2\2YX\3\2\2\2YZ\3\2\2\2Z[\3\2\2\2[\\\5\22\n\2\\b\3\2\2\2"+
+		"]^\5\24\13\2^_\5\20\t\2_`\5\n\6\2`b\3\2\2\2aT\3\2\2\2aW\3\2\2\2a]\3\2"+
+		"\2\2b\r\3\2\2\2cd\t\4\2\2d\17\3\2\2\2ef\t\5\2\2f\21\3\2\2\2go\7\31\2\2"+
+		"ho\7\32\2\2io\7\33\2\2jk\7\26\2\2ko\7\35\2\2lm\7\27\2\2mo\7\35\2\2ng\3"+
+		"\2\2\2nh\3\2\2\2ni\3\2\2\2nj\3\2\2\2nl\3\2\2\2o\23\3\2\2\2pr\7\22\2\2"+
+		"qp\3\2\2\2qr\3\2\2\2r\u0084\3\2\2\2su\7$\2\2ts\3\2\2\2uv\3\2\2\2vt\3\2"+
+		"\2\2vw\3\2\2\2w~\3\2\2\2xz\7 \2\2y{\7$\2\2zy\3\2\2\2{|\3\2\2\2|z\3\2\2"+
+		"\2|}\3\2\2\2}\177\3\2\2\2~x\3\2\2\2~\177\3\2\2\2\177\u0081\3\2\2\2\u0080"+
+		"\u0082\t\6\2\2\u0081\u0080\3\2\2\2\u0081\u0082\3\2\2\2\u0082\u0085\3\2"+
+		"\2\2\u0083\u0085\7\37\2\2\u0084t\3\2\2\2\u0084\u0083\3\2\2\2\u0085\25"+
+		"\3\2\2\2\23\33#+/8<JQYanqv|~\u0081\u0084";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
