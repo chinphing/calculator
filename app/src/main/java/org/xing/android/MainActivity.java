@@ -273,13 +273,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             String text = NumberUtil.format(evalResult, 8);
 
             String item = readExpr + "=" + text;
+
             historyData.add(0, item);
             historyList.loadUrl("javascript:addItem('" + item + "')");
-            /*
-            historyList.setAdapter(new ArrayAdapter<String>(
-                    this, R.layout.list_text_view, historyData));
-            */
-            //inputText.setText(expr+"->"+readExpr+"="+text);
             inputText.setText(text);
         } else {
             inputText.setText("遗憾：'" + expr + "'无效表达式！");

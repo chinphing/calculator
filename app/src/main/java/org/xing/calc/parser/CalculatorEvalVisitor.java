@@ -174,8 +174,20 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 	@Override
 	public Double visitNumber(calculatorParser.NumberContext ctx) {
 		try{
-			numParser.parse(ctx.getText());
-			return Double.parseDouble(numParser.getEvalExpr());
+			String expr = ctx.getText();
+			if(ctx.PAI() != null || ctx.DU() != null) {
+				numParser.parse(expr.substring(0, expr.length()-1));
+				Double result = Double.parseDouble(numParser.getEvalExpr());
+				if(ctx.PAI() != null) {
+					return result * Math.PI;
+				}else {
+					return result * Math.PI / 180;
+				}
+			} else {
+				numParser.parse(expr);
+				return Double.parseDouble(numParser.getEvalExpr());
+			}
+
 		}catch(Exception ex) {
 			return Double.NaN;
 		}

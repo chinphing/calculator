@@ -290,8 +290,22 @@ public class CalculatorMathjaxExprVisitor extends calculatorBaseVisitor<String> 
     @Override
     public String visitNumber(calculatorParser.NumberContext ctx) {
         try{
-            numParser.parse(ctx.getText());
-            return numParser.getReadExpr();
+            String expr = ctx.getText();
+            StringBuilder result = new StringBuilder();
+            if(ctx.PAI() != null || ctx.DU() != null) {
+                numParser.parse(expr.substring(0, expr.length()-1));
+                result.append(numParser.getReadExpr());
+
+                if(ctx.PAI() != null) {
+                    result.append("\\\\pi");
+                }else {
+                    result.append("\\\\degree");
+                }
+            } else {
+                numParser.parse(ctx.getText());
+                result.append(numParser.getReadExpr());
+            }
+            return result.toString();
         }catch(Exception ex) {
             return null;
         }

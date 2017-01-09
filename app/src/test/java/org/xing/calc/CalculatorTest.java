@@ -123,6 +123,12 @@ public class CalculatorTest{
         chnMap.put("三平方根", "1.732051");
         chnMap.put("三乘以三开方", "5.196152");
 
+        //弧度制和π
+        chnMap.put("负三点一五派", "-9.896017");
+        chnMap.put("正弦六十度", "0.866025");
+        chnMap.put("正弦三十度", "0.500000");
+        chnMap.put("1000+两千再加3000=多少", "6000");
+
         int correctNum = 0;
         int wrongNum = 0;
         for(String expr : chnMap.keySet()) {
