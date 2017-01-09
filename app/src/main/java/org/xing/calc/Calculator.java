@@ -7,7 +7,6 @@ import org.xing.calc.filter.CorrectionExprFilter;
 import org.xing.calc.filter.ExprFilter;
 import org.xing.calc.filter.RedundantExprFilter;
 import org.xing.calc.parser.CalculatorEvalVisitor;
-import org.xing.calc.parser.CalculatorExprVisitor;
 import org.xing.calc.parser.CalculatorMathjaxExprVisitor;
 import org.xing.calc.parser.grammer.calculatorLexer;
 import org.xing.calc.parser.grammer.calculatorParser;
@@ -45,27 +44,38 @@ public class Calculator {
 	private Set<Character> continuousInputTag;
 	
 	/*
-	 * 连续输入表达式的函数标志
+	 * 前置函数的连续计算
 	 */
 	private Set<String> continuousFuncTag;
+
+	/*
+ 	* 后置函数的连续计算
+ 	*/
+	private Set<String> continuousPostFuncTag;
 	
 	public Calculator() {
 		setLastResult(0.0);
-		
+
 		filters = new LinkedList<ExprFilter>();
 
 		String inputTags = "加+减-乘*×除/÷";
 		continuousInputTag = new HashSet<>();
-		for(int i=0;i<inputTags.length();i++) {
+		for (int i = 0; i < inputTags.length(); i++) {
 			continuousInputTag.add(inputTags.charAt(i));
 		}
 
-		String[] funcTags = new String[] {"cos","余弦","sin", 
-				"正弦","tan","正切","acos","反余弦","asin","反正弦",
-				"atan","反正切","ln","log","lg","对数","根号"};
+		String[] funcTags = new String[]{"cos", "余弦", "sin",
+				"正弦", "tan", "正切", "acos", "反余弦", "asin", "反正弦",
+				"atan", "反正切", "ln", "log", "lg", "对数", "根号"};
 		continuousFuncTag = new HashSet<>();
-		for(int i=0;i<funcTags.length;i++) {
+		for (int i = 0; i < funcTags.length; i++) {
 			continuousFuncTag.add(funcTags[i]);
+		}
+
+		String[] postFuncTags = new String[]{"开方", "开平方", "开立方", "平方根", "立方根"};
+		continuousPostFuncTag = new HashSet<>();
+		for (int i = 0; i < postFuncTags.length; i++) {
+			continuousPostFuncTag.add(postFuncTags[i]);
 		}
 	}
 	
@@ -98,7 +108,7 @@ public class Calculator {
 		CalculatorEvalVisitor evalVisitor = new CalculatorEvalVisitor();
 		result = evalVisitor.visit(tree);
 
-		CalculatorExprVisitor exprVisitor = new CalculatorMathjaxExprVisitor();
+		CalculatorMathjaxExprVisitor exprVisitor = new CalculatorMathjaxExprVisitor();
 		readExpr = exprVisitor.visit(tree);
 
 		if (result != null && !result.isNaN()) {
@@ -108,10 +118,10 @@ public class Calculator {
 		
 		return result != null? result:Double.NaN;
 	}
-	
+
 	public double eval(String expr)  {
 		Double result = Double.NaN;
-		
+
 		try {
 			for (ExprFilter filter : filters) {
 				expr = filter.call(expr);
@@ -121,13 +131,15 @@ public class Calculator {
 				expr = NumberUtil.format(this.lastResult, 8)+expr;
 			}else if(continuousFuncTag.contains(expr)) {
 				expr = expr + NumberUtil.format(this.lastResult, 8);
+			}else if(continuousPostFuncTag.contains(expr)) {
+				expr = NumberUtil.format(this.lastResult, 8)+ expr;
 			}
-			
+
 			result = innerEval(expr);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+
 		return result;
 	}
 

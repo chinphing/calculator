@@ -2,17 +2,56 @@ package org.xing.calc.parser;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.xing.calc.parser.grammer.calculatorBaseVisitor;
 import org.xing.calc.parser.grammer.calculatorParser;
+
+import java.util.Stack;
 
 /**
  * Created by xing on 2017/1/1.
  */
 
-public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
+public class CalculatorMathjaxExprVisitor extends calculatorBaseVisitor<String> {
+    protected NumberParser numParser;
+
+    public CalculatorMathjaxExprVisitor() {
+        numParser = new NumberParser();
+    }
 
     public enum AtomType{
         PosNumber, NegNumber, Sqrt, Frac, Log, Brack, Pow, Mixed
     }
+
+    private boolean bracketsLeggal(String expr) {
+        Stack<Character> brackets = new Stack<>();
+        for(int i=0;i<expr.length();i++) {
+            Character c = expr.charAt(i);
+            if(c == '(') {
+                brackets.add(c);
+            } else if(c== ')') {
+                if((!brackets.empty()) && brackets.peek() == '(') {
+                    brackets.pop();
+                }else {
+                    return false;
+                }
+            }
+        }
+
+        if(brackets.empty()) return true;
+        return false;
+    }
+
+    protected String trimBrackets(String expr) {
+        if(expr == null) return null;
+
+        if(expr.startsWith("(") && expr.endsWith(")")) {
+            String substr = expr.substring(1, expr.length()-1);
+            if(bracketsLeggal(substr)) return substr;
+        }
+
+        return expr;
+    }
+
 
     public static AtomType getAtomType(String expr) {
 
@@ -44,7 +83,7 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
                 || atomType == AtomType.Sqrt || atomType == AtomType.Mixed) {
             brackResult = "("+expr + ")";
         }else if(atomType == AtomType.Brack) {
-            nonbrackResult = super.trimBrackets(expr);
+            nonbrackResult = trimBrackets(expr);
         }
 
         return new String[] {brackResult, nonbrackResult};
@@ -186,7 +225,7 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
 
     @Override
     public String visitFunc(calculatorParser.FuncContext ctx) {
-        if(ctx.getChildCount() == 3) {
+        if(ctx.funcnameEx() != null) {
             calculatorParser.FuncnameExContext func = ctx.funcnameEx();
             String firstNum = visit(ctx.getChild(0));
             String secondNum = visit(ctx.getChild(2));
@@ -199,7 +238,7 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
             }else if(func.GENHAO() != null) {
                 return "\\\\sqrt["+brackFirstNum[0]+"]{"+brackSecondNum[1]+"}";
             }
-        } else {
+        } else if(ctx.funcname() != null){
             String expr = visit(ctx.getChild(1));
             calculatorParser.FuncnameContext func = ctx.funcname();
             if(expr == null) return null;
@@ -230,7 +269,21 @@ public class CalculatorMathjaxExprVisitor extends CalculatorExprVisitor {
             }else{
                 System.err.println("Not supported function '"+ctx.funcname()+"'");
             }
+        }else if(ctx.postFuncname() != null) {
+            calculatorParser.PostFuncnameContext postFuncname = ctx.postFuncname();
+            String expr = visit(ctx.getChild(0));
+            String[] brackExpr = getBrackExpr(expr);
+
+            if(postFuncname.KAIFANG() != null
+                    || postFuncname.KAIPINGFANG() != null
+                    || postFuncname.PINGFANG() != null) {
+                return "\\\\sqrt{"+brackExpr[1]+"}";
+            }else if(postFuncname.KAILIFANG() != null
+                    || postFuncname.LIFANG() != null) {
+                return "\\\\sqrt[3]{"+brackExpr[1]+"}";
+            }
         }
+
         return null;
     }
 

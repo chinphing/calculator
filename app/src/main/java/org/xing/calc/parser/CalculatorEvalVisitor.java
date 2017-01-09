@@ -6,6 +6,7 @@ import org.xing.calc.parser.grammer.calculatorParser;
 import org.xing.calc.parser.grammer.calculatorParser.FuncContext;
 import org.xing.calc.parser.grammer.calculatorParser.FuncnameContext;
 import org.xing.calc.parser.grammer.calculatorParser.FuncnameExContext;
+import org.xing.calc.parser.grammer.calculatorParser.PostFuncnameContext;
 
 public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 	private NumberParser numParser;
@@ -79,8 +80,6 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 					result = Math.pow(result, 2);
 				} else if (type == calculatorParser.LIFANG) {
 					result = Math.pow(result, 3);
-				} else if (type == calculatorParser.KAIFANG) {
-					result = Math.pow(result, 0.5);
 				} else {
 					System.err.println("未处理的终端节点:visitChinaPowExpression");
 				}
@@ -115,7 +114,7 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 	@Override
 	public Double visitFunc(FuncContext ctx) {
 		Double result = Double.NaN;
-		if(ctx.getChildCount() == 3) {
+		if(ctx.funcnameEx() != null) {
 			FuncnameExContext func = ctx.funcnameEx();
 			Double firstNum = visit(ctx.getChild(0));
 			Double secondNum = visit(ctx.getChild(2));
@@ -124,7 +123,7 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 			}else if(func.GENHAO() != null) {
 				result = Math.pow(secondNum, 1/firstNum);
 			}
-		} else {
+		} else if(ctx.funcname() != null){
 			FuncnameContext func = ctx.funcname();
 			Double exprValue = visit(ctx.getChild(1));
 
@@ -155,14 +154,21 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 			}else{
 				System.err.println("Not supported function '"+ctx.funcname()+"'");
 			}	
+		}else if(ctx.postFuncname() != null) {
+			PostFuncnameContext postFuncname = ctx.postFuncname();
+			Double exprValue = visit(ctx.getChild(0));
+			
+			if(postFuncname.KAIFANG() != null 
+					|| postFuncname.KAIPINGFANG() != null
+					|| postFuncname.PINGFANG() != null) {
+				result =  Math.pow(exprValue, 0.5);
+			}else if(postFuncname.KAILIFANG() != null
+					|| postFuncname.LIFANG() != null) {
+				result =  Math.pow(exprValue, 1.0/3);
+			}
 		}
 		
 		return result;
-	}
-
-	@Override
-	public Double visitFuncname(FuncnameContext ctx) {
-		return Double.NaN;
 	}
 
 	@Override

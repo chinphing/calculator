@@ -15,10 +15,11 @@ import static org.xing.calc.Calculator.createDefault;
 public class CalculatorTest{
 
     @Test
-    public void eval() throws Exception {
+    public void testEval() throws Exception {
         Calculator calc = createDefault(null);
 
         Map<String, String> chnMap = new HashMap<String, String>();
+
         chnMap.put("sin12", "-0.536573");
         chnMap.put("10%", "0.1");
         chnMap.put("2除以2/3", "3");
@@ -112,6 +113,16 @@ public class CalculatorTest{
         chnMap.put("零点零零八一的四分之一次方加上四的负四分之三次方的二次方加上根号八的负四分之三次方减去16的负零点75次方", "0.758502");
         chnMap.put("log根号二十七除以log3加上lg二十五加上lg4加上七的括号log2除以log7括号次方加上负九点八的零次方", "6.5");
 
+        //postFuncname测试
+        chnMap.put("三开方", "1.732051");
+        chnMap.put("三的开方", "1.732051");
+        chnMap.put("三开平方", "1.732051");
+        chnMap.put("三开立方", "1.442250");
+        chnMap.put("三的平方根", "1.732051");
+        chnMap.put("三的立方根", "1.442250");
+        chnMap.put("三平方根", "1.732051");
+        chnMap.put("三乘以三开方", "5.196152");
+
         int correctNum = 0;
         int wrongNum = 0;
         for(String expr : chnMap.keySet()) {
@@ -136,6 +147,7 @@ public class CalculatorTest{
 
         //连续运算
         Vector<Map.Entry<String, String>> contiExpr = new Vector<>();
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("6.471928-3.15", "3.321928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("加三点一五", "6.471928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("减三点一五", "3.321928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("乘三点一五", "10.464073"));
@@ -144,6 +156,8 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("对数", "0.600273"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("正弦", "0.564868"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("反正弦", "0.600273"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("开方", "0.774773"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("平方根", "0.880212"));
 
         for(Map.Entry<String, String> en : contiExpr) {
             String expr = en.getKey();
