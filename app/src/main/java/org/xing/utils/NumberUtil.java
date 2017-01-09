@@ -10,4 +10,9 @@ public class NumberUtil {
         text = text.replaceAll("(\\.)?0*$", "");
         return text;
     }
+
+    public static String getPrintSize(long size) {
+        float printSize = (float)size / 1024/ 1024;
+        return String.format("%.1fMB", printSize);
+    }
 }

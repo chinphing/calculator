@@ -5,18 +5,20 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
+import org.xing.android.AppConfig;
+import org.xing.utils.NumberUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +52,7 @@ public class UpdateManager {
     public static void update(Context context, final boolean isEnforceCheck){
         mContext = context;
         mIsEnforceCheck = isEnforceCheck;
-        mAppVersionCode = getVersionCode(mContext);
+        mAppVersionCode = AppConfig.getVersionCode();
 
         if(TextUtils.isEmpty(checkUrl)){
             Toast.makeText(mContext, "url不能为空，请设置url", Toast.LENGTH_SHORT).show();
@@ -88,11 +90,9 @@ public class UpdateManager {
             if(mAppVersionCode < mUpdateEntity.versionCode){
                 //启动更新
                 AlertUpdate();
-            }else{
-                Toast.makeText(mContext, "当前版本已经是最新版本", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
-            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+            MobclickAgent.reportError(mContext, e);
         }
 
     }
@@ -101,17 +101,25 @@ public class UpdateManager {
     private static void AlertUpdate(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("发现更新");
+        builder.setTitle("发现新版本");
         builder.setMessage("新版本:" + mUpdateEntity.versionName + "\n"
-                + "版本内容:" + "\n"
-                + mUpdateEntity.updateLog + "\n");
+                + "大小：" + NumberUtil.getPrintSize(mUpdateEntity.fileSize) + "\n"
+                + "更新:" + mUpdateEntity.updateLog + "\n");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                MobclickAgent.onEvent(mContext, "updateConfirm");
                 updateApp();
             }
         });
-        builder.setNegativeButton("取消", null);
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                MobclickAgent.onEvent(mContext, "updateCancel");
+                //选择取消之后，不再检查更新
+                AppConfig.setCheckUpdate(false);
+            }
+        });
         builder.show();
     }
 
@@ -121,7 +129,7 @@ public class UpdateManager {
 
     private static void updateApp(boolean isEnforceDown) {
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String fileName = getPackgeName(mContext)+mUpdateEntity.versionName +".apk";
+        String fileName = AppConfig.getPackageName() + mUpdateEntity.versionName +".apk";
 
         if(!isEnforceDown){
             File file = new File(filePath+"/"+fileName);
@@ -132,10 +140,14 @@ public class UpdateManager {
         }
 
         mAlertDialog = new ProgressDialog(mContext);
-        mAlertDialog.setTitle("更新ing");
-        mAlertDialog.setMessage("正在下载最新版本,请稍后");
+        mAlertDialog.setTitle("更新("+mUpdateEntity.versionName+")");
+        mAlertDialog.setMessage("正在下载最新版本...");
         mAlertDialog.setCancelable(false);
-        mAlertDialog.setIndeterminate(true);
+        mAlertDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mAlertDialog.setProgress(0);
+        mAlertDialog.setMax(100);
+        mAlertDialog.setIndeterminate(false);
+        mAlertDialog.setProgressNumberFormat("");
         mAlertDialog.show();
 
         OkHttpUtils.get().url(mUpdateEntity.downUrl).build().execute(
@@ -144,7 +156,15 @@ public class UpdateManager {
                         fileName) {
                     @Override
                     public void inProgress(float progress, long total) {
-                        mAlertDialog.setMessage("当前下载进度:"+(int) (100 * progress)+"%");
+                        int downloadSize = (int)(progress * total);
+                        if(downloadSize > mAlertDialog.getProgress() + 100 * 1024) {
+                            mAlertDialog.setProgress((int)(100*progress));
+                            mAlertDialog.setProgressNumberFormat(
+                                    String.format("%s/%s",
+                                    NumberUtil.getPrintSize(downloadSize),
+                                    NumberUtil.getPrintSize(total))
+                            );
+                        }
                     }
 
                     @Override
@@ -173,18 +193,20 @@ public class UpdateManager {
             md5Alert();
             return;
         }
+
+        MobclickAgent.onEvent(mContext, "install");
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
-
     }
 
     private static void md5Alert() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("提示");
-        builder.setMessage("\nmd5不一致，是否重新下载\n");
+        builder.setMessage("\n安装文件不完整，是否重新下载\n");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -193,8 +215,8 @@ public class UpdateManager {
         });
         builder.setNegativeButton("取消", null);
         builder.show();
-
     }
+
     private static void resterAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("提示");
@@ -210,7 +232,6 @@ public class UpdateManager {
     }
 
     private static boolean checkMD5(File file) {
-        /*
         String md5Value;
         try {
             md5Value = getMd5ByFile(file);
@@ -219,8 +240,6 @@ public class UpdateManager {
         }
         Log.d("md5:",md5Value);
         return md5Value.equals(mUpdateEntity.md5);
-        */
-        return true;
     }
 
     public static String getMd5ByFile(File file) throws FileNotFoundException {
@@ -245,54 +264,4 @@ public class UpdateManager {
         }
         return value;
     }
-
-    /**
-     * 获得apk版本号
-     * @param context
-     * @return
-     */
-    public static int getVersionCode(Context context) {
-        int versionCode = 0;
-        PackageInfo packInfo = getPackInfo(context);
-        if(packInfo!=null){
-            versionCode = packInfo.versionCode;
-        }
-        return versionCode;
-    }
-
-
-    /**
-     * 获得apkPackgeName
-     * @param context
-     * @return
-     */
-    public static String getPackgeName(Context context) {
-        String packName = "";
-        PackageInfo packInfo = getPackInfo(context);
-        if(packInfo!=null){
-            packName = packInfo.packageName;
-        }
-        return packName;
-    }
-
-    /**
-     * 获得apkinfo
-     * @param context
-     * @return
-     */
-    public static PackageInfo getPackInfo(Context context) {
-        // 获取packagemanager的实例
-        PackageManager packageManager = context.getPackageManager();
-        // getPackageName()是你当前类的包名，0代表是获取版本信息
-        PackageInfo packInfo = null;
-        try {
-            packInfo = packageManager.getPackageInfo(context.getPackageName(),
-                    0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return packInfo;
-    }
-
-
 }

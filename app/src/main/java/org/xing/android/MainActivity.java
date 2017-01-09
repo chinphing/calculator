@@ -4,13 +4,9 @@ import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
@@ -60,11 +56,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private int noInputCount = 0;
     private int maxNoInputCount = 5;
 
-    /*
-    是否第一次启动
-     */
-    private boolean isFirstStart;
-
     protected void showHelp() {
         historyList.loadUrl("javascript:hideAllList(false);");
         MobclickAgent.onEvent(this, "help");
@@ -97,8 +88,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        UpdateManager.checkUrl = this.getString(R.string.updateCheckUrl);
-        UpdateManager.update(this);
+        AppConfig.loadConfig(this);
+
+        if(AppConfig.getCheckUpdate()) {
+            UpdateManager.checkUrl = this.getString(R.string.updateCheckUrl);
+            UpdateManager.update(this);
+        }
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
@@ -140,32 +135,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         historyList.getSettings().setJavaScriptEnabled(true);
         historyList.getSettings().setAppCacheEnabled(true);
 
-        isFirstStart = isFirstStart();
-        historyList.loadUrl("javascript:var isFirstStart="+isFirstStart+";");
+        historyList.loadUrl("javascript:var isFirstStart="+AppConfig.getIsFirstStart()+";");
         historyList.loadUrl("file:///android_asset/history.html");
 
         startListening(true);
     }
 
-    private boolean isFirstStart() {
-        String VERSION_KEY = "version";
-        PackageInfo info = null;
-
-        try {
-            info = getPackageManager().getPackageInfo(this.getApplicationContext().getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        int currentVersion = info.versionCode;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int lastVersion = prefs.getInt(VERSION_KEY, 0);
-        if (currentVersion > lastVersion) {
-            prefs.edit().putInt(VERSION_KEY, currentVersion).commit();
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public void onResume() {
@@ -331,9 +306,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
             showResult(expr.toString(), evalResult, readExpr);
 
-            if(isFirstStart) {
+            if(AppConfig.getIsFirstStart()) {
                 showTips(1);
-                isFirstStart = false;
+                AppConfig.setIsFirstStart(false);
             }
         }
         startListening(true);

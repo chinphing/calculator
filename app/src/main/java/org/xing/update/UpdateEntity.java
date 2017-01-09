@@ -15,6 +15,7 @@ public class UpdateEntity {
     public String downUrl = "";
     public String updateLog = "";
     public String md5 = "";
+    public int fileSize = 0;
 
 
     public UpdateEntity(String json) throws JSONException {
@@ -27,6 +28,6 @@ public class UpdateEntity {
         this.preBaselineCode = jsonObject.getInt("preBaselineCode");
         this.updateLog = jsonObject.getString("updateLog");
         this.md5 = jsonObject.getString("md5");
-
+        this.fileSize = jsonObject.getInt("fileSize");
     }
 }

@@ -29,6 +29,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		correctionCharMap.put('是', "4");
 		correctionCharMap.put('事', "4");
 		correctionCharMap.put('士', "4");
+		correctionCharMap.put('式', "4");
 		correctionCharMap.put('氏', "4");
 		correctionCharMap.put('市', "4");
 		correctionCharMap.put('世', "4");
