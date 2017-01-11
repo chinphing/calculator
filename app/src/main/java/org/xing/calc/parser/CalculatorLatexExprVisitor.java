@@ -11,10 +11,10 @@ import java.util.Stack;
  * Created by xing on 2017/1/1.
  */
 
-public class CalculatorMathjaxExprVisitor extends calculatorBaseVisitor<String> {
+public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
     protected NumberParser numParser;
 
-    public CalculatorMathjaxExprVisitor() {
+    public CalculatorLatexExprVisitor() {
         numParser = new NumberParser();
     }
 
