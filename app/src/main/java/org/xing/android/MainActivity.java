@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 MobclickAgent.onEvent(this, "errorNetwork");
                 break;
             case SpeechRecognizer.ERROR_NO_MATCH:
-                sb.append("未能识别");
+                sb.append("未识别");
                 MobclickAgent.onEvent(this, "failMatch");
                 startListening(true);
                 break;
@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 MobclickAgent.onEvent(this, "busy");
                 break;
             case SpeechRecognizer.ERROR_SERVER:
-                sb.append("未能识别");
+                sb.append("未识别");
                 startListening(true);
                 MobclickAgent.onEvent(this, "failServer");
                 break;
