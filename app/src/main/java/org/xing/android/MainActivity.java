@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("小技巧");
-                builder.setMessage("还支持括号、分数、三角函数、对数、幂运算以及更复杂的嵌套，现在看说明吗？" +
+                builder.setMessage("还支持π、弧度制、角度制、括号、分数、三角函数、对数、幂运算以及更复杂的嵌套，现在看说明吗？" +
                         "以后也可以通过'示例''帮助''说明''怎么用'的命令打开说明。");
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                 noInputCount++;
                 if (noInputCount >= maxNoInputCount) {
-                    sb.append("暂停工作，点击'开始'按钮重新工作");
+                    sb.append("已暂停");
                 } else {
                     startListening(false);
                 }
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             historyList.loadUrl("javascript:addItem('" + item + "')");
             inputText.setText(text);
         } else {
-            inputText.setText("遗憾：'" + expr + "'无效表达式！");
+            inputText.setText("未识别");
         }
 
     }
