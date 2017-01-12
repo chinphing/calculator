@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     public void onEndOfSpeech() {
         stateButton.setBackgroundResource(R.mipmap.input_sleep);
-        isListening = false;
+        inputText.setText("正在识别...");
     }
 
     public void onError(int error) {
@@ -284,8 +284,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     public void onResults(Bundle results) {
-        String expr = buildExpr(results);
+        isListening = false;
 
+        String expr = buildExpr(results);
         if(expr.contains("帮助") || expr.contains("示例")
                 || expr.contains("说明") || expr.contains("怎么用") ) {
             showHelp();
