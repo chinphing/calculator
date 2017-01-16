@@ -62,15 +62,14 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     protected void showTips(int delaySecond) {
-        //延迟10s弹出对话框，大致实在用户说了一句话之后弹出
+        //延迟1s弹出对话框，大致实在用户说了一句话之后弹出
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("小技巧");
-                builder.setMessage("还支持π、弧度制、角度制、括号、分数、三角函数、对数、幂运算以及更复杂的嵌套，现在看说明吗？" +
-                        "以后也可以通过'示例''帮助''说明''怎么用'的命令打开说明。");
+                builder.setMessage("  说'帮助'、'怎么用'，查看使用教程。\n  支持括号、分数、π、三角函数、对数函数。\n  立即查看教程？");
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

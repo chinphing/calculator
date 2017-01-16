@@ -52,6 +52,11 @@ public class Calculator {
  	* 后置函数的连续计算
  	*/
 	private Set<String> continuousPostFuncTag;
+
+	/*
+	清零命令
+	 */
+	private Set<String> continuousClearTag;
 	
 	public Calculator() {
 		setLastResult(0.0);
@@ -76,6 +81,12 @@ public class Calculator {
 		continuousPostFuncTag = new HashSet<>();
 		for (int i = 0; i < postFuncTags.length; i++) {
 			continuousPostFuncTag.add(postFuncTags[i]);
+		}
+
+		String[] clearTags = new String[]{"清零", "归零"};
+		continuousClearTag = new HashSet<>();
+		for (int i = 0; i < clearTags.length; i++) {
+			continuousClearTag.add(clearTags[i]);
 		}
 	}
 	
@@ -133,6 +144,8 @@ public class Calculator {
 				expr = expr + NumberUtil.format(this.lastResult, 8);
 			}else if(continuousPostFuncTag.contains(expr)) {
 				expr = NumberUtil.format(this.lastResult, 8)+ expr;
+			}else if(continuousClearTag.contains(expr)){
+				expr = "零";
 			}
 
 			result = innerEval(expr);
@@ -145,7 +158,7 @@ public class Calculator {
 
 	public static Calculator createDefault(InputStream tokenStream) {
 		String allowedChars =
-				"0123456789.零一二三四五六七八九点负个十百千万亿+-*/括号加上减去乘以除÷×根号开方的平方次方立方分之sincostanlglogln反正弦反余弦反正切对数()|^度°派π又";
+				"0123456789.零一二三四五六七八九点负个十百千万亿+-*/括号加上减去乘以除÷×根号开方的平方次方立方分之sincostanlglogln反正弦反余弦反正切对数()|^度°派π又清零归零";
 		
 		Calculator calc = new Calculator();
 		calc.addFilter(new CorrectionExprFilter());
