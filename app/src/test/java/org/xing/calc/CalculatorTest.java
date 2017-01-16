@@ -168,6 +168,9 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("开方", "0.774773"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("平方根", "0.880212"));
 
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("三又四分之一", "3.25"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("负三又四分之一", "-3.25"));
+
         for(Map.Entry<String, String> en : contiExpr) {
             String expr = en.getKey();
             double value = Double.parseDouble(en.getValue());

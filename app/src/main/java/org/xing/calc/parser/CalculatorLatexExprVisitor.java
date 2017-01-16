@@ -67,6 +67,8 @@ public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
             return AtomType.Brack;
         }else if(expr.contains("^")) {
             return AtomType.Pow;
+        }else if(expr.contains("\\\\frac")) {
+            return AtomType.Frac;
         }else if(expr.contains("+") || expr.contains("-")
                     || expr.contains("÷") || expr.contains("×") ) {
             return AtomType.Mixed;
@@ -218,13 +220,18 @@ public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
                 String[] brackExpr = getBrackExpr(visit(ctx.expression()));
                 return "("+brackExpr[1]+")";
             }
+        }else if(ctx.getChildCount() == 5) {
+            String expr0 = visit(ctx.getChild(0));
+            String expr2 = visit(ctx.getChild(2));
+            String expr4 = visit(ctx.getChild(4));
+            return expr0+"\\\\frac{"+expr4+"}{"+expr2+"}";
         }else {
             return visit(ctx.getChild(0));
         }
     }
 
     @Override
-    public String visitFunc(calculatorParser.FuncContext ctx) {
+    public String visitFunction(calculatorParser.FunctionContext ctx) {
         if(ctx.funcnameEx() != null) {
             calculatorParser.FuncnameExContext func = ctx.funcnameEx();
             String firstNum = visit(ctx.getChild(0));

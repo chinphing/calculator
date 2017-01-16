@@ -3,7 +3,7 @@ package org.xing.calc.parser;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.xing.calc.parser.grammer.calculatorBaseVisitor;
 import org.xing.calc.parser.grammer.calculatorParser;
-import org.xing.calc.parser.grammer.calculatorParser.FuncContext;
+import org.xing.calc.parser.grammer.calculatorParser.FunctionContext;
 import org.xing.calc.parser.grammer.calculatorParser.FuncnameContext;
 import org.xing.calc.parser.grammer.calculatorParser.FuncnameExContext;
 import org.xing.calc.parser.grammer.calculatorParser.PostFuncnameContext;
@@ -106,13 +106,22 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 			}else {
 				return visit(ctx.expression());
 			}
+		}else if(ctx.getChildCount() == 5) {
+			Double firstNumber = visit(ctx.getChild(0));
+			Double secondNumber = visit(ctx.getChild(2));
+			Double thirdNumber = visit(ctx.getChild(4));
+			if(firstNumber < 0) {
+				return (firstNumber * secondNumber - thirdNumber) / secondNumber;
+			} else {
+				return (firstNumber * secondNumber + thirdNumber) / secondNumber;
+			}
 		}else {
 			return visit(ctx.getChild(0));
 		}
 	}
 
 	@Override
-	public Double visitFunc(FuncContext ctx) {
+	public Double visitFunction(FunctionContext ctx) {
 		Double result = Double.NaN;
 		if(ctx.funcnameEx() != null) {
 			FuncnameExContext func = ctx.funcnameEx();
