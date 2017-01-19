@@ -22,9 +22,9 @@
         android:id="@+id/input"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:textColor="#ffffff"
+        android:textColor="@color/colorText"
         android:text="@string/tips"
-        android:textSize="29sp"
+        android:textSize="40sp"
         android:duplicateParentState="false"
         android:editable="false"
         android:focusable="false" />
@@ -54,9 +54,9 @@
         android:layout_alignEnd="@+id/input"
         android:indeterminate="false"
         android:layout_width="match_parent"
-        android:paddingLeft="6dp"
+        android:paddingLeft="7dp"
         android:progressDrawable="@drawable/record_progress"
-        android:paddingRight="6dp" />
+        android:paddingRight="7dp" />
 
     <FrameLayout
         android:layout_width="match_parent"

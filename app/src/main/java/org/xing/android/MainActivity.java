@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void showHelp() {
         historyList.loadUrl("javascript:hideAllList(false);");
         MobclickAgent.onEvent(this, "help");
+        inputText.setText("");
     }
 
     protected void showTips(int delaySecond) {
