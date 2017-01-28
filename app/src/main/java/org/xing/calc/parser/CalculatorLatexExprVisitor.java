@@ -146,44 +146,35 @@ public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
 
     @Override
     public String visitPowExpression(calculatorParser.PowExpressionContext ctx) {
-        String result = visit(ctx.getChild(0));
-        if(ctx.getChildCount() > 1) {
-            for(int i=2;i<ctx.getChildCount();i+=2) {
-                String[] brackExpr = getBrackExpr(result);
-                result = "{"+brackExpr[0]+"}^{"+visit(ctx.getChild(i))+"}";
-            }
-        }
-
-        return result.toString();
-    }
-
-    @Override
-    public String visitChinaPowExpression(
-            calculatorParser.ChinaPowExpressionContext ctx) {
-
         int index = 0;
         String result = visit(ctx.getChild(index++));
 
         while (index < ctx.getChildCount()) {
             String[] brackExpr = getBrackExpr(result);
-
-            if (ctx.getChild(index + 1) instanceof TerminalNode) {
-                int type = ((TerminalNode) ctx.getChild(index + 1)).getSymbol()
-                        .getType();
-                if (type == calculatorParser.PINGFANG) {
-                    result = "{"+brackExpr[0]+"}^2";
-                } else if (type == calculatorParser.LIFANG) {
-                    result = "{"+brackExpr[0]+"}^3";
-                } else if (type == calculatorParser.KAIFANG) {
-                    result = "\\\\sqrt{"+brackExpr[1]+"}";
+            TerminalNode node = (TerminalNode) ctx.getChild(index);
+            if(node.getSymbol().getType() == calculatorParser.DE) {
+                if (ctx.getChild(index + 1) instanceof TerminalNode) {
+                    int type = ((TerminalNode) ctx.getChild(index + 1)).getSymbol()
+                            .getType();
+                    if (type == calculatorParser.PINGFANG) {
+                        result = "{" + brackExpr[0] + "}^2";
+                    } else if (type == calculatorParser.LIFANG) {
+                        result = "{" + brackExpr[0] + "}^3";
+                    } else if (type == calculatorParser.KAIFANG) {
+                        result = "\\\\sqrt{" + brackExpr[1] + "}";
+                    } else {
+                        System.err.println("未处理的终端节点:visitChinaPowExpression");
+                    }
+                    index += 2;
                 } else {
-                    System.err.println("未处理的终端节点:visitChinaPowExpression");
+                    String pow = visit(ctx.getChild(index + 1));
+                    result = "{" + brackExpr[0] + "}^{" + pow + "}";
+                    index += 3;
                 }
-                index += 2;
             } else {
                 String pow = visit(ctx.getChild(index + 1));
-                result = "{"+brackExpr[0]+"}^{" + pow+"}";
-                index += 3;
+                result = "{" + brackExpr[0] + "}^{" + pow + "}";
+                index += 2;
             }
         }
         return result.toString();

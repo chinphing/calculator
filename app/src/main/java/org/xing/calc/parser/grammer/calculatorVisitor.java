@@ -29,12 +29,6 @@ public interface calculatorVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPowExpression(calculatorParser.PowExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link calculatorParser#chinaPowExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitChinaPowExpression(calculatorParser.ChinaPowExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link calculatorParser#atom}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
