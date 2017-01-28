@@ -65,7 +65,9 @@ public class NumberParser extends Parser {
 					lastnumZero= numZero;
 				}
 				
-				if(index == 1)  {
+				if(index == 1
+						&& (!numberDigitsMap.containsKey(reversedInputNumber.charAt(0)))
+						)  {
 					//处理‘一万二’、‘三千四’这种简略说法
 					int headFilledNumZero = numberDigitsMap.get(c) - numDigits;
 					for(int i=0;i<headFilledNumZero;i++) {

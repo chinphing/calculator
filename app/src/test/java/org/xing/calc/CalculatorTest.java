@@ -2,6 +2,7 @@ package org.xing.calc;
 
 import org.junit.Test;
 
+import java.io.FileInputStream;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class CalculatorTest{
 
     @Test
     public void testEval() throws Exception {
-        Calculator calc = createDefault(null);
+        Calculator calc = createDefault(new FileInputStream("src\\main\\res\\raw\\token"));
 
         Map<String, String> chnMap = new HashMap<String, String>();
 
@@ -170,6 +171,10 @@ public class CalculatorTest{
 
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("三又四分之一", "3.25"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("负三又四分之一", "-3.25"));
+
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("一千万", "10000000"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("十六万亿", "16000000000000"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("二对数三乘以二队戍午", "3.680169"));
 
         for(Map.Entry<String, String> en : contiExpr) {
             String expr = en.getKey();
