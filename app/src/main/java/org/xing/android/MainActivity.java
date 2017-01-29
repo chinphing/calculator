@@ -14,11 +14,13 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.ProgressBar;
 
 import com.baidu.speech.VoiceRecognitionService;
 import com.umeng.analytics.MobclickAgent;
 
+import org.w3c.dom.Text;
 import org.xing.calc.Calculator;
 import org.xing.logger.AsyncLog;
 import org.xing.logger.Log;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private Log evalLog;
 
     private EditText inputText;
+    private TextView msgText;
     private ProgressBar recordDynamic;
     private Button stateButton;
 
@@ -59,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void showHelp() {
         historyList.loadUrl("javascript:hideAllList(false);");
         MobclickAgent.onEvent(this, "help");
-        inputText.setText("");
     }
 
     protected void showTips(int delaySecond) {
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onClick(View v) {
                 startListening(true);
-                inputText.setText(R.string.tips);
+                msgText.setText(R.string.tips);
             }
         });
 
@@ -120,11 +122,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onClick(View v) {
                 stopListening();
-                inputText.setText("已暂停");
+                msgText.setText("已暂停");
             }
         });
 
         inputText = (EditText) this.findViewById(R.id.input);
+        msgText = (TextView) this.findViewById(R.id.msg);
 
         recordDynamic = (ProgressBar) this.findViewById(R.id.recordDynamic);
         stateButton = (Button) this.findViewById(R.id.stateButton);
@@ -194,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     public void onEndOfSpeech() {
         stateButton.setBackgroundResource(R.mipmap.input_sleep);
-        inputText.setText("正在识别...");
+        msgText.setText("正在识别...");
     }
 
     public void onError(int error) {
@@ -243,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 break;
         }
         if (sb.length() > 0) {
-            inputText.setText(sb.toString());
+            msgText.setText(sb.toString());
         }
     }
 
@@ -277,8 +280,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             historyData.add(0, item);
             historyList.loadUrl("javascript:addItem('" + item + "')");
             inputText.setText(text);
+            msgText.setText("");
         } else {
-            inputText.setText("未识别");
+            msgText.setText("未识别");
         }
 
     }

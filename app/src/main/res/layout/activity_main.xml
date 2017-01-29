@@ -16,6 +16,7 @@
         android:background="@drawable/boder"
         android:inputType="textPersonName"
         android:ems="10"
+        android:paddingLeft="5dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -23,15 +24,16 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:textColor="@color/colorText"
-        android:text="@string/tips"
-        android:textSize="40sp"
+        android:text="0"
+        android:textSize="38sp"
         android:duplicateParentState="false"
         android:editable="false"
         android:focusable="false" />
 
     <Button
         android:id="@+id/stateButton"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginBottom="6dp"
         android:background="@mipmap/input_sleep"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -54,28 +56,40 @@
         android:layout_alignEnd="@+id/input"
         android:indeterminate="false"
         android:layout_width="match_parent"
-        android:paddingLeft="7dp"
+        android:paddingLeft="3dp"
         android:progressDrawable="@drawable/record_progress"
-        android:paddingRight="7dp" />
+        android:paddingRight="3dp" />
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_below="@+id/input"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@drawable/boder"
         android:layout_marginBottom="60dp"
-        android:layout_marginTop="10dp"
-        android:padding="10dip"
+        android:layout_marginTop="5dp"
+        android:padding="5dip"
         >
             <WebView
                 android:id="@+id/historylist"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="97"
                 android:layout_gravity="center"
                 android:layerType="software" />
-    </FrameLayout>
+
+        <TextView
+            android:id = "@+id/msg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:textColor="#777777"
+            android:layout_below="@+id/historylist"
+            android:textSize="12dp"
+            android:text = "@string/tips"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/table_num"
