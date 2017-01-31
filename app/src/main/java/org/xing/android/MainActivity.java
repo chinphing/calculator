@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onClick(View v) {
                 startListening(true);
-                msgText.setText(R.string.tips);
+                msgText.setText("");
             }
         });
 
@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     public void onReadyForSpeech(Bundle params) {
         stateButton.setBackgroundResource(R.mipmap.input_ready);
+        msgText.setText("");
     }
 
     public void onBeginningOfSpeech() {
