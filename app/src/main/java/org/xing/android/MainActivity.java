@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         super.onResume();
         startListening(true);
         MobclickAgent.onResume(this);
+        msgText.setText("");
     }
 
     @Override
@@ -181,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     public void onReadyForSpeech(Bundle params) {
         stateButton.setBackgroundResource(R.mipmap.input_ready);
-        msgText.setText("");
     }
 
     public void onBeginningOfSpeech() {
