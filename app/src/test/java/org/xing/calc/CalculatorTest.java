@@ -157,6 +157,7 @@ public class CalculatorTest{
 
         //连续运算
         Vector<Map.Entry<String, String>> contiExpr = new Vector<>();
+
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("6.471928-3.15", "3.321928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("加三点一五", "6.471928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("减三点一五", "3.321928"));
@@ -175,6 +176,8 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("一千万", "10000000"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("十六万亿", "16000000000000"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("二对数三乘以二队戍午", "3.680169"));
+
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("一百曲二", "50"));
 
         for(Map.Entry<String, String> en : contiExpr) {
             String expr = en.getKey();
