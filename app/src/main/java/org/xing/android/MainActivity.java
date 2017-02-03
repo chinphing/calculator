@@ -109,8 +109,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
         evalLog = AsyncLog.createAsyncHttpLog(this.getString(R.string.recordUrl));
 
-        Button stateButton = (Button) this.findViewById(R.id.stateButton);
-        stateButton.setOnClickListener(new View.OnClickListener() {
+        Button stateBtn = (Button) this.findViewById(R.id.stateButton);
+        stateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MobclickAgent.onEvent(MainActivity.this, "statusClick");
