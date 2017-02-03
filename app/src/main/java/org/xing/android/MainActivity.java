@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     protected void showHelp() {
         historyList.loadUrl("javascript:hideAllList(false);");
+        msgText.setText("");
         MobclickAgent.onEvent(this, "help");
     }
 
@@ -108,21 +109,18 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
         evalLog = AsyncLog.createAsyncHttpLog(this.getString(R.string.recordUrl));
 
-        Button beginButton = (Button) this.findViewById(R.id.begin);
-        beginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startListening(true);
-                msgText.setText("");
-            }
-        });
-
-        Button endButton = (Button) this.findViewById(R.id.end);
+        Button endButton = (Button) this.findViewById(R.id.stateButton);
         endButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopListening();
-                msgText.setText("已暂停");
+                MobclickAgent.onEvent(MainActivity.this, "statusClick");
+                if(isListening) {
+                    stopListening();
+                    msgText.setText("已暂停");
+                } else {
+                    startListening(true);
+                    msgText.setText("");
+                }
             }
         });
 

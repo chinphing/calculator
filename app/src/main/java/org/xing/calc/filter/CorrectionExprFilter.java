@@ -19,6 +19,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		correctionCharMap.put('橙', "乘");
 		correctionCharMap.put('盛', "乘");
 
+		correctionCharMap.put('区', "除");
 		correctionCharMap.put('褚', "除");
 
 		correctionCharMap.put('两', "二");

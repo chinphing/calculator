@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     tools:context="org.xing.android.MainActivity"
     android:background="@color/colorBackground">
 
@@ -68,7 +68,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@drawable/boder"
-        android:layout_marginBottom="60dp"
         android:layout_marginTop="5dp"
         android:padding="5dip"
         >
@@ -87,30 +86,6 @@
             android:textColor="#777777"
             android:layout_below="@+id/historylist"
             android:textSize="12dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/table_num"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <Button
-            android:text="开始"
-            android:id="@+id/begin"
-            android:background="@drawable/button"
-            style="@style/btn_input_amount_style"
-            android:layout_marginRight="5dp" />
-
-        <Button
-            android:text="暂停"
-            android:id="@+id/end"
-            android:background="@drawable/button"
-            style="@style/btn_input_amount_style"
-            android:layout_marginLeft="5dp" />
     </LinearLayout>
 
 </RelativeLayout>
