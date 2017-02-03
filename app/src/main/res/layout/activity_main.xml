@@ -32,14 +32,12 @@
 
     <Button
         android:id="@+id/stateButton"
-        android:layout_height="32dp"
-        android:layout_marginBottom="6dp"
+        android:layout_height="44dp"
+        android:layout_width="44dp"
         android:background="@mipmap/input_sleep"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/input"
-        android:layout_width="22dp"
-        android:layout_marginRight="6dp" />
+        android:layout_alignBottom="@+id/input" />
 
     <ProgressBar
         style="@android:style/Widget.ProgressBar.Horizontal"
