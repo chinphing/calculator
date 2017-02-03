@@ -132,10 +132,16 @@ public class Calculator {
 
 	public double eval(String expr)  {
 		Double result = Double.NaN;
+		String orgExpr = expr;
 
 		try {
 			for (ExprFilter filter : filters) {
 				expr = filter.call(expr);
+			}
+
+			//过滤的文字太多，视为无效表达式
+            if(orgExpr.length() - expr.length() > 4) {
+				return Double.NaN;
 			}
 
 			if(expr.length() > 0 && continuousInputTag.contains(expr.charAt(0))) {

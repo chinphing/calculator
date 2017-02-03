@@ -177,7 +177,7 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("十六万亿", "16000000000000"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("二对数三乘以二队戍午", "3.680169"));
 
-        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("一百曲二", "50"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("一百除二等于等于多少", "50"));
 
         for(Map.Entry<String, String> en : contiExpr) {
             String expr = en.getKey();

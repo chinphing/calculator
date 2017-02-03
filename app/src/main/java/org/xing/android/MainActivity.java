@@ -109,8 +109,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
         evalLog = AsyncLog.createAsyncHttpLog(this.getString(R.string.recordUrl));
 
-        Button endButton = (Button) this.findViewById(R.id.stateButton);
-        endButton.setOnClickListener(new View.OnClickListener() {
+        Button stateButton = (Button) this.findViewById(R.id.stateButton);
+        stateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MobclickAgent.onEvent(MainActivity.this, "statusClick");
@@ -287,7 +287,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     public void onResults(Bundle results) {
-        isListening = false;
 
         String expr = buildExpr(results);
         if(expr.contains("帮助") || expr.contains("示例")
@@ -311,6 +310,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 AppConfig.setIsFirstStart(false);
             }
         }
+
+        isListening = false;
         startListening(true);
     }
 
