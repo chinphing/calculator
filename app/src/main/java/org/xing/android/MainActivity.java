@@ -130,6 +130,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             }
         });
 
+        this.findViewById(R.id.help_mark).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHelp();
+            }
+        });
+
         inputText = (EditText) this.findViewById(R.id.input);
         msgText = (TextView) this.findViewById(R.id.msg);
 
@@ -173,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if (isListening) return;
         speechRecognizer.startListening(new Intent());
         isListening = true;
+        lastRmsdB = 0;
         if (resetInputCount) {
             noInputCount = 0;
         }
@@ -192,8 +200,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     }
 
+    private float lastRmsdB=0;
     public void onRmsChanged(float rmsdB) {
-        recordDynamic.setProgress((int) rmsdB);
+        lastRmsdB = (rmsdB*3+lastRmsdB*7) /10;
+        recordDynamic.setProgress((int) lastRmsdB);
     }
 
     public void onBufferReceived(byte[] buffer) {

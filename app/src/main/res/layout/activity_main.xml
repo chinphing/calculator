@@ -78,13 +78,35 @@
                 android:layout_gravity="center"
                 android:layerType="software" />
 
-        <TextView
-            android:id = "@+id/msg"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#777777"
-            android:layout_below="@+id/historylist"
-            android:textSize="12dp" />
+            android:orientation="horizontal"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/boder" >
+
+            <TextView
+                android:id = "@+id/msg"
+                android:layout_width="0dp"
+                android:layout_weight="96"
+                android:layout_height="wrap_content"
+                android:textColor="#777777"
+                android:textSize="12dp" />
+
+
+            <TextView
+                android:id = "@+id/help_mark"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:textColor="#777777"
+                android:clickable="true"
+                android:background="@drawable/textview_help_selector"
+                android:gravity="center"
+                android:text="\?"
+                android:textSize="15dp" />
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

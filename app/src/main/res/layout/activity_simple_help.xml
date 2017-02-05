@@ -36,13 +36,13 @@
                 android:id = "@+id/help_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#777777"
+                android:textColor="#333333"
                 android:text  = "帮助"
-                android:layout_marginTop="3dp"
-                android:textSize="20dp"
-                android:gravity="center"
-                android:layout_below="@+id/historylist" />
+                android:layout_marginTop="1dp"
+                android:textSize="18dp"
+                android:gravity="center" />
             </LinearLayout>
+
         <WebView
             android:id="@+id/simple_help"
             android:background="@color/colorFront"
