@@ -82,6 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_gravity="center"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@drawable/boder" >
@@ -89,22 +90,22 @@
             <TextView
                 android:id = "@+id/msg"
                 android:layout_width="0dp"
-                android:layout_weight="96"
+                android:layout_weight="95"
                 android:layout_height="wrap_content"
                 android:textColor="#777777"
-                android:textSize="12dp" />
+                android:textSize="12dp"
+                android:gravity="center"
+                android:layout_gravity="bottom" />
 
 
-            <TextView
+            <Button
                 android:id = "@+id/help_mark"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:textColor="#777777"
                 android:clickable="true"
                 android:background="@drawable/textview_help_selector"
                 android:gravity="center"
-                android:text="\?"
                 android:textSize="15dp" />
         </LinearLayout>
     </LinearLayout>

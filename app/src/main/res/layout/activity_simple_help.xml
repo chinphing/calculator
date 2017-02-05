@@ -19,16 +19,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_gravity="center"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:background="@color/colorBackground"
-                android:padding="5dp"
                 >
+
             <Button
                 android:id="@+id/help_close"
-                android:layout_height="20dp"
-                android:layout_width="20dp"
-                android:background="@mipmap/btn_close"
+                android:layout_height="40dp"
+                android:layout_width="40dp"
+
+                android:background="@drawable/btn_close_selector"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
 
@@ -38,9 +40,9 @@
                 android:layout_height="wrap_content"
                 android:textColor="#333333"
                 android:text  = "帮助"
-                android:layout_marginTop="1dp"
-                android:textSize="18dp"
-                android:gravity="center" />
+                android:textSize="20dp"
+                android:gravity="center"
+                android:layout_gravity="center_vertical" />
             </LinearLayout>
 
         <WebView
