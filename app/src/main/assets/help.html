@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="./js/KaTeX/katex.min.css" />
+    <script src="./js/KaTeX/katex.min.js"></script>
+
+</head>
+<body>
+<style>
+        body {
+            color: #444444;
+            background: #e0e0e0;
+            margin: 0;
+            padding: 5px;
+        }
+
+        a {
+            color: #fff;
+        }
+
+        .list li {
+            margin: 10px 0px;
+        }
+
+        .list h3 {
+            margin: 10px 0px;
+        }
+
+</style>
+
+
+
+<div id="abstract" class="list">
+    <h3>功能简介：</h3>
+    <ul>
+        <li> 纯语音输入，复杂计算一句话解决。</li>
+        <li> 您说的句子越长，识别准确率越高。</li>
+        <li> 支持小数、负数、分数、带优先级的混合四则运算。</li>
+        <li> 支持弧度制、角度制、π</li>
+        <li> 支持括号、幂运算、三角函数、对数运算。</li>
+        <li> 支持连续计算，以及上述计算的无限嵌套组合。</li>
+    </ul>
+</div>
+
+<div id="example" class = "list">
+    <h3>输入示例：</h3>
+    <ul>
+        <li><latex>+100</latex>  <p>读：加一百</p></li>
+        <li><latex>200+3*2.5</latex>  <p>读：二百加三乘二点五</p></li>
+        <li><latex>(2+3.11)/2</latex>  <p>读：括号二加三点一一括号除二</p></li>
+        <li><latex>\frac{1}{4}</latex> <p>读：四分之一</p></li>
+        <li><latex>3\frac{1}{4}</latex> <p>读：三又四分之一</p></li>
+        <li><latex>{4}^{-0.5}</latex> <p>读：四的负零点五次方</p></li>
+        <li><latex>\sqrt[5]{18}</latex> <p>读：五根号十八</p></li>
+        <li><latex>sin(0.1)</latex> <p>读：正弦零点一</p></li>
+        <li><latex>sin(\frac{2\pi}{3})</latex> <p>读：正弦三分之二派</p></li>
+        <li><latex>sin(30\degree)</latex> <p>读：正弦三十度</p></li>
+        <li><latex>log_{3}4</latex> <p>读：三对数四</p></li>
+        <li><latex>{(log_{3}(4+3*2))}^{\frac{1}{4}}</latex> <p>读：三对数括号四加三乘二括号的四分之一次方</p></li>
+        <li><latex>\frac{3+\frac{1}{4}}{2}</latex> <p>读：二分之括号三加四分之一括号</p></li>
+    </ul>
+</div >
+
+<script  type="text/javascript">
+        function hideDiv(targetId, hide) {
+            var target = document.getElementById(targetId);
+
+            if(hide) {
+                target.style.display = "none";
+            } else {
+                target.style.display = "block";
+            }
+        }
+
+        function hideExample(hide) {
+            hideDiv("example", hide)
+        }
+
+        function hideAbstract(hide) {
+            hideDiv("abstract", hide)
+        }
+
+        function hideAllList(hide) {
+           hideExample(hide);
+           hideAbstract(hide);
+        }
+
+        function replaceMultiply(expr) {
+            return expr.replace(new RegExp(/\∗/g), "×").replace(new RegExp(/>\/</g), ">÷<");
+        }
+
+        function addItem(item) {
+            hideAllList(true);
+
+            var li = document.createElement("li");
+            li.innerHTML = replaceMultiply(katex.renderToString(item));
+            var list = document.getElementById("list");
+            if(list.childNodes == null || list.childNodes.length == 0) {
+                list.appendChild(li);
+            } else {
+                list.insertBefore(li, list.childNodes[0]);
+            }
+        }
+
+        function translateExpression(tagname) {
+            var latexExprs = document.getElementsByTagName(tagname);
+            for(var i=0;i<latexExprs.length;i++) {
+                var latexExpr = latexExprs[i];
+                var htmlExpr = katex.renderToString(latexExpr.innerHTML);
+                latexExpr.innerHTML = replaceMultiply(htmlExpr);
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        translateExpression("latex");
+    </script>
+</body>
+</html>

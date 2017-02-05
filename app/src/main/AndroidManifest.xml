@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.xing.android" >
+    package="org.xing.android">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
@@ -15,26 +15,42 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
 
-        <!--百度语音识别设置-->
-        <meta-data android:name="com.baidu.speech.APP_ID" android:value="${bd_speech_appid}"/>
-        <meta-data android:name="com.baidu.speech.API_KEY" android:value="${bd_speech_key}"/>
-        <meta-data android:name="com.baidu.speech.SECRET_KEY" android:value="${bd_speech_secret}"/>
-        <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false" ></service>
+        <!-- 百度语音识别设置 -->
+        <meta-data
+            android:name="com.baidu.speech.APP_ID"
+            android:value="${bd_speech_appid}" />
+        <meta-data
+            android:name="com.baidu.speech.API_KEY"
+            android:value="${bd_speech_key}" />
+        <meta-data
+            android:name="com.baidu.speech.SECRET_KEY"
+            android:value="${bd_speech_secret}" />
 
-        <!--友盟统计-->
-        <meta-data android:value="${umeng_appkey}" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="${umeng_channel}" android:name="UMENG_CHANNEL"/>
+        <service
+            android:name="com.baidu.speech.VoiceRecognitionService"
+            android:exported="false" />
+
+        <!-- 友盟统计 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="${umeng_appkey}" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${umeng_channel}" />
 
         <!-- 橫屏切换不会导致Activity重新生成 -->
-        <activity android:name="org.xing.android.MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SimpleHelpActivity"></activity>
     </application>
+
 </manifest>

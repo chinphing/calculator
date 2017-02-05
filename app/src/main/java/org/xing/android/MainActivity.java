@@ -60,9 +60,15 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private int maxNoInputCount = 5;
 
     protected void showHelp() {
+        /*
         historyList.loadUrl("javascript:hideAllList(false);");
         msgText.setText("");
         MobclickAgent.onEvent(this, "help");
+        */
+        Intent intent =new Intent(MainActivity.this, SimpleHelpActivity.class);
+        intent.putExtra("url", "file:///android_asset/help.html");
+
+        startActivity(intent);
     }
 
     protected void showTips(int delaySecond) {

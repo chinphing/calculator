@@ -72,6 +72,7 @@
             <WebView
                 android:id="@+id/historylist"
                 android:layout_width="match_parent"
+                android:background="@color/colorFront"
                 android:layout_height="0dp"
                 android:layout_weight="97"
                 android:layout_gravity="center"
