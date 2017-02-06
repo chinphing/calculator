@@ -25,24 +25,33 @@
                 android:background="@color/colorBackground"
                 >
 
-            <Button
-                android:id="@+id/help_close"
-                android:layout_height="40dp"
-                android:layout_width="40dp"
+                <Button
+                    android:id="@+id/help_close"
+                    android:layout_height="40dp"
+                    android:layout_width="40dp"
 
-                android:background="@drawable/btn_close_selector"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                    android:background="@drawable/btn_close_selector"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
 
-            <TextView
-                android:id = "@+id/help_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#333333"
-                android:text  = "帮助"
-                android:textSize="20dp"
-                android:gravity="center"
-                android:layout_gravity="center_vertical" />
+                <TextView
+                    android:id = "@+id/help_title"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="#333333"
+                    android:text  = "帮助"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical" />
+
+                <Button
+                    android:id="@+id/help_blank"
+                    android:layout_height="40dp"
+                    android:layout_width="40dp"
+                    android:background="@color/colorBackground"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
             </LinearLayout>
 
         <WebView
