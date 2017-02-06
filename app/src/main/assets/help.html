@@ -34,20 +34,8 @@
 <div id="operation" class="list">
     <h3>操作：</h3>
     <ul>
-        <li> 1、点击麦克风图标可开始、暂停计算。</li>
-        <li> 2、麦克风图标为绿色开始计算，灰色表示停止。</li>
-    </ul>
-</div>
-
-<div id="abstract" class="list">
-    <h3>功能：</h3>
-    <ul>
-        <li> 纯语音输入，复杂计算一句话快速解决。</li>
-        <li> 不用动手，不用找按钮，计算历史以数学公式清晰呈现</li>
-        <li> 支持小数、负数、分数、带优先级的混合四则运算。</li>
-        <li> 支持弧度制、角度制、π</li>
-        <li> 支持括号、幂运算、三角函数、对数运算。</li>
-        <li> 支持连续计算，以及上述计算的无限嵌套组合。</li>
+        <li> 1、点击麦克风图标可开始、暂停语音输入。</li>
+        <li> 2、麦克风图标为绿色开始语音输入，灰色表示停止。</li>
     </ul>
 </div>
 
@@ -60,28 +48,87 @@
         <li><latex>\frac{1}{4}</latex> <p>读：四分之一</p></li>
         <li><latex>3\frac{1}{4}</latex> <p>读：三又四分之一</p></li>
         <li><latex>{4}^{-0.5}</latex> <p>读：四的负零点五次方</p></li>
+        <li><latex>\sqrt{18}</latex> <p>读：根号十八</p></li>
         <li><latex>\sqrt[5]{18}</latex> <p>读：五根号十八</p></li>
         <li><latex>sin(0.1)</latex> <p>读：正弦零点一</p></li>
         <li><latex>sin(\frac{2\pi}{3})</latex> <p>读：正弦三分之二派</p></li>
         <li><latex>sin(30\degree)</latex> <p>读：正弦三十度</p></li>
+        <li><latex>ln4</latex> <p>读：对数四</p></li>
         <li><latex>log_{3}4</latex> <p>读：三对数四</p></li>
-        <li><latex>{(log_{3}(4+3*2))}^{\frac{1}{4}}</latex> <p>读：三对数括号四加三乘二括号的四分之一次方</p></li>
+        <li><latex>{(\sqrt{8})}^{-\frac{4}{3}}</latex> <p>读：根号八的负三分之四次方</p></li>
         <li><latex>\frac{3+\frac{1}{4}}{2}</latex> <p>读：二分之括号三加四分之一括号</p></li>
+        <li><latex>{(log_{3}(4+3*2))}^{\frac{1}{4}}</latex> <p>读：三对数括号四加三乘二括号的四分之一次方</p></li>
     </ul>
 </div >
 
 <div id="details" class = "list">
     <h3>详细说明：</h3>
     <ul>
-        <li id="number"></li>
-        <li id="mixed"></li>
-        <li id="brackets"></li>
-        <li id="pow"></li>
-        <li id="func"></li>
-        <li id="pi"></li>
-        <li id="degree"></li>
-        <li id="log"></li>
-        <li id="advance"></li>
+        <li id="log">
+            <h5>对数函数</h5>
+            <p>支持任意底的对数表达。<br />
+                一元对数：读“对数a”，“l n a”“l g a ”“l o g a”（按字母读入），
+                分别表示<latex>log_{e}a</latex>、<latex>log_{e}a</latex>、<latex>log_{10}a</latex>、<latex>log_{2}a</latex>。<br />
+                二元对数：读“a对数b”，表示<latex>log_{a}b</latex>其中a是一个数字，b可以是数字、分数、括号表达式、函数。</p>
+        </li>
+        <li id="sqrt">
+            <h5>求根函数</h5>
+            <p>
+                一元求根：读“根号a”，a是数字，表示<latex>\sqrt{a}</latex>。<br />
+                二元求根：读“a根号b”，表示<latex>\sqrt[a]{b}</latex>，<br />
+                其中a是一个数字，b可以是数字、分数、括号表达式、函数。
+            </p>
+        </li>
+        <li id="number">
+            <h5>数字</h5>
+            <p>支持负数、小数、数字按正常的口语表达即可。
+                比如“一百二”、“负五十点二”、“三三”</p>
+        </li>
+        <li id="frac">
+            <h5>分数</h5>
+            <p>一般的口语表达即可，比如“五分之三点一”、“三又二分之一”。</p>
+        </li>
+        <li id="mixed">
+            <h5>加减乘除混合运算</h5>
+            <p>支持带优先级的“加”,“加上”，“减”，“减去”，“乘”，“乘以”，“除”，“除以”八种常用表达方式。<br />
+                注意：“除”和“除以”是同样的意思，“三除二”和“三除以二”都表示“3÷2”。</p>
+        </li>
+        <li id="continue">
+            <h5>连续计算</h5>
+            <p>上一次计算的结果参与到这一次的计算就是连续计算，<br />
+                一般以混合运算的运算符号（加减乘除）开始，或者是以下短语。<br />
+                "cos", "余弦", "sin", "正弦", "tan", "正切", "acos", "反余弦", "asin", "反正弦",
+                "atan", "反正切", "ln", "log", "lg", "对数", "根号"，"开方", "开平方", "开立方", "平方根", "立方根"。</p>
+        </li>
+        <li id="brackets">
+            <h5>括号</h5>
+            <p>直接读“括号”即可，不需要添加“左”或者“右”，计算器自动识别左右。<br />
+                必须两个括号成对出现，一个在开始位置，一个在结束位置。比如“三乘以括号二加一括号加三”表示"3×(2+1)+3" <br />
+                括号表达式可以作为一个整体嵌套在分数、求幂、三角函数、对数函数、求根等运算中，从而实现任意复杂的嵌套表达式，可查看使用示例。</p>
+        </li>
+        <li id="pow">
+            <h5>幂运算</h5>
+            <p>支持平方、立方以及n次方的表达，n可以为小数、负数或者分数。
+                比如“三的平方”，“三的五次方”，“三的负五点一次方”，“三的二分之一次方”。</p>
+        </li>
+        <li id="sin">
+            <h5>三角函数</h5>
+            <p>以“sin”为例，可以读“s i n”（按字母读入），或者“正弦”。
+                后面可以接数字、分数、括号表达式、其他函数。</p>
+        </li>
+        <li id="func">
+            <h5>其他函数</h5>
+            <p>其他函数包括“开方”、“开平方”、“开立方”、“平方根”、“立方根”。<br />
+                读“a开方”，表示<latex>\sqrt{a}</latex>。</p>
+        </li>
+        <li id="pi">
+            <h5>弧度制 π</h5>
+            <p>读“派”，可以跟数字直接组合，比如“三派”，或者跟分数组合“三分之二派”。</p>
+        </li>
+        <li id="degree">
+            <h5>角度制 °</h5>
+            <p>读“度”，表达方式与π相同。</p>
+        </li>
     </ul>
 </div>
 
@@ -111,19 +158,6 @@
 
         function replaceMultiply(expr) {
             return expr.replace(new RegExp(/\∗/g), "×").replace(new RegExp(/>\/</g), ">÷<");
-        }
-
-        function addItem(item) {
-            hideAllList(true);
-
-            var li = document.createElement("li");
-            li.innerHTML = replaceMultiply(katex.renderToString(item));
-            var list = document.getElementById("list");
-            if(list.childNodes == null || list.childNodes.length == 0) {
-                list.appendChild(li);
-            } else {
-                list.insertBefore(li, list.childNodes[0]);
-            }
         }
 
         function translateExpression(tagname) {
