@@ -6,5 +6,5 @@
 
     <color name="colorBackground">#d0d0d0</color>
     <color name="colorText">#202020</color>
-    <color name="colorFront">#e0e0e0</color>
+    <color name="colorFront">#ffffff</color>
 </resources>
