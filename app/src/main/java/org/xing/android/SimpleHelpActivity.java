@@ -1,11 +1,16 @@
 package org.xing.android;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+
+import java.io.ByteArrayInputStream;
 
 public class SimpleHelpActivity extends AppCompatActivity {
     private WebView helpWeb;
@@ -28,6 +33,25 @@ public class SimpleHelpActivity extends AppCompatActivity {
         helpWeb.setBackgroundColor(0);
         helpWeb.getSettings().setJavaScriptEnabled(true);
         helpWeb.getSettings().setAppCacheEnabled(true);
+
+        helpWeb.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                if (url.startsWith("http") || url.startsWith("https")
+                || url.startsWith("javascript") || url.startsWith("file")) {
+                    return super.shouldInterceptRequest(view, url);
+                } else {
+                    Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(in);
+                    return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("启动手机qq...".getBytes()));
+                }
+            }
+        });
 
         String url = getIntent().getStringExtra("url");
         helpWeb.loadUrl(url);
