@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.misc.DoubleKeyMap;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.xing.calc.filter.CorrectionExprFilter;
 import org.xing.calc.filter.ExprFilter;
@@ -19,6 +20,7 @@ import org.xing.calc.parser.grammer.calculatorParser;
 import org.xing.utils.NumberUtil;
 
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.BitSet;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -48,6 +50,7 @@ public class Calculator implements ANTLRErrorListener{
 	/*
 	解析错误
 	 */
+	private int errPos;
 	private String errMsg;
 
 	/**
@@ -137,7 +140,10 @@ public class Calculator implements ANTLRErrorListener{
 
 	public void setErrorMsg(int pos) {
 		int offset = 5;
-		if(currentExpr == null || pos < 0 || pos >= currentExpr.length()) errMsg = null;
+		if(errPos != -1) return;
+		if(currentExpr == null || pos < 0
+				|| pos >= currentExpr.length()) errMsg = null;
+		errPos = pos;
 		int start = pos > offset ? pos-offset:0;
 		int end = pos + offset < currentExpr.length() ? pos+offset:currentExpr.length();
 		errMsg = currentExpr.substring(start, end);
@@ -180,24 +186,40 @@ public class Calculator implements ANTLRErrorListener{
 			for (ExprFilter filter : filters) {
 				expr = filter.call(expr);
 			}
-			currentExpr = expr;
+
 
 			//过滤的文字太多，视为无效表达式
-            if(currentExpr.length() - expr.length() > 4) {
+            if(orgExpr.length() - expr.length() > 4) {
 				return Double.NaN;
 			}
 
-			if(continuousInputTag.contains(expr.charAt(0))) {
-				expr = NumberUtil.format(this.lastResult, 8)+expr;
-			}else if(continuousFuncTag.contains(expr)) {
-				expr = expr + NumberUtil.format(this.lastResult, 8);
-			}else if(continuousPostFuncTag.contains(expr)) {
-				expr = NumberUtil.format(this.lastResult, 8)+ expr;
-			}else if(continuousPowTag.contains(expr)) {
-				expr = NumberUtil.format(this.lastResult, 8) + "的" + expr;
-			}
 
-			result = innerEval(expr);
+
+			while(true) {
+				errPos = -1;
+				currentExpr = expr;
+
+				if(continuousInputTag.contains(expr.charAt(0))) {
+					expr = NumberUtil.format(this.lastResult, 8)+expr;
+				}else if(continuousFuncTag.contains(expr)) {
+					expr = expr + NumberUtil.format(this.lastResult, 8);
+				}else if(continuousPostFuncTag.contains(expr)) {
+					expr = NumberUtil.format(this.lastResult, 8)+ expr;
+				}else if(continuousPowTag.contains(expr)) {
+					expr = NumberUtil.format(this.lastResult, 8) + "的" + expr;
+				}
+
+				result = innerEval(expr);
+				if(!result.isNaN()) break;
+				if(errPos >= 0 && errPos < currentExpr.length()
+						&& currentExpr.charAt(errPos) == '点') {
+					char[] seq = currentExpr.toCharArray();
+					seq[errPos] = '减';
+					expr = String.valueOf(seq);
+				} else {
+					break;
+				}
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

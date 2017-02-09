@@ -109,6 +109,17 @@ public class CorrectionExprFilter implements ExprFilter {
 		correctionStringMap.put("乘邦", "乘八");
 		correctionStringMap.put("主角", "除九");
 		correctionStringMap.put("图九", "除九");
+
+		correctionStringMap.put("清平", "清屏");
+		correctionStringMap.put("青平", "清屏");
+		correctionStringMap.put("青萍", "清屏");
+		correctionStringMap.put("青苹", "清屏");
+		correctionStringMap.put("蜻蜓", "清屏");
+		correctionStringMap.put("金瓶", "清屏");
+
+		correctionStringMap.put("浙江", "撤销");
+		correctionStringMap.put("大腿", "倒退");
+		correctionStringMap.put("车享", "倒退");
 	}
 
 	@Override
@@ -126,6 +137,19 @@ public class CorrectionExprFilter implements ExprFilter {
 		String result = str.toString();
 		for(String s: correctionStringMap.keySet()) {
 			result = result.replace(s, correctionStringMap.get(s));
+		}
+
+		/*
+		纠正常见的结尾错误
+		 */
+		if(result.endsWith("加") || result.endsWith("减")
+				|| result.endsWith("乘")
+				|| result.endsWith("+") || result.endsWith("-")
+				|| result.endsWith("×") || result.endsWith("/") ) {
+			result = result.substring(0, result.length()-1);
+		} else if(result.endsWith("加上") || result.endsWith("减去")
+				|| result.endsWith("乘以") || result.endsWith("除以")) {
+			result = result.substring(0, result.length()-2);
 		}
 
 		return result;

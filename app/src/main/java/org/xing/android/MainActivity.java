@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         params.put("result", result);
         params.put("inputExpr", inputExpr);
         params.put("readExpr", readExpr == null ? "null" : readExpr);
-        params.put("type", 0);
+        params.put("type", type);
         evalLog.recordEvaluation(params);
     }
 
@@ -325,6 +325,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if(cmd != null && cmd.length() > 0
                 && cmdName.containsKey(cmd)) {
             int type = cmdName.get(cmd);
+            this.recordEvaluation(uniqueId, "NaN",
+                    expr.toString(), "null", type);
             switch (type) {
                 case 1:
                     historyResult.clear();

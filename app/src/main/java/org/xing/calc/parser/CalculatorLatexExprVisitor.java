@@ -19,7 +19,7 @@ public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
     }
 
     public enum AtomType{
-        PosNumber, NegNumber, Sqrt, Frac, Log, Brack, Pow, Mixed
+        None, PosNumber, NegNumber, Sqrt, Frac, Log, Brack, Pow, Mixed
     }
 
     private boolean bracketsLeggal(String expr) {
@@ -54,6 +54,7 @@ public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
 
 
     public static AtomType getAtomType(String expr) {
+        if(expr == null) return AtomType.None;
 
         if(expr.startsWith("-")) {
             return AtomType.NegNumber;
@@ -177,7 +178,7 @@ public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
                 index += 2;
             }
         }
-        return result.toString();
+        return result;
     }
 
     @Override
