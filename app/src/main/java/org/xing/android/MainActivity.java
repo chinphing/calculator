@@ -325,8 +325,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if(cmd != null && cmd.length() > 0
                 && cmdName.containsKey(cmd)) {
             int type = cmdName.get(cmd);
-            this.recordEvaluation(uniqueId, "NaN",
-                    expr.toString(), "null", type);
+            this.recordEvaluation(uniqueId, "NaN", expr.toString(), "null", type);
             switch (type) {
                 case 1:
                     historyResult.clear();
