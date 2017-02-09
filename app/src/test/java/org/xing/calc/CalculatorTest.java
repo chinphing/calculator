@@ -163,10 +163,10 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("加三点一五", "6.471928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("减三点一五", "3.321928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("乘三点一五", "10.464073"));
-        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("除三点一五", "3.321928"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("区三点一五", "3.321928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("根号", "1.822616"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("对数", "0.600273"));
-        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("正弦", "0.564868"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("争先", "0.564868"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("反正弦", "0.600273"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("开方", "0.774773"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("平方根", "0.880212"));
