@@ -52,6 +52,18 @@
             return expr.replace(new RegExp(/\∗/g), "×").replace(new RegExp(/>\/</g), ">÷<");
         }
 
+        function clearHistory() {
+            var list = document.getElementById("list");
+            list.innerHTML = "";
+        }
+
+        function historyPop() {
+            var list = document.getElementById("list");
+            if(list.childNodes != null && list.childNodes.length > 0) {
+                list.removeChild(list.childNodes[0]);
+            }
+        }
+
         function addItem(item) {
             var li = document.createElement("li");
             li.innerHTML = replaceMultiply(katex.renderToString(item));
