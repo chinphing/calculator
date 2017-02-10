@@ -10,6 +10,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.io.ByteArrayInputStream;
 
 public class SimpleHelpActivity extends AppCompatActivity {
@@ -55,5 +57,18 @@ public class SimpleHelpActivity extends AppCompatActivity {
 
         String url = getIntent().getStringExtra("url");
         helpWeb.loadUrl(url);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }
