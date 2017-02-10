@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private TextView msgText;
     private ProgressBar recordDynamic;
     private Button stateButton;
+    private Button startButton;
     private WebView historyList;
 
     /*
@@ -115,16 +116,35 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
         evalLog = AsyncLog.createAsyncHttpLog(this.getString(R.string.recordUrl));
 
-        Button stateBtn = (Button) this.findViewById(R.id.stateButton);
-        stateBtn.setOnClickListener(new View.OnClickListener() {
+        stateButton = (Button) this.findViewById(R.id.stateButton);
+        stateButton = (Button) this.findViewById(R.id.stateButton);
+        stateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MobclickAgent.onEvent(MainActivity.this, "statusClick");
                 if(isListening) {
                     stopListening();
+                    startButton.setBackgroundResource(R.mipmap.start);
                     msgText.setText("已暂停");
                 } else {
                     startListening(true);
+                    startButton.setBackgroundResource(R.mipmap.stop);
+                    msgText.setText("");
+                }
+            }
+        });
+        startButton = (Button) this.findViewById(R.id.ctrl_start);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MobclickAgent.onEvent(MainActivity.this, "startClick");
+                if(isListening) {
+                    stopListening();
+                    startButton.setBackgroundResource(R.mipmap.start);
+                    msgText.setText("已暂停");
+                } else {
+                    startListening(true);
+                    startButton.setBackgroundResource(R.mipmap.stop);
                     msgText.setText("");
                 }
             }
@@ -141,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         msgText = (TextView) this.findViewById(R.id.msg);
 
         recordDynamic = (ProgressBar) this.findViewById(R.id.recordDynamic);
-        stateButton = (Button) this.findViewById(R.id.stateButton);
 
         historyList = (WebView) this.findViewById(R.id.historylist);
         historyList.setBackgroundColor(0);
@@ -152,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         historyList.loadUrl("file:///android_asset/history.html");
 
         startListening(true);
+        startButton.setBackgroundResource(R.mipmap.stop);
 
         historyResult = new Stack<>();
         cmdName = new HashMap<String, Integer>();
@@ -173,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onResume() {
         super.onResume();
         startListening(true);
+        startButton.setBackgroundResource(R.mipmap.stop);
         MobclickAgent.onResume(this);
         msgText.setText("");
     }
@@ -181,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onPause() {
         super.onPause();
         stopListening();
+        startButton.setBackgroundResource(R.mipmap.start);
         MobclickAgent.onPause(this);
     }
 
@@ -235,24 +257,29 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         switch (error) {
             case SpeechRecognizer.ERROR_AUDIO:
                 sb.append("录音设备未授权");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                 noInputCount++;
                 if (noInputCount >= maxNoInputCount) {
                     sb.append("已暂停");
+                    startButton.setBackgroundResource(R.mipmap.start);
                 } else {
                     startListening(false);
                 }
                 break;
             case SpeechRecognizer.ERROR_CLIENT:
                 sb.append("客户端错误");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
                 sb.append("权限不足");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_NETWORK:
                 sb.append("请检查网络连接");
                 MobclickAgent.onEvent(this, "errorNetwork");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_NO_MATCH:
                 sb.append("未识别");
@@ -262,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
                 sb.append("引擎忙");
                 MobclickAgent.onEvent(this, "busy");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_SERVER:
                 sb.append("未识别");
@@ -271,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
                 sb.append("网络连接连接超时");
                 MobclickAgent.onEvent(this, "errorNetworkTimeout");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
         }
         if (sb.length() > 0) {

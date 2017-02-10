@@ -21,6 +21,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("澄", "乘");
 		addWord("橙", "乘");
 		addWord("盛", "乘");
+		addWord("重", "乘");
 
 		addWord("区", "除");
 		addWord("褚", "除");
