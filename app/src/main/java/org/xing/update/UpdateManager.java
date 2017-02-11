@@ -108,7 +108,7 @@ public class UpdateManager {
             } else if(mIsEnforceCheck){
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("更新");
-                builder.setMessage("已是最新版本："+mUpdateEntity.versionName);
+                builder.setMessage("已是最新版本："+AppConfig.getVersionName());
                 builder.setPositiveButton("确定", null);
                 builder.show();
             }
