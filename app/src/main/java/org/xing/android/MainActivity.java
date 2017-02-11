@@ -100,10 +100,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         AppConfig.loadConfig(this);
 
-        if(AppConfig.getCheckUpdate()) {
-            UpdateManager.checkUrl = this.getString(R.string.updateCheckUrl);
-            UpdateManager.update(this);
-        }
+        //20s后检查更新
+        UpdateManager.postUpdate(this, 20);
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
@@ -186,6 +184,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         cmdName.put("帮助", 3);
         cmdName.put("示例", 3);
         cmdName.put("说明", 3);
+
+
+        cmdName.put("升级", 4);
+        cmdName.put("版本", 4);
     }
 
 
@@ -378,6 +380,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     break;
                 case 3:
                     showHelp();
+                    break;
+                case 4:
+                    UpdateManager.update(this, true);
                     break;
                 default:
                     break;

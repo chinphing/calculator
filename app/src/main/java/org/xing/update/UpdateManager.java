@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,6 +19,8 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.xing.android.AppConfig;
+import org.xing.android.MainActivity;
+import org.xing.android.R;
 import org.xing.utils.NumberUtil;
 
 import java.io.File;
@@ -45,6 +48,19 @@ public class UpdateManager {
     public static String checkUrl = "";
     public static UpdateEntity mUpdateEntity;
 
+    public static void postUpdate(final Context context, int delaySecond) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(AppConfig.getCheckUpdate()) {
+                    mIsEnforceCheck = false;
+                    UpdateManager.update(context);
+                }
+            }
+        }, delaySecond*1000);
+    }
+
     public static void update(Context context){
         update(context,mIsEnforceCheck);
     }
@@ -54,6 +70,7 @@ public class UpdateManager {
         mIsEnforceCheck = isEnforceCheck;
         mAppVersionCode = AppConfig.getVersionCode();
 
+        checkUrl = mContext.getString(R.string.updateCheckUrl);
         if(TextUtils.isEmpty(checkUrl)){
             Toast.makeText(mContext, "url不能为空，请设置url", Toast.LENGTH_SHORT).show();
             return;
@@ -76,8 +93,6 @@ public class UpdateManager {
     }
 
     private static void loadOnlineData(String json) {
-
-
         try {
             UpdateEntity updateEntity = new UpdateEntity(json);
             if(updateEntity == null){
@@ -90,6 +105,12 @@ public class UpdateManager {
             if(mAppVersionCode < mUpdateEntity.versionCode){
                 //启动更新
                 AlertUpdate();
+            } else if(mIsEnforceCheck){
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("更新");
+                builder.setMessage("已是最新版本："+mUpdateEntity.versionName);
+                builder.setPositiveButton("确定", null);
+                builder.show();
             }
         } catch (JSONException e) {
             MobclickAgent.reportError(mContext, e);
@@ -102,7 +123,8 @@ public class UpdateManager {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("发现新版本");
-        builder.setMessage("新版本:" + mUpdateEntity.versionName + "\n"
+        builder.setMessage("当前版本：" + AppConfig.getVersionName() + "\n"
+                + "新版本：" + mUpdateEntity.versionName + "\n"
                 + "大小：" + NumberUtil.getPrintSize(mUpdateEntity.fileSize) + "\n"
                 + "更新:" + mUpdateEntity.updateLog + "\n");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
