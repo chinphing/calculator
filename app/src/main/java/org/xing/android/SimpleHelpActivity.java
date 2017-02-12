@@ -50,7 +50,7 @@ public class SimpleHelpActivity extends AppCompatActivity {
                 } else {
                     Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(in);
-                    return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("启动手机qq...".getBytes()));
+                    return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("启动外部应用...".getBytes()));
                 }
             }
         });
