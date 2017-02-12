@@ -14,13 +14,12 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.baidu.speech.VoiceRecognitionService;
 import com.umeng.analytics.MobclickAgent;
 
-import org.w3c.dom.Text;
 import org.xing.calc.Calculator;
 import org.xing.logger.AsyncLog;
 import org.xing.logger.Log;
@@ -30,10 +29,7 @@ import org.xing.utils.NumberUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener {
@@ -156,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         });
 
         inputText = (EditText) this.findViewById(R.id.input);
+        inputText.setKeyListener(null);
         msgText = (TextView) this.findViewById(R.id.msg);
 
         recordDynamic = (ProgressBar) this.findViewById(R.id.recordDynamic);

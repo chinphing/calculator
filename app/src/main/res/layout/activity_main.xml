@@ -27,9 +27,7 @@
         android:textColor="@color/colorText"
         android:text="0"
         android:textSize="38sp"
-        android:duplicateParentState="false"
-        android:editable="false"
-        android:focusable="false" />
+        android:duplicateParentState="false" />
 
     <Button
         android:id="@+id/stateButton"
