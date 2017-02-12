@@ -133,6 +133,7 @@ public class CalculatorTest{
         chnMap.put("负派", "-3.141593");
         chnMap.put("根号派", "1.772454");
 
+
         int correctNum = 0;
         int wrongNum = 0;
         for(String expr : chnMap.keySet()) {
@@ -162,10 +163,10 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("加三点一五", "6.471928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("减三点一五", "3.321928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("乘三点一五", "10.464073"));
-        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("除三点一五", "3.321928"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("区三点一五", "3.321928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("根号", "1.822616"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("对数", "0.600273"));
-        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("正弦", "0.564868"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("争先", "0.564868"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("反正弦", "0.600273"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("开方", "0.774773"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("平方根", "0.880212"));
@@ -177,7 +178,12 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("十六万亿", "16000000000000"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("二对数三乘以二队戍午", "3.680169"));
 
-        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("一百除二等于等于多少", "50"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("一百除二等于多少", "50"));
+
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("三点一点零点一加", "3"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("三点一点零点一", "3"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("26.9点59.9", "-33"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("点十九", "-52"));
 
         for(Map.Entry<String, String> en : contiExpr) {
             String expr = en.getKey();

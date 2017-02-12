@@ -30,8 +30,11 @@ import org.xing.utils.NumberUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener {
 
@@ -46,12 +49,15 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private TextView msgText;
     private ProgressBar recordDynamic;
     private Button stateButton;
+    private Button startButton;
+    private WebView historyList;
 
     /*
-    历史记录
-     */
-    private WebView historyList;
-    private LinkedList<String> historyData;
+	命令
+	 */
+    private Stack<Double> historyResult;
+    private Map<String, Integer> cmdName;
+
 
     /*
     空闲状态计数，达到maxNoInputCount暂时停止工作
@@ -60,11 +66,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private int maxNoInputCount = 5;
 
     protected void showHelp() {
-        /*
-        historyList.loadUrl("javascript:hideAllList(false);");
-        msgText.setText("");
-        MobclickAgent.onEvent(this, "help");
-        */
         Intent intent =new Intent(MainActivity.this, SimpleHelpActivity.class);
         intent.putExtra("url", "file:///android_asset/help.html");
 
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("小技巧");
-                builder.setMessage("  说'帮助'、'怎么用'，查看使用教程。\n  支持括号、分数、π、三角函数、对数函数。\n  立即查看教程？");
+                builder.setMessage("  说'帮助'、'说明'，查看使用教程。\n  支持括号、分数、π、三角函数、对数函数。\n  立即查看教程？");
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -99,10 +100,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         AppConfig.loadConfig(this);
 
-        if(AppConfig.getCheckUpdate()) {
-            UpdateManager.checkUrl = this.getString(R.string.updateCheckUrl);
-            UpdateManager.update(this);
-        }
+        //20s后检查更新
+        UpdateManager.postUpdate(this, 20);
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
@@ -115,16 +114,35 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
         evalLog = AsyncLog.createAsyncHttpLog(this.getString(R.string.recordUrl));
 
-        Button stateBtn = (Button) this.findViewById(R.id.stateButton);
-        stateBtn.setOnClickListener(new View.OnClickListener() {
+        stateButton = (Button) this.findViewById(R.id.stateButton);
+        stateButton = (Button) this.findViewById(R.id.stateButton);
+        stateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MobclickAgent.onEvent(MainActivity.this, "statusClick");
                 if(isListening) {
                     stopListening();
+                    startButton.setBackgroundResource(R.mipmap.start);
                     msgText.setText("已暂停");
                 } else {
                     startListening(true);
+                    startButton.setBackgroundResource(R.mipmap.stop);
+                    msgText.setText("");
+                }
+            }
+        });
+        startButton = (Button) this.findViewById(R.id.ctrl_start);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MobclickAgent.onEvent(MainActivity.this, "startClick");
+                if(isListening) {
+                    stopListening();
+                    startButton.setBackgroundResource(R.mipmap.start);
+                    msgText.setText("已暂停");
+                } else {
+                    startListening(true);
+                    startButton.setBackgroundResource(R.mipmap.stop);
                     msgText.setText("");
                 }
             }
@@ -141,9 +159,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         msgText = (TextView) this.findViewById(R.id.msg);
 
         recordDynamic = (ProgressBar) this.findViewById(R.id.recordDynamic);
-        stateButton = (Button) this.findViewById(R.id.stateButton);
 
-        historyData = new LinkedList<String>();
         historyList = (WebView) this.findViewById(R.id.historylist);
         historyList.setBackgroundColor(0);
         historyList.getSettings().setJavaScriptEnabled(true);
@@ -153,6 +169,25 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         historyList.loadUrl("file:///android_asset/history.html");
 
         startListening(true);
+        startButton.setBackgroundResource(R.mipmap.stop);
+
+        historyResult = new Stack<>();
+        cmdName = new HashMap<String, Integer>();
+        cmdName.put("清屏", 1);
+        cmdName.put("清空", 1);
+        cmdName.put("清除", 1);
+
+        cmdName.put("撤销", 2);
+        cmdName.put("倒退", 2);
+        cmdName.put("删除", 2);
+
+        cmdName.put("帮助", 3);
+        cmdName.put("示例", 3);
+        cmdName.put("说明", 3);
+
+
+        cmdName.put("升级", 4);
+        cmdName.put("版本", 4);
     }
 
 
@@ -160,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onResume() {
         super.onResume();
         startListening(true);
+        startButton.setBackgroundResource(R.mipmap.stop);
         MobclickAgent.onResume(this);
         msgText.setText("");
     }
@@ -168,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onPause() {
         super.onPause();
         stopListening();
+        startButton.setBackgroundResource(R.mipmap.start);
         MobclickAgent.onPause(this);
     }
 
@@ -222,24 +259,29 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         switch (error) {
             case SpeechRecognizer.ERROR_AUDIO:
                 sb.append("录音设备未授权");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                 noInputCount++;
                 if (noInputCount >= maxNoInputCount) {
                     sb.append("已暂停");
+                    startButton.setBackgroundResource(R.mipmap.start);
                 } else {
                     startListening(false);
                 }
                 break;
             case SpeechRecognizer.ERROR_CLIENT:
                 sb.append("客户端错误");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
                 sb.append("权限不足");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_NETWORK:
                 sb.append("请检查网络连接");
                 MobclickAgent.onEvent(this, "errorNetwork");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_NO_MATCH:
                 sb.append("未识别");
@@ -249,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
                 sb.append("引擎忙");
                 MobclickAgent.onEvent(this, "busy");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_SERVER:
                 sb.append("未识别");
@@ -258,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
                 sb.append("网络连接连接超时");
                 MobclickAgent.onEvent(this, "errorNetworkTimeout");
+                startButton.setBackgroundResource(R.mipmap.start);
                 break;
         }
         if (sb.length() > 0) {
@@ -281,34 +325,79 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         params.put("result", result);
         params.put("inputExpr", inputExpr);
         params.put("readExpr", readExpr == null ? "null" : readExpr);
-        params.put("type", 0);
+        params.put("type", type);
         evalLog.recordEvaluation(params);
     }
 
     private void showResult(String expr, Double evalResult, String readExpr) {
         //界面上显示结果
         if (!Double.isNaN(evalResult)) {
+            historyResult.push(evalResult);
             String text = NumberUtil.format(evalResult, 8);
 
             String item = readExpr + "=" + text;
 
-            historyData.add(0, item);
             historyList.loadUrl("javascript:addItem('" + item + "')");
             inputText.setText(text);
             msgText.setText("");
         } else {
-            msgText.setText("未识别");
+            String errMsg = calculator.getErrMsg();
+            if(errMsg != null) {
+                msgText.setText("未识别，'"+errMsg+"'表达错误");
+            } else {
+                msgText.setText("未识别");
+            }
         }
 
+    }
+
+    public boolean handleCommand(String expr) {
+        String cmd = calculator.execFilter(expr);
+        if(cmd != null && cmd.length() > 0
+                && cmdName.containsKey(cmd)) {
+            int type = cmdName.get(cmd);
+            this.recordEvaluation(uniqueId, "NaN", expr.toString(), "null", type);
+            switch (type) {
+                case 1:
+                    historyResult.clear();
+                    historyList.loadUrl("javascript:clearHistory()");
+                    calculator.setLastResult(0);
+                    inputText.setText("0");
+                    break;
+                case 2:
+                    if(historyResult.size() > 0) {
+                        historyResult.pop();
+                        historyList.loadUrl("javascript:historyPop()");
+                        if(historyResult.size() > 0) {
+                            Double lastResult = historyResult.peek();
+                            calculator.setLastResult(lastResult);
+                            inputText.setText(NumberUtil.format(lastResult, 8));
+                        } else {
+                            calculator.setLastResult(0);
+                            inputText.setText("0");
+                        }
+                    }
+                    break;
+                case 3:
+                    showHelp();
+                    break;
+                case 4:
+                    UpdateManager.update(this, true);
+                    break;
+                default:
+                    break;
+            }
+            msgText.setText("");
+            return true;
+        }
+
+        return false;
     }
 
     public void onResults(Bundle results) {
 
         String expr = buildExpr(results);
-        if(expr.contains("帮助") || expr.contains("示例")
-                || expr.contains("说明") || expr.contains("怎么用") ) {
-            showHelp();
-        } else {
+        if(!handleCommand(expr)) {
             //结算结果
             String readExpr = null;
             Double evalResult = calculator.eval(expr.toString());
