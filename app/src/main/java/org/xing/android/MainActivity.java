@@ -24,6 +24,7 @@ import com.qq.e.ads.banner.AbstractBannerADListener;
 import com.qq.e.ads.banner.BannerView;
 import com.umeng.analytics.MobclickAgent;
 
+import org.xing.ad.AdManager;
 import org.xing.calc.Calculator;
 import org.xing.logger.AsyncLog;
 import org.xing.logger.Log;
@@ -61,8 +62,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     /*
     腾讯联盟广告
      */
-    private ViewGroup bannerContainer;
-    private BannerView bv;
+    private AdManager adManager;
 
     /*
     空闲状态计数，达到maxNoInputCount暂时停止工作
@@ -117,12 +117,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     stopListening();
                     startButton.setBackgroundResource(R.mipmap.start);
                     msgText.setText("已暂停");
-                    showAd(0);
+                    adManager.showAd(0);
                 } else {
                     startListening(true);
                     startButton.setBackgroundResource(R.mipmap.stop);
                     msgText.setText("");
-                    closeAd();
+                    adManager.closeAd();
                 }
             }
         });
@@ -135,12 +135,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     stopListening();
                     startButton.setBackgroundResource(R.mipmap.start);
                     msgText.setText("已暂停");
-                    showAd(0);
+                    adManager.showAd(0);
                 } else {
                     startListening(true);
                     startButton.setBackgroundResource(R.mipmap.stop);
                     msgText.setText("");
-                    closeAd();
+                    adManager.closeAd();
                 }
             }
         });
@@ -195,61 +195,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     private void initAd() {
-        bannerContainer = (ViewGroup) this.findViewById(R.id.bannerContainer);
-    }
-
-    private void showAd(int delaySeconds) {
-        if(bv == null) {
-            String appid = this.getString(R.string.gdtAppid);
-            String bannerPosID = this.getString(R.string.gdtBannerPosID);
-            this.bv = new BannerView(this, ADSize.BANNER, appid, bannerPosID);
-            this.bv.setRefresh(30);
-            this.bv.setShowClose(true);
-            this.bv.setADListener(new AbstractBannerADListener() {
-                @Override
-                public void onNoAD(int arg0) {
-                    MobclickAgent.onEvent(MainActivity.this, "bannerNoAD");
-                }
-
-                @Override
-                public void onADReceiv() {
-                    MobclickAgent.onEvent(MainActivity.this, "bannerReceived");
-                }
-
-                @Override
-                public void onADExposure() {
-                    MainActivity.this.bv.setPadding(0, 0, 0, 10);
-                }
-
-                @Override
-                public void onADClosed() {
-                    closeAd();
-                }
-            });
-            bannerContainer.addView(bv);
-        }
-        this.bv.loadAD();
-
-        /*
-        自动关闭
-         */
-        if(delaySeconds > 0) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    MainActivity.this.closeAd();
-                }
-            }, delaySeconds * 1000);
-        }
-    }
-
-    private void closeAd() {
-        if (bv != null) {
-            bannerContainer.removeView(bv);
-            bv.destroy();
-            bv = null;
-        }
+        adManager = new AdManager(this,
+                this.getString(R.string.gdtAppid),
+                this.getString(R.string.gdtBannerPosID),
+                (ViewGroup) this.findViewById(R.id.bannerContainer));
     }
 
     @Override
