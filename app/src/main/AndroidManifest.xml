@@ -50,9 +50,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".SimpleHelpActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+
+        <!-- 腾讯广告联盟 -->
+        <service android:name="com.qq.e.comm.DownloadService" android:exported="false"/>
+        <activity android:name="com.qq.e.ads.ADActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize"/>
     </application>
 
 </manifest>

@@ -10,7 +10,9 @@ import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.baidu.speech.VoiceRecognitionService;
+import com.qq.e.ads.banner.ADSize;
+import com.qq.e.ads.banner.AbstractBannerADListener;
+import com.qq.e.ads.banner.BannerView;
 import com.umeng.analytics.MobclickAgent;
 
 import org.xing.calc.Calculator;
@@ -54,6 +59,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private Stack<Double> historyResult;
     private Map<String, Integer> cmdName;
 
+    /*
+    腾讯联盟广告
+     */
+    private ViewGroup bannerContainer;
+    private BannerView bv;
 
     /*
     空闲状态计数，达到maxNoInputCount暂时停止工作
@@ -76,7 +86,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("小技巧");
-                builder.setMessage("  说'帮助'、'说明'，查看使用教程。\n  支持括号、分数、π、三角函数、对数函数。\n  立即查看教程？");
+                builder.setMessage("  说'帮助'、'说明'，查看使用教程。\n  " +
+                        "支持括号、分数、π、三角函数、对数函数。\n  立即查看教程？");
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -89,27 +100,14 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }, delaySecond*1000);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        AppConfig.loadConfig(this);
-
-        //20s后检查更新
-        UpdateManager.postUpdate(this, 20);
-
-        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-
+    private void initSpeechRecognizer() {
         isListening = false;
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(
                 this, new ComponentName(this, VoiceRecognitionService.class));
         speechRecognizer.setRecognitionListener(this);
+    }
 
-        uniqueId = DeviceUtil.getUniqueId(this);
-        calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
-        evalLog = AsyncLog.createAsyncHttpLog(this.getString(R.string.recordUrl));
-
+    private void initUserView() {
         stateButton = (Button) this.findViewById(R.id.stateButton);
         stateButton = (Button) this.findViewById(R.id.stateButton);
         stateButton.setOnClickListener(new View.OnClickListener() {
@@ -120,10 +118,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     stopListening();
                     startButton.setBackgroundResource(R.mipmap.start);
                     msgText.setText("已暂停");
+                    showAd(0);
                 } else {
                     startListening(true);
                     startButton.setBackgroundResource(R.mipmap.stop);
                     msgText.setText("");
+                    closeAd();
                 }
             }
         });
@@ -136,10 +136,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     stopListening();
                     startButton.setBackgroundResource(R.mipmap.start);
                     msgText.setText("已暂停");
+                    showAd(0);
                 } else {
                     startListening(true);
                     startButton.setBackgroundResource(R.mipmap.stop);
                     msgText.setText("");
+                    closeAd();
                 }
             }
         });
@@ -156,6 +158,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         msgText = (TextView) this.findViewById(R.id.msg);
 
         recordDynamic = (ProgressBar) this.findViewById(R.id.recordDynamic);
+    }
+
+    private void initCalculator() {
+        uniqueId = DeviceUtil.getUniqueId(this);
+        calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
+        evalLog = AsyncLog.createAsyncHttpLog(this.getString(R.string.recordUrl));
 
         historyList = (WebView) this.findViewById(R.id.historylist);
         historyList.setBackgroundColor(0);
@@ -165,10 +173,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         historyList.loadUrl("javascript:var isFirstStart="+AppConfig.getIsFirstStart()+";");
         historyList.loadUrl("file:///android_asset/history.html");
 
-        startListening(true);
-        startButton.setBackgroundResource(R.mipmap.stop);
-
         historyResult = new Stack<>();
+    }
+
+    private void initCommand() {
         cmdName = new HashMap<String, Integer>();
         cmdName.put("清屏", 1);
         cmdName.put("清空", 1);
@@ -185,6 +193,101 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         cmdName.put("升级", 4);
         cmdName.put("版本", 4);
+    }
+
+    private void setCloseButton(int width, int height) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        float scale = metrics.density;
+
+        Button adCloseButton = (Button)findViewById(R.id.ad_close);
+        ViewGroup.LayoutParams lp = adCloseButton.getLayoutParams();
+        lp.height = (int)(width * scale);
+        lp.width = (int)(height * scale);
+        adCloseButton.setLayoutParams(lp);
+    }
+
+    private void initAd() {
+        bannerContainer = (ViewGroup) this.findViewById(R.id.bannerContainer);
+
+        Button adCloseButton = (Button)findViewById(R.id.ad_close);
+        adCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeAd();
+            }
+        });
+    }
+
+    private void showAd(int delaySeconds) {
+        if(bv == null) {
+            String appid = this.getString(R.string.gdtAppid);
+            String bannerPosID = this.getString(R.string.gdtBannerPosID);
+            this.bv = new BannerView(this, ADSize.BANNER, appid, bannerPosID);
+            this.bv.setRefresh(30);
+            this.bv.setADListener(new AbstractBannerADListener() {
+                @Override
+                public void onNoAD(int arg0) {
+                    MobclickAgent.onEvent(MainActivity.this, "bannerNoAD");
+                }
+
+                @Override
+                public void onADReceiv() {
+                    MobclickAgent.onEvent(MainActivity.this, "bannerReceived");
+                }
+
+                @Override
+                public void onADExposure() {
+                    MainActivity.this.bv.setPadding(0, 0, 0, 5);
+                    setCloseButton(30, 30);
+                }
+            });
+            bannerContainer.addView(bv, 0);
+        }
+        this.bv.loadAD();
+
+        /*
+        自动关闭
+         */
+        if(delaySeconds > 0) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MainActivity.this.closeAd();
+                }
+            }, delaySeconds * 1000);
+        }
+    }
+
+    private void closeAd() {
+        if (bv != null) {
+            setCloseButton(0, 0);
+            bannerContainer.removeView(bv);
+            bv.destroy();
+            bv = null;
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        AppConfig.loadConfig(this);
+
+        //10s后检查更新
+        UpdateManager.postUpdate(this, 10);
+
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        initSpeechRecognizer();
+        initUserView();
+        initCalculator();
+        initCommand();
+        initAd();
+
+        startListening(true);
+        startButton.setBackgroundResource(R.mipmap.stop);
     }
 
 
