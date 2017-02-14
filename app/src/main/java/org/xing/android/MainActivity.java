@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -195,28 +194,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         cmdName.put("版本", 4);
     }
 
-    private void setCloseButton(int width, int height) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        float scale = metrics.density;
-
-        Button adCloseButton = (Button)findViewById(R.id.ad_close);
-        ViewGroup.LayoutParams lp = adCloseButton.getLayoutParams();
-        lp.height = (int)(width * scale);
-        lp.width = (int)(height * scale);
-        adCloseButton.setLayoutParams(lp);
-    }
-
     private void initAd() {
         bannerContainer = (ViewGroup) this.findViewById(R.id.bannerContainer);
-
-        Button adCloseButton = (Button)findViewById(R.id.ad_close);
-        adCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeAd();
-            }
-        });
     }
 
     private void showAd(int delaySeconds) {
@@ -225,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             String bannerPosID = this.getString(R.string.gdtBannerPosID);
             this.bv = new BannerView(this, ADSize.BANNER, appid, bannerPosID);
             this.bv.setRefresh(30);
+            this.bv.setShowClose(true);
             this.bv.setADListener(new AbstractBannerADListener() {
                 @Override
                 public void onNoAD(int arg0) {
@@ -238,11 +218,15 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
                 @Override
                 public void onADExposure() {
-                    MainActivity.this.bv.setPadding(0, 0, 0, 5);
-                    setCloseButton(30, 30);
+                    MainActivity.this.bv.setPadding(0, 0, 0, 10);
+                }
+
+                @Override
+                public void onADClosed() {
+                    closeAd();
                 }
             });
-            bannerContainer.addView(bv, 0);
+            bannerContainer.addView(bv);
         }
         this.bv.loadAD();
 
@@ -262,7 +246,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private void closeAd() {
         if (bv != null) {
-            setCloseButton(0, 0);
             bannerContainer.removeView(bv);
             bv.destroy();
             bv = null;
