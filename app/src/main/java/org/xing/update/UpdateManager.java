@@ -19,7 +19,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.xing.android.AppConfig;
-import org.xing.android.MainActivity;
 import org.xing.android.R;
 import org.xing.utils.NumberUtil;
 
@@ -126,7 +125,7 @@ public class UpdateManager {
         builder.setMessage("当前版本：" + AppConfig.getVersionName() + "\n"
                 + "新版本：" + mUpdateEntity.versionName + "\n"
                 + "大小：" + NumberUtil.getPrintSize(mUpdateEntity.fileSize) + "\n"
-                + "更新:" + mUpdateEntity.updateLog + "\n");
+                + mUpdateEntity.updateLog + "\n");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
