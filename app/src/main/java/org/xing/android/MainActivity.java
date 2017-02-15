@@ -19,9 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.baidu.speech.VoiceRecognitionService;
-import com.qq.e.ads.banner.ADSize;
-import com.qq.e.ads.banner.AbstractBannerADListener;
-import com.qq.e.ads.banner.BannerView;
 import com.umeng.analytics.MobclickAgent;
 
 import org.xing.ad.AdManager;
@@ -183,12 +180,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         cmdName.put("撤销", 2);
         cmdName.put("倒退", 2);
+        cmdName.put("后退", 2);
         cmdName.put("删除", 2);
 
         cmdName.put("帮助", 3);
         cmdName.put("示例", 3);
         cmdName.put("说明", 3);
-
 
         cmdName.put("升级", 4);
         cmdName.put("版本", 4);

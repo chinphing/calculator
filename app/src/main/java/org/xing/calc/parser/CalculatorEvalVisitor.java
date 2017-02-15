@@ -3,9 +3,9 @@ package org.xing.calc.parser;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.xing.calc.parser.grammer.calculatorBaseVisitor;
 import org.xing.calc.parser.grammer.calculatorParser;
-import org.xing.calc.parser.grammer.calculatorParser.FunctionContext;
 import org.xing.calc.parser.grammer.calculatorParser.FuncnameContext;
 import org.xing.calc.parser.grammer.calculatorParser.FuncnameExContext;
+import org.xing.calc.parser.grammer.calculatorParser.FunctionContext;
 import org.xing.calc.parser.grammer.calculatorParser.PostFuncnameContext;
 
 public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
@@ -109,7 +109,8 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 				return (firstNumber * secondNumber + thirdNumber) / secondNumber;
 			}
 		}else {
-			return visit(ctx.getChild(0));
+			Double result = visit(ctx.getChild(0));
+			return result == null? Double.NaN:result;
 		}
 	}
 

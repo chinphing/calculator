@@ -2,16 +2,12 @@ package org.xing.ad;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.view.ViewGroup;
 
 import com.qq.e.ads.banner.ADSize;
 import com.qq.e.ads.banner.AbstractBannerADListener;
 import com.qq.e.ads.banner.BannerView;
 import com.umeng.analytics.MobclickAgent;
-
-import org.xing.android.MainActivity;
-import org.xing.android.R;
 
 import java.util.Random;
 import java.util.Timer;
@@ -34,8 +30,10 @@ public class AdManager {
      */
 
     private Random random;
+    private float showProb;
     private long lastShowTimestamp;
     private static long showInterval = 60 * 1000;
+
 
     public AdManager(Activity context,
                     String appid, String bannerPosID,
@@ -46,6 +44,7 @@ public class AdManager {
         this.adContainer = bannerContainer;
 
         random = new Random();
+        showProb = 0.25f;
         lastShowTimestamp = System.currentTimeMillis();
 
         Timer timer = new Timer();
@@ -54,8 +53,13 @@ public class AdManager {
             public void run() {
                 long currentTimestamp = System.currentTimeMillis();
                 if(currentTimestamp - lastShowTimestamp > showInterval) {
-                    if(random.nextFloat() < 0.25) {
-                        showAd(15);
+                    if(random.nextFloat() < showProb) {
+                        mContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAd(15);
+                            }
+                        });
                     } else {
                         lastShowTimestamp = currentTimestamp;
                     }
