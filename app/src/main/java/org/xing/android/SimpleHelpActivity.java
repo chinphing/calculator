@@ -1,5 +1,6 @@
 package org.xing.android;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -48,9 +49,15 @@ public class SimpleHelpActivity extends AppCompatActivity {
                 || url.startsWith("javascript") || url.startsWith("file")) {
                     return super.shouldInterceptRequest(view, url);
                 } else {
-                    Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(in);
-                    return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("启动外部应用...".getBytes()));
+                    String tips = "启动外部应用...";
+                    try{
+                        Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(in);
+                    }catch (ActivityNotFoundException ex) {
+                        tips = "启动外部应用失败，请安装最新版应用。";
+                    }
+
+                    return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream(tips.getBytes()));
                 }
             }
         });
