@@ -25,6 +25,9 @@ public class AdManager {
     private ViewGroup adContainer;
     private BannerView bv;
 
+    private Handler handler;
+    private Runnable runnable;
+
     /*
     自动显示广告机制
      */
@@ -41,6 +44,9 @@ public class AdManager {
         this.gdtBannerPosID = bannerPosID;
         this.adContainer = bannerContainer;
 
+        handler = null;
+        runnable = null;
+
         random = new Random();
         showProb = 0.25f;
         lastShowTimestamp = System.currentTimeMillis();
@@ -54,7 +60,7 @@ public class AdManager {
                     if(random.nextFloat() < showProb) {
                         mContext.runOnUiThread(new Runnable() {
                                 @Override
-                                public void run() {showAd(15);
+                                public void run() {showAd(30);
                                 }
                             });
                     } else {
@@ -95,20 +101,25 @@ public class AdManager {
                 }
             });
             adContainer.addView(bv);
+            this.bv.loadAD();
         }
-        this.bv.loadAD();
+
+        /*
+        清理上一次自动关闭的状态，以免影响这一次的展示
+         */
+        if(handler != null) {
+            if(runnable != null) {
+                handler.removeCallbacks(runnable);
+                runnable = null;
+            }
+            handler = null;
+        }
 
         /*
         自动关闭
          */
         if(delaySeconds > 0) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    closeAd();
-                }
-            }, delaySeconds * 1000);
+            postCloseAd(delaySeconds);
         }
     }
 
@@ -121,14 +132,15 @@ public class AdManager {
     }
 
     public void postCloseAd(int delaySeconds) {
-        if(delaySeconds > 0) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
+        if(bv != null && delaySeconds > 0) {
+            handler = new Handler();
+            runnable = new Runnable() {
                 @Override
                 public void run() {
                     closeAd();
                 }
-            }, delaySeconds * 1000);
+            };
+            handler.postDelayed(runnable, delaySeconds * 1000);
         }else {
             closeAd();
         }
