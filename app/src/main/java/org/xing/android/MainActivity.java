@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     startListening(true);
                     startButton.setBackgroundResource(R.mipmap.stop);
                     msgText.setText("");
-                    adManager.closeAd();
+                    adManager.postCloseAd(20);
                 }
             }
         });

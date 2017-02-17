@@ -120,4 +120,17 @@ public class AdManager {
         }
     }
 
+    public void postCloseAd(int delaySeconds) {
+        if(delaySeconds > 0) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    closeAd();
+                }
+            }, delaySeconds * 1000);
+        }else {
+            closeAd();
+        }
+    }
 }
