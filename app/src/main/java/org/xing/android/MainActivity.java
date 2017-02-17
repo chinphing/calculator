@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.speech.VoiceRecognitionService;
 import com.umeng.analytics.MobclickAgent;
@@ -116,17 +118,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onClick(View v) {
                 MobclickAgent.onEvent(MainActivity.this, "statusClick");
-                if(isListening) {
-                    stopListening();
-                    startButton.setBackgroundResource(R.mipmap.start);
-                    msgText.setText("已暂停");
-                    adManager.showAd(0);
-                } else {
-                    startListening(true);
-                    startButton.setBackgroundResource(R.mipmap.stop);
-                    msgText.setText("");
-                    adManager.closeAd();
-                }
+                Toast toast = Toast.makeText(MainActivity.this,
+                        "图标为绿色可以开始输入\n灰色表示已暂停或者正在识别。",
+                        Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP, 0, 0);
+                toast.show();
             }
         });
         startButton = (Button) this.findViewById(R.id.ctrl_start);
