@@ -228,7 +228,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         startButton.setBackgroundResource(R.mipmap.stop);
         MobclickAgent.onResume(this);
         msgText.setText("");
-        adManager.onResume();
     }
 
     @Override
@@ -237,7 +236,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         stopListening();
         startButton.setBackgroundResource(R.mipmap.start);
         MobclickAgent.onPause(this);
-        adManager.onResume();
     }
 
     @Override

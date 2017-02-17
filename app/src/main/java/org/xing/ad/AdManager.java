@@ -28,12 +28,10 @@ public class AdManager {
     /*
     自动显示广告机制
      */
-    private boolean visible;
     private Random random;
     private float showProb;
     private long lastShowTimestamp;
     private static long showInterval = 60 * 1000;
-    private static float incrementalProb = 0.25f;
 
     public AdManager(Activity context,
                     String appid, String bannerPosID,
@@ -43,9 +41,8 @@ public class AdManager {
         this.gdtBannerPosID = bannerPosID;
         this.adContainer = bannerContainer;
 
-        visible = false;
         random = new Random();
-        showProb = incrementalProb;
+        showProb = 0.25f;
         lastShowTimestamp = System.currentTimeMillis();
 
         Timer timer = new Timer();
@@ -55,16 +52,11 @@ public class AdManager {
                 long currentTimestamp = System.currentTimeMillis();
                 if(currentTimestamp - lastShowTimestamp > showInterval) {
                     if(random.nextFloat() < showProb) {
-                        if(visible) {
-                            mContext.runOnUiThread(new Runnable() {
+                        mContext.runOnUiThread(new Runnable() {
                                 @Override
-                                public void run() {
-                                    showAd(15);
+                                public void run() {showAd(15);
                                 }
                             });
-                        } else {
-                            showProb += incrementalProb;
-                        }
                     } else {
                         lastShowTimestamp = currentTimestamp;
                     }
@@ -73,16 +65,8 @@ public class AdManager {
         }, 5 * 1000, 5* 1000);
     }
 
-    public void onPause() {
-        visible = false;
-    }
-
-    public void onResume() {
-        visible = true;
-    }
-
     public void showAd(int delaySeconds) {
-        showProb = incrementalProb;
+        showProb = 0.25f;
         lastShowTimestamp = System.currentTimeMillis();
 
         if(bv == null) {
@@ -102,7 +86,7 @@ public class AdManager {
                 }
 
                 @Override
-                public void onADExposure() { bv.setPadding(0, 0, 0, 10);
+                public void onADExposure() { MobclickAgent.onEvent(mContext, "bannerExposure");bv.setPadding(0, 0, 0, 10);
                 }
 
                 @Override

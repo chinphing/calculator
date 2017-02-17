@@ -30,30 +30,29 @@
             >
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="44dp"
                 android:orientation="horizontal" >
 
                 <EditText
+                    android:id="@+id/input"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="5dp"
                     android:background="@drawable/boder"
                     android:inputType="textPersonName"
-                    android:ems="10"
-                    android:layout_below="@+id/bannerContainer"
-                    android:paddingLeft="5dp"
                     android:textIsSelectable="true"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:id="@+id/input"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
                     android:textColor="@color/colorText"
+                    android:typeface="serif"
                     android:text="0"
-                    android:textSize="38sp"
+                    android:textSize="35dp"
                     android:duplicateParentState="false" />
 
                 <Button
                         android:id="@+id/stateButton"
-                        android:layout_height="44dp"
+                        android:layout_height="match_parent"
                         android:layout_width="44dp"
                         android:layout_gravity="right"
                         android:background="@mipmap/input_sleep"
@@ -139,8 +138,8 @@
                     android:background="@drawable/boder" >
                         <Button
                             android:id = "@+id/help_mark"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:textColor="#777777"
                             android:clickable="true"
                             android:background="@drawable/textview_help_selector"
