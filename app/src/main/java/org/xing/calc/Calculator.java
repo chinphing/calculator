@@ -43,7 +43,7 @@ public class Calculator implements ANTLRErrorListener{
 	/*
 	当前输入表达式
  	*/
-	private String currentExpr;
+	private String orgExpr;
 
 	/*
 	解析错误
@@ -142,13 +142,13 @@ public class Calculator implements ANTLRErrorListener{
 	public void setErrorMsg(int pos, String r) {
 		int offset = 5;
 		if(errPos != -1) return;
-		if(currentExpr == null || pos < 0
-				|| pos >= currentExpr.length()) errMsg = null;
+		if(orgExpr == null || pos < 0
+				|| pos >= orgExpr.length()) errMsg = null;
 		errPos = pos;
 		reason = r;
 		int start = pos > offset ? pos-offset:0;
-		int end = pos + offset < currentExpr.length() ? pos+offset:currentExpr.length();
-		errMsg = currentExpr.substring(start, end);
+		int end = pos + offset < orgExpr.length() ? pos+offset:orgExpr.length();
+		errMsg = orgExpr.substring(start, end);
 	}
 
 
@@ -180,7 +180,7 @@ public class Calculator implements ANTLRErrorListener{
 	public double eval(String expr)  {
 		errMsg = null;
 		Double result = Double.NaN;
-		String orgExpr = expr;
+		orgExpr = expr;
 
 		if(expr == null || expr.length() == 0) return result;
 
@@ -189,14 +189,12 @@ public class Calculator implements ANTLRErrorListener{
 				expr = filter.call(expr);
 			}
 
-
 			//过滤的文字太多，视为无效表达式
             if(orgExpr.length() - expr.length() > 4) {
 				return Double.NaN;
 			}
 
-
-
+			String currentExpr = null;
 			while(true) {
 				errPos = -1;
 				currentExpr = expr;

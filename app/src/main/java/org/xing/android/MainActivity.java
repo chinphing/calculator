@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             if(errMsg != null) {
                 msgText.setText("未识别，'"+errMsg+"'表达错误");
             } else {
-                msgText.setText("未识别");
+                msgText.setText("未识别，'"+expr+"'表达错误");
             }
         }
 
