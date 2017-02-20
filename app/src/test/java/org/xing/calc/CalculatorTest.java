@@ -133,7 +133,6 @@ public class CalculatorTest{
         chnMap.put("负派", "-3.141593");
         chnMap.put("根号派", "1.772454");
 
-
         int correctNum = 0;
         int wrongNum = 0;
         for(String expr : chnMap.keySet()) {
@@ -158,6 +157,7 @@ public class CalculatorTest{
 
         //连续运算
         Vector<Map.Entry<String, String>> contiExpr = new Vector<>();
+
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("6.471928-3.15", "3.321928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("加三点一五", "6.471928"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("减三点一五", "3.321928"));
@@ -184,6 +184,10 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("26.9点59.9", "-33"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("点一八×两点四", "-76.2"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("点42", "-118.2"));
+
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("21的三九减四点六", "16.79"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("21.39点四点六的差除以七的三", "20.759863"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("21.39减四点六的差除以七的三", "20.759863"));
 
         for(Map.Entry<String, String> en : contiExpr) {
             String expr = en.getKey();

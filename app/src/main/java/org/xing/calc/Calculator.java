@@ -8,7 +8,6 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.DoubleKeyMap;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.xing.calc.filter.CorrectionExprFilter;
 import org.xing.calc.filter.ExprFilter;
@@ -20,7 +19,6 @@ import org.xing.calc.parser.grammer.calculatorParser;
 import org.xing.utils.NumberUtil;
 
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.BitSet;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -52,6 +50,7 @@ public class Calculator implements ANTLRErrorListener{
 	 */
 	private int errPos;
 	private String errMsg;
+	private String reason;
 
 	/**
 	 * 表达式过滤器列表，包括纠错、多余字符过滤以及数字转换等
@@ -133,17 +132,20 @@ public class Calculator implements ANTLRErrorListener{
 	public String getErrMsg() {
 		return errMsg;
 	}
-
+	public String getReason() {
+		return reason;
+	}
 	public String getReadExpr() {
 		return lastReadExpr;
 	}
 
-	public void setErrorMsg(int pos) {
+	public void setErrorMsg(int pos, String r) {
 		int offset = 5;
 		if(errPos != -1) return;
 		if(currentExpr == null || pos < 0
 				|| pos >= currentExpr.length()) errMsg = null;
 		errPos = pos;
+		reason = r;
 		int start = pos > offset ? pos-offset:0;
 		int end = pos + offset < currentExpr.length() ? pos+offset:currentExpr.length();
 		errMsg = currentExpr.substring(start, end);
@@ -210,12 +212,27 @@ public class Calculator implements ANTLRErrorListener{
 				}
 
 				result = innerEval(expr);
-				if(!result.isNaN()) break;
-				if(errPos >= 0 && errPos < currentExpr.length()
-						&& currentExpr.charAt(errPos) == '点') {
-					char[] seq = currentExpr.toCharArray();
-					seq[errPos] = '减';
-					expr = String.valueOf(seq);
+
+				if(errPos >= 0 && errPos <= currentExpr.length()) {
+					if(errPos < currentExpr.length() && currentExpr.charAt(errPos) == '点') {
+						char[] seq = currentExpr.toCharArray();
+						seq[errPos] = '减';
+						expr = String.valueOf(seq);
+					}else if(reason != null && reason.contains("次方")) {
+						//21的三九减四点六 中间的“的”改为“点”
+						char[] seq = currentExpr.toCharArray();
+						while(errPos >= 0) {
+							if(errPos < currentExpr.length() && seq[errPos] == '的') {
+								seq[errPos] = '点';
+								expr = String.valueOf(seq);
+								break;
+							}
+							errPos --;
+						}
+						if(errPos < 0) break;
+					} else {
+						break;
+					}
 				} else {
 					break;
 				}
@@ -243,21 +260,21 @@ public class Calculator implements ANTLRErrorListener{
 
 	@Override
 	public void syntaxError(Recognizer<?, ?> recognizer, Object o, int i, int i1, String s, RecognitionException e) {
-		setErrorMsg(i1);
+		setErrorMsg(i1, s);
 	}
 
 	@Override
 	public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean b, BitSet bitSet, ATNConfigSet atnConfigSet) {
-		setErrorMsg(i1);
+		setErrorMsg(i1, "");
 	}
 
 	@Override
 	public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitSet, ATNConfigSet atnConfigSet) {
-		setErrorMsg(i1);
+		setErrorMsg(i1, "");
 	}
 
 	@Override
 	public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atnConfigSet) {
-		setErrorMsg(i1);
+		setErrorMsg(i1, "");
 	}
 }

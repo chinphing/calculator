@@ -92,6 +92,10 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("对手", "对数");
 		addWord("等于", "");
 		addWord("多少", "");
+		addWord("的差", "");
+		addWord("的和", "");
+		addWord("的积", "");
+		addWord("的商", "");
 
 		addWord("%", "/100");
 		addWord("％", "/100");
