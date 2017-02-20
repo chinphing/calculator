@@ -78,6 +78,22 @@ public class RedundantExprFilter implements ExprFilter{
 				}
 			}
 		}
-		return str.toString();
+
+
+		/*
+		纠正常见的结尾错误
+		 */
+		String result = str.toString();
+		if(result.endsWith("加") || result.endsWith("减")
+				|| result.endsWith("乘")
+				|| result.endsWith("+") || result.endsWith("-")
+				|| result.endsWith("×") || result.endsWith("/") ) {
+			result = result.substring(0, result.length()-1);
+		} else if(result.endsWith("加上") || result.endsWith("减去")
+				|| result.endsWith("乘以") || result.endsWith("除以")) {
+			result = result.substring(0, result.length()-2);
+		}
+
+		return result;
 	}
 }
