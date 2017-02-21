@@ -16,7 +16,7 @@ public class HttpLog implements Log {
 
 
     @Override
-    public boolean recordEvaluation(Map<String, Object> params) {
+    public boolean log(Map<String, Object> params) {
         HttpUtil.doPost(this.url, params, "utf-8");
 
         return true;

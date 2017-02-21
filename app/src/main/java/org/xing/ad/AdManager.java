@@ -9,6 +9,9 @@ import com.qq.e.ads.banner.AbstractBannerADListener;
 import com.qq.e.ads.banner.BannerView;
 import com.umeng.analytics.MobclickAgent;
 
+import org.xing.android.MainActivity;
+import org.xing.logger.impl.EventLogger;
+
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,6 +31,7 @@ public class AdManager {
     private Handler handler;
     private Runnable runnable;
 
+    private EventLogger eventLogger;
     /*
     自动显示广告机制
      */
@@ -46,6 +50,8 @@ public class AdManager {
 
         handler = null;
         runnable = null;
+
+        eventLogger = MainActivity.eventLogger;
 
         random = new Random();
         showProb = 0.25f;
@@ -84,15 +90,20 @@ public class AdManager {
                 @Override
                 public void onNoAD(int arg0) {
                     MobclickAgent.onEvent(mContext, "bannerNoAD");
+                    eventLogger.onEvent("bannerNoAD");
                 }
 
                 @Override
                 public void onADReceiv() {
                     MobclickAgent.onEvent(mContext, "bannerReceived");
+                    eventLogger.onEvent("bannerReceived");
                 }
 
                 @Override
-                public void onADExposure() { MobclickAgent.onEvent(mContext, "bannerExposure");bv.setPadding(0, 0, 0, 10);
+                public void onADExposure() {
+                    bv.setPadding(0, 0, 0, 10);
+                    MobclickAgent.onEvent(mContext, "bannerExposure");
+                    eventLogger.onEvent("bannerExposure");
                 }
 
                 @Override

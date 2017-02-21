@@ -7,5 +7,5 @@ import java.util.Map;
  */
 
 public interface Log {
-    boolean recordEvaluation(Map<String, Object> params);
+    boolean log(Map<String, Object> params);
 }

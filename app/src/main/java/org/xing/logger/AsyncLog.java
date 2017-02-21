@@ -19,11 +19,11 @@ public class AsyncLog implements Log {
     }
 
     @Override
-    public boolean recordEvaluation(final Map<String, Object> params) {
+    public boolean log(final Map<String, Object> params) {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
-                syncLog.recordEvaluation(params);
+                syncLog.log(params);
             }
         });
         return true;

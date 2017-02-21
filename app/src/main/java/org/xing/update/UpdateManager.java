@@ -19,7 +19,9 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.xing.android.AppConfig;
+import org.xing.android.MainActivity;
 import org.xing.android.R;
+import org.xing.logger.impl.EventLogger;
 import org.xing.utils.NumberUtil;
 
 import java.io.File;
@@ -38,14 +40,15 @@ import okhttp3.Call;
  * Created by sangbo on 16-5-19.
  */
 public class UpdateManager {
-
-
     private static int mAppVersionCode = 0;
     private static Context mContext;
     private static ProgressDialog mAlertDialog;
     private static boolean mIsEnforceCheck = false;
+    private static EventLogger eventLogger = null;
+
     public static String checkUrl = "";
     public static UpdateEntity mUpdateEntity;
+
 
     public static void postUpdate(final Context context, int delaySecond) {
         Handler handler = new Handler();
@@ -54,7 +57,7 @@ public class UpdateManager {
             public void run() {
                 if(AppConfig.getCheckUpdate()) {
                     mIsEnforceCheck = false;
-                    UpdateManager.update(context);
+                    update(context);
                 }
             }
         }, delaySecond*1000);
@@ -68,6 +71,10 @@ public class UpdateManager {
         mContext = context;
         mIsEnforceCheck = isEnforceCheck;
         mAppVersionCode = AppConfig.getVersionCode();
+
+        if(eventLogger == null) {
+            eventLogger = MainActivity.eventLogger;
+        }
 
         checkUrl = mContext.getString(R.string.updateCheckUrl);
         if(TextUtils.isEmpty(checkUrl)){
@@ -129,14 +136,14 @@ public class UpdateManager {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                MobclickAgent.onEvent(mContext, "updateConfirm");
+                eventLogger.onEvent("updateConfirm");
                 updateApp();
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                MobclickAgent.onEvent(mContext, "updateCancel");
+                eventLogger.onEvent("updateCancel");
                 //选择取消之后，不再检查更新
                 AppConfig.setCheckUpdate(false);
             }
@@ -215,7 +222,7 @@ public class UpdateManager {
             return;
         }
 
-        MobclickAgent.onEvent(mContext, "install");
+        eventLogger.onEvent("install");
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");

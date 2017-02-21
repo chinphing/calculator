@@ -25,8 +25,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.xing.ad.AdManager;
 import org.xing.calc.Calculator;
-import org.xing.logger.AsyncLog;
-import org.xing.logger.Log;
+import org.xing.logger.impl.EventLogger;
 import org.xing.update.UpdateManager;
 import org.xing.utils.DeviceUtil;
 import org.xing.utils.NumberUtil;
@@ -44,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private String uniqueId;
     private Calculator calculator;
-    private Log evalLog;
+
+    public static EventLogger eventLogger;
 
     private EditText inputText;
     private TextView msgText;
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     protected void showHelp() {
         MobclickAgent.onEvent(this, "help");
+        eventLogger.onEvent("help");
         String url = "file:///android_asset/help.html";
 
         Random random = new Random();
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onClick(View v) {
                 MobclickAgent.onEvent(MainActivity.this, "statusClick");
+                eventLogger.onEvent("statusClick");
                 Toast toast = Toast.makeText(MainActivity.this,
                         "图标为绿色可以开始输入\n灰色表示已暂停或者正在识别。",
                         Toast.LENGTH_SHORT);
@@ -130,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onClick(View v) {
                 MobclickAgent.onEvent(MainActivity.this, "startClick");
+                eventLogger.onEvent("startClick");
                 if(isListening) {
                     stopListening();
                     startButton.setBackgroundResource(R.mipmap.start);
@@ -159,9 +162,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     private void initCalculator() {
-        uniqueId = DeviceUtil.getUniqueId(this);
         calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
-        evalLog = AsyncLog.createAsyncHttpLog(this.getString(R.string.recordUrl));
 
         historyList = (WebView) this.findViewById(R.id.historylist);
         historyList.setBackgroundColor(0);
@@ -207,10 +208,16 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         AppConfig.loadConfig(this);
 
+        uniqueId = DeviceUtil.getUniqueId(this);
+        eventLogger = new EventLogger(uniqueId, AppConfig.getVersionName(),
+                this.getString(R.string.recordUrl));
+        eventLogger.onEvent("start");
+
         //10s后检查更新
         UpdateManager.postUpdate(this, 10);
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+
         initSpeechRecognizer();
         initUserView();
         initCalculator();
@@ -293,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             case SpeechRecognizer.ERROR_AUDIO:
                 sb.append("录音设备未授权");
                 startButton.setBackgroundResource(R.mipmap.start);
+                eventLogger.onEvent("errorAudio");
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                 noInputCount++;
@@ -306,34 +314,41 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             case SpeechRecognizer.ERROR_CLIENT:
                 sb.append("客户端错误");
                 startButton.setBackgroundResource(R.mipmap.start);
+                eventLogger.onEvent("errorClient");
                 break;
             case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
                 sb.append("权限不足");
                 startButton.setBackgroundResource(R.mipmap.start);
+                eventLogger.onEvent("errorPermissions");
                 break;
             case SpeechRecognizer.ERROR_NETWORK:
                 sb.append("请检查网络连接");
                 MobclickAgent.onEvent(this, "errorNetwork");
+                eventLogger.onEvent("errorNetwork");
                 startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_NO_MATCH:
                 sb.append("未识别");
                 MobclickAgent.onEvent(this, "failMatch");
+                eventLogger.onEvent("failMatch");
                 startListening(true);
                 break;
             case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
                 sb.append("引擎忙");
                 MobclickAgent.onEvent(this, "busy");
+                eventLogger.onEvent("busy");
                 startButton.setBackgroundResource(R.mipmap.start);
                 break;
             case SpeechRecognizer.ERROR_SERVER:
                 sb.append("未识别");
                 startListening(true);
                 MobclickAgent.onEvent(this, "failServer");
+                eventLogger.onEvent("failServer");
                 break;
             case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
                 sb.append("网络连接连接超时");
                 MobclickAgent.onEvent(this, "errorNetworkTimeout");
+                eventLogger.onEvent("errorNetworkTimeout");
                 startButton.setBackgroundResource(R.mipmap.start);
                 break;
         }
@@ -349,17 +364,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             expr.append(w);
         }
         return expr.toString();
-    }
-
-    private void recordEvaluation(String userId, String result,
-                                  String inputExpr, String readExpr, int type) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("userId", userId);
-        params.put("result", result);
-        params.put("inputExpr", inputExpr);
-        params.put("readExpr", readExpr == null ? "null" : readExpr);
-        params.put("type", type);
-        evalLog.recordEvaluation(params);
     }
 
     private void showResult(String expr, Double evalResult, String readExpr) {
@@ -389,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if(cmd != null && cmd.length() > 0
                 && cmdName.containsKey(cmd)) {
             int type = cmdName.get(cmd);
-            this.recordEvaluation(uniqueId, "NaN", expr.toString(), "null", type);
+            this.eventLogger.onEvent("NaN", expr.toString(), "null", type);
             switch (type) {
                 case 1:
                     historyResult.clear();
@@ -438,7 +442,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 readExpr = calculator.getReadExpr();
             }
 
-            this.recordEvaluation(uniqueId, NumberUtil.format(evalResult, 8),
+            this.eventLogger.onEvent(NumberUtil.format(evalResult, 8),
                     expr.toString(), readExpr, 0);
 
             showResult(expr.toString(), evalResult, readExpr);
