@@ -7,14 +7,15 @@
     <link rel="stylesheet" href="./js/KaTeX/katex.min.css" />
     <script src="./js/KaTeX/katex.min.js"></script>
 
-</head>
-<body>
-<style>
+    <style>
+        *{
+            margin : 0;
+            padding : 0;
+        }
+
         body {
             color: #444444;
             background: #ffffff;
-            margin: 0;
-            padding: 0;
         }
 
         a {
@@ -22,25 +23,53 @@
         }
 
         .list li {
-            margin: 10px 0px;
-        }
-
-        .list h3 {
-            margin: 10px 0px;
+            margin: 5px 0px;
         }
 
         #history ul {
              list-style:none;
-             padding : 0px;
              -webkit-margin-before: -0.1em;
              font-size : 125%;
+        }
+
+        #tips {
+            padding:0px;
+            margin:2px;
+        }
+
+        #tips p {
+            text-align:center;
+            color: #a00000;
+            font-size : 75%;
+            padding:0px;
         }
 
         .hide-block {
             display  : none;
         }
 
-</style>
+    </style>
+</head>
+<body>
+
+<div id="tips" class = "list">
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘帮助’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘版本’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘加一千’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘三分之一’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘删除’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘对数三’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘三对数五’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘清空’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘一加括号二加一括号’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘正弦零点二’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘正弦三分之派’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘正弦三十度’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘根号五’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘三根号五’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘三的平方’</p></marquee>
+    <marquee loop = "1" class="hide-block"><p>提示：试试说‘三的四次方’</p></marquee>
+</div>
 
 <div id="history" class = "list history">
     <ul id="list"></ul>
@@ -75,6 +104,35 @@
             }
         }
 
-    </script>
+        function randomInt(max) {
+            return Math.floor(Math.random()*max);
+        }
+
+        function showChildren(list, index, show) {
+            if(list == null || index < 0 || index >= list.length) {
+                return;
+            }
+
+            if(show) {
+                list[index].style.display = "block";
+            } else {
+                list[index].style.display = "none";
+            }
+        }
+
+        function showTips(list) {
+            displayIndex = randomInt(list.length);
+            showChildren(list, displayIndex, true)
+            window.setTimeout("showChildren(list, displayIndex, false)",10000);
+        }
+</script>
+
+<script  type="text/javascript">
+    var displayIndex = -1;
+    var list = document.getElementById("tips").getElementsByTagName("marquee");
+    window.setTimeout("showTips(list)",5000);
+    window.setInterval("showTips(list)", 60*1000);
+</script>
+
 </body>
 </html>

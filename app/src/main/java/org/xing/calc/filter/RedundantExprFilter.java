@@ -85,7 +85,7 @@ public class RedundantExprFilter implements ExprFilter{
 		 */
 		String result = str.toString();
 		if(result.endsWith("加") || result.endsWith("减")
-				|| result.endsWith("乘")
+				|| result.endsWith("乘") || result.endsWith("点")
 				|| result.endsWith("+") || result.endsWith("-")
 				|| result.endsWith("×") || result.endsWith("/") ) {
 			result = result.substring(0, result.length()-1);

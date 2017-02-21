@@ -15,4 +15,13 @@ public class NumberUtil {
         float printSize = (float)size / 1024/ 1024;
         return String.format("%.1fMB", printSize);
     }
+
+    public static String toFraction(Double number) {
+        if(number == null || number.isNaN() || number.isInfinite()) {
+            return null;
+        }
+        StringBuilder frac = new StringBuilder();
+
+        return frac.toString();
+    }
 }

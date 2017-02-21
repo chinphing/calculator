@@ -86,7 +86,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@drawable/boder"
-            android:padding="5dip"
+            android:padding="3dip"
             >
                 <WebView
                     android:id="@+id/historylist"
@@ -94,6 +94,8 @@
                     android:background="@color/colorFront"
                     android:layout_height="0dp"
                     android:layout_weight="97"
+                    android:padding="0dp"
+                    android:layout_margin="0dp"
                     android:layout_gravity="center"
                     android:layerType="software" />
 
