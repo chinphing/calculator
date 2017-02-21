@@ -25,6 +25,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.xing.ad.AdManager;
 import org.xing.calc.Calculator;
+import org.xing.calc.Tips;
 import org.xing.logger.impl.EventLogger;
 import org.xing.update.UpdateManager;
 import org.xing.utils.DeviceUtil;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private Calculator calculator;
 
     public static EventLogger eventLogger;
+    private Tips tips;
 
     private EditText inputText;
     private TextView msgText;
@@ -213,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 this.getString(R.string.recordUrl));
         eventLogger.onEvent("start");
 
+        tips = Tips.createSimpleTips();
+
         //10s后检查更新
         UpdateManager.postUpdate(this, 10);
 
@@ -235,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         startListening(true);
         startButton.setBackgroundResource(R.mipmap.stop);
         MobclickAgent.onResume(this);
-        msgText.setText("");
+        msgText.setText("试一下:‘"+tips.randomGet()+"’");
 
         adManager.postCloseAd(30);
     }

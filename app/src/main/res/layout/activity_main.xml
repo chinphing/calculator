@@ -112,6 +112,7 @@
                     android:id = "@+id/msg"
                     android:layout_width="0dp"
                     android:layout_weight="45"
+                    android:padding="5dp"
                     android:layout_height="wrap_content"
                     android:textColor="#777777"
                     android:textSize="12dp"
