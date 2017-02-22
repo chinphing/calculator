@@ -10,10 +10,10 @@ import org.xing.logger.impl.EventLogger;
 public class LoggerTest {
     @Test
     public void testEvent() {
-        EventLogger eventLogger = new EventLogger("http://xingxing.zysoft.com/evaluation.php");
+        EventLogger eventLogger = new EventLogger("1", "1.3.4", "http://xingxing.zysoft.com/evaluation.php");
 
-        eventLogger.onEvent( "3445", NumberUtil.format(3.15, 8), "零点一四五", "0.145", 0);
-        eventLogger.onEvent("1.3.3" , "3445", "start");
+        eventLogger.onEvent( NumberUtil.format(3.15, 8), "零点一四五", "0.145", 0);
+        eventLogger.onEvent( "start");
 
         try {
             Thread.currentThread().sleep(10000);

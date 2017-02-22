@@ -36,6 +36,7 @@ public class AdManager {
     自动显示广告机制
      */
     private Random random;
+    private boolean visible;
     private float showProb;
     private long lastShowTimestamp;
     private static long showInterval = 60 * 1000;
@@ -54,6 +55,7 @@ public class AdManager {
         eventLogger = MainActivity.eventLogger;
 
         random = new Random();
+        visible = false;
         showProb = 0.25f;
         lastShowTimestamp = System.currentTimeMillis();
 
@@ -63,7 +65,7 @@ public class AdManager {
             public void run() {
                 long currentTimestamp = System.currentTimeMillis();
                 if(currentTimestamp - lastShowTimestamp > showInterval) {
-                    if(random.nextFloat() < showProb) {
+                    if(visible && random.nextFloat() < showProb) {
                         mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {showAd(30);
@@ -74,7 +76,7 @@ public class AdManager {
                     }
                 }
             }
-        }, 5 * 1000, 5* 1000);
+        }, 15 * 1000, 15* 1000);
     }
 
     public void showAd(int delaySeconds) {
@@ -155,5 +157,13 @@ public class AdManager {
         }else {
             closeAd();
         }
+    }
+
+    public void onResume() {
+        visible = true;
+    }
+
+    public void onPause() {
+        visible = false;
     }
 }
