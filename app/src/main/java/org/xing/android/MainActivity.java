@@ -274,7 +274,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     public  void stopListening() {
-        speechRecognizer.cancel();
+        if(isListening) {
+            speechRecognizer.cancel();
+        }
         listeningStopped();
     }
 
