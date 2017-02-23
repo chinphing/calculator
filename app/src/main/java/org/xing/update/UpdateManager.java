@@ -260,25 +260,24 @@ public class UpdateManager {
     }
 
     private static boolean checkMD5(File file) {
-        String md5Value;
+        BigInteger md5Value = null;
         try {
             md5Value = getMd5ByFile(file);
         } catch (FileNotFoundException e) {
-            md5Value = "-1";
+            e.printStackTrace();
         }
-        Log.d("md5:",md5Value);
-        return md5Value.equals(mUpdateEntity.md5);
+        Log.d("md5:",md5Value.toString(16));
+        return md5Value != null && mUpdateEntity.md5 != null && md5Value.equals(mUpdateEntity.md5);
     }
 
-    public static String getMd5ByFile(File file) throws FileNotFoundException {
-        String value = null;
+    public static BigInteger getMd5ByFile(File file) throws FileNotFoundException {
+        BigInteger value = null;
         FileInputStream in = new FileInputStream(file);
         try {
             MappedByteBuffer byteBuffer = in.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             md5.update(byteBuffer);
-            BigInteger bi = new BigInteger(1, md5.digest());
-            value = bi.toString(16);
+            value = new BigInteger(1, md5.digest());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

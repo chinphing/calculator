@@ -3,6 +3,8 @@ package org.xing.update;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
+
 /**
  * Created by sangbo on 16-5-19.
  */
@@ -14,7 +16,7 @@ public class UpdateEntity {
     public String versionName = "";
     public String downUrl = "";
     public String updateLog = "";
-    public String md5 = "";
+    public BigInteger md5 = null;
     public int fileSize = 0;
 
 
@@ -27,7 +29,10 @@ public class UpdateEntity {
         this.downUrl = jsonObject.getString("downUrl");
         this.preBaselineCode = jsonObject.getInt("preBaselineCode");
         this.updateLog = jsonObject.getString("updateLog");
-        this.md5 = jsonObject.getString("md5");
+        String md5String = jsonObject.getString("md5");
+        if(md5String != null) {
+            this.md5 = new BigInteger(md5String, 16);
+        }
         this.fileSize = jsonObject.getInt("fileSize");
     }
 }
