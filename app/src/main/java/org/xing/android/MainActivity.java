@@ -35,7 +35,6 @@ import org.xing.utils.NumberUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener {
@@ -76,10 +75,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void showHelp() {
         MobclickAgent.onEvent(this, "help");
         eventLogger.onEvent("help");
-        String url = "file:///android_asset/help.html";
-
-        Random random = new Random();
-        if(random.nextFloat() < 0.5f) url += "#example";
+        String url = "file:///android_asset/help.html#example";
 
         Intent intent =new Intent(MainActivity.this, SimpleHelpActivity.class);
         intent.putExtra("url", url);

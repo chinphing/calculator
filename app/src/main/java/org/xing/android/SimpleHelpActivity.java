@@ -23,7 +23,6 @@ public class SimpleHelpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_help);
 
-
         Button closeButton =(Button)findViewById(R.id.help_close);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
