@@ -39,6 +39,7 @@ public class RedundantExprFilter implements ExprFilter{
 		
 		//通过拼音来加入纠正一批由于用户读音不准确导致的识别错误
 		allowedCharsPinyin.put("qu", '除');
+		allowedCharsPinyin.put("xuan", '弦');
 	}
 
 	private Map<Character, String> loadTokens(InputStream input) throws IOException {
