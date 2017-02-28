@@ -121,12 +121,16 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("主角", "除九");
 		addWord("图九", "除九");
 
+		addWord("圆周率", "派");
+
 		addWord("清平", "清屏");
 		addWord("青平", "清屏");
 		addWord("青萍", "清屏");
 		addWord("青苹", "清屏");
 		addWord("蜻蜓", "清屏");
 		addWord("金瓶", "清屏");
+		addWord("星空", "清空");
+		addWord("净空", "清空");
 
 		addWord("浙江", "撤销");
 		addWord("大腿", "倒退");
