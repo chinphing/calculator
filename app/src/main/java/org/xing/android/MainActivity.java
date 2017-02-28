@@ -411,6 +411,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         return expr.toString();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+    }
+
     private void showResult(String expr, Double evalResult, String readExpr) {
         //界面上显示结果
         if (!Double.isNaN(evalResult)) {
