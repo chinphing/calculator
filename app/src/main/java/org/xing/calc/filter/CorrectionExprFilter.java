@@ -27,6 +27,8 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("区", "除");
 		addWord("褚", "除");
 
+		addWord("括弧", "括号");
+
 		addWord("两", "二");
 		addWord("俩", "二");
 		addWord("山", "3");
