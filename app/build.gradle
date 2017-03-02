@@ -33,7 +33,7 @@ android {
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.endsWith('.apk')) {
                         // 输出apk名称为wooyun_v1.0_wandoujia.apk
-                        def fileName = "xingxing-${defaultConfig.versionName}.apk"
+                        def fileName = "xingxing-pure-${defaultConfig.versionName}.apk"
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
                 }
