@@ -14,6 +14,9 @@ public class AppConfig {
     private static String packageName;
     private static int versionCode;
     private static String versionName;
+
+    private static String themeId;
+
     private static boolean isFirstStart;
     private static boolean checkUpdate;
     private static Context mContext;
@@ -45,6 +48,8 @@ public class AppConfig {
                 checkUpdate = prefs.getBoolean("checkUpdate", true);
             }
 
+            themeId = prefs.getString("themeId", "0");
+
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -59,6 +64,13 @@ public class AppConfig {
     }
     public static String getVersionName() {
         return versionName;
+    }
+    public static String getThemeId() {
+        return themeId;
+    }
+    public static void setThemeId(String themeId) {
+        AppConfig.themeId = themeId;
+        prefs.edit().putString("themeId", themeId).commit();
     }
     public static boolean getIsFirstStart() {
         return isFirstStart;

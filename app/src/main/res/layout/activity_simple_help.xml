@@ -56,7 +56,7 @@
 
         <WebView
             android:id="@+id/simple_help"
-            android:background="@color/colorFront"
+            android:background="@color/colorBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"

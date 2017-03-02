@@ -5,21 +5,16 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.xing.android.MainActivity"
-    android:background="@color/colorBackground">
+    tools:context="org.xing.android.MainActivity" >
 
     <LinearLayout
+        android:id="@+id/backgroundLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <FrameLayout android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_alignParentTop="true"
-            android:id="@+id/bannerContainer">
-        </FrameLayout>
+        android:layout_alignParentStart="true"
+        android:background="@color/colorBackground" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +25,8 @@
             >
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
                 android:orientation="horizontal" >
 
                 <EditText
@@ -38,7 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="5dp"
-                    android:background="@drawable/boder"
+                    android:background="@android:color/transparent"
                     android:inputType="textPersonName"
                     android:textIsSelectable="true"
                     android:layout_alignParentTop="true"
@@ -47,18 +43,27 @@
                     android:textColor="@color/colorText"
                     android:typeface="serif"
                     android:text="0"
-                    android:textSize="35dp"
+                    android:textSize="40dp"
                     android:duplicateParentState="false" />
 
-                <Button
-                        android:id="@+id/stateButton"
-                        android:layout_height="match_parent"
-                        android:layout_width="44dp"
-                        android:layout_gravity="right"
-                        android:background="@mipmap/input_sleep"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignBottom="@+id/input" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_gravity="right"
+                    android:gravity="center"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    >
+                    <Button
+                            android:id="@+id/stateButton"
+                            android:layout_height="35dp"
+                            android:layout_width="35dp"
+                            android:background="@mipmap/input_sleep"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignBottom="@+id/input" />
+                </LinearLayout>
             </FrameLayout>
 
             <ProgressBar
@@ -68,7 +73,7 @@
                     android:progress="0"
                     android:visibility="visible"
                     android:alpha="50"
-                    android:layout_height="3dp"
+                    android:layout_height="2dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:indeterminate="false"
@@ -85,13 +90,13 @@
             android:layout_weight="90"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:background="@drawable/boder"
+            android:background="@android:color/transparent"
             android:padding="3dip"
             >
                 <WebView
                     android:id="@+id/historylist"
                     android:layout_width="match_parent"
-                    android:background="@color/colorFront"
+                    android:background="@android:color/transparent"
                     android:layout_height="0dp"
                     android:layout_weight="97"
                     android:padding="0dp"
@@ -106,7 +111,7 @@
                 android:gravity="center"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/boder" >
+                android:background="@android:color/transparent" >
 
                 <TextView
                     android:id = "@+id/msg"
@@ -117,6 +122,7 @@
                     android:textColor="#777777"
                     android:textSize="12dp"
                     android:gravity="left"
+                    android:background="@android:color/transparent"
                     android:layout_gravity="bottom" />
 
                 <Button
@@ -138,7 +144,7 @@
                     android:gravity="right"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:background="@drawable/boder" >
+                    android:background="@android:color/transparent" >
                         <Button
                             android:id = "@+id/help_mark"
                             android:layout_width="25dp"
@@ -151,5 +157,11 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
+        <FrameLayout android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:id="@+id/bannerContainer">
+        </FrameLayout>
     </LinearLayout>
 </RelativeLayout>

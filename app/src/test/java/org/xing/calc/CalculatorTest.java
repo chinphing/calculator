@@ -189,6 +189,7 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("21.39点四点六的差除以七的三", "20.759863"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("21.39减四点六的差除以七的三", "20.759863"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("五点四乘六得四八成二", "69.984"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("正玄三十度", "0.5"));
 
         for(Map.Entry<String, String> en : contiExpr) {
             String expr = en.getKey();

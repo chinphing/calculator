@@ -5,18 +5,24 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
+import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,16 +34,21 @@ import org.xing.ad.AdManager;
 import org.xing.calc.Calculator;
 import org.xing.calc.Tips;
 import org.xing.logger.impl.EventLogger;
+import org.xing.theme.Theme;
+import org.xing.theme.ThemeChangeListener;
+import org.xing.theme.ThemeManager;
 import org.xing.update.UpdateManager;
 import org.xing.utils.DeviceUtil;
 import org.xing.utils.NumberUtil;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-public class MainActivity extends AppCompatActivity implements RecognitionListener {
+public class MainActivity extends AppCompatActivity implements RecognitionListener, ThemeChangeListener {
 
     private boolean isListening;
     private SpeechRecognizer speechRecognizer;
@@ -65,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     腾讯联盟广告
      */
     private AdManager adManager;
+
+    private Theme currentTheme;
+    private ThemeManager themeManager;
 
     /*
     空闲状态计数，达到maxNoInputCount暂时停止工作
@@ -167,6 +181,39 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         historyList.setBackgroundColor(0);
         historyList.getSettings().setJavaScriptEnabled(true);
         historyList.getSettings().setAppCacheEnabled(true);
+        historyList.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url)
+            {
+                super.onPageFinished(view, url);
+
+                if(currentTheme != null) {
+                    String jsCode = "javascript:setTextColor('" + currentTheme.getStyle("historyColor") + "')";
+                    historyList.loadUrl(jsCode);
+                }
+            }
+        });
+
+        historyList.setOnTouchListener(new View.OnTouchListener() {
+            GestureDetector detector = null;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(detector == null) {
+                    detector = new GestureDetector(MainActivity.this,
+                            new GestureDetector.SimpleOnGestureListener() {
+                                @Override
+                                public boolean onDoubleTap(MotionEvent e) {
+                                    themeManager.randomTheme();
+                                    return super.onDoubleTap(e);
+                                }
+                            }
+                    );
+                }
+                detector.onTouchEvent(event);
+
+                return false;
+            }
+        });
 
         historyList.loadUrl("javascript:var isFirstStart="+AppConfig.getIsFirstStart()+";");
         historyList.loadUrl("file:///android_asset/history.html");
@@ -191,6 +238,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         cmdName.put("升级", 4);
         cmdName.put("版本", 4);
+
+        cmdName.put("主题", 5);
     }
 
     private void initAd() {
@@ -204,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
         AppConfig.loadConfig(this);
 
         uniqueId = DeviceUtil.getUniqueId(this);
@@ -224,6 +273,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         initCalculator();
         initCommand();
         initAd();
+
+        themeManager = new ThemeManager(this);
+        themeManager.addThemeChangeListener(this);
+        themeManager.applyTheme(AppConfig.getThemeId());
 
         startListening(true);
         startButton.setBackgroundResource(R.mipmap.stop);
@@ -471,6 +524,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 case 4:
                     UpdateManager.update(this, true);
                     break;
+                case 5:
+                    themeManager.randomTheme();
+                    break;
                 default:
                     break;
             }
@@ -512,5 +568,43 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     public void onEvent(int eventType, Bundle params) {
+    }
+
+    public boolean isAlive() {
+        return !this.isFinishing();
+    }
+
+    public void onThemeChange(Theme theme) {
+        if(theme == null) return;
+
+        try {
+            currentTheme = theme;
+            AppConfig.setThemeId(theme.getId());
+
+            int color;
+            List<String> backgroundImages = theme.getImagePaths();
+            LinearLayout layout = (LinearLayout) this.findViewById(R.id.backgroundLayout);
+            if(backgroundImages != null && backgroundImages.size() > 0) {
+                InputStream is = this.getAssets().open(backgroundImages.get(0));
+                Drawable background = Drawable.createFromStream(is, "theme");
+                layout.setBackgroundDrawable(background);
+                is.close();
+            } else {
+                layout.setBackgroundDrawable(null);
+                color =  Color.parseColor(theme.getStyle("background"));
+                layout.setBackgroundColor(color);
+            }
+
+            String jsCode = "javascript:setTextColor('"+currentTheme.getStyle("historyColor")+"')";
+            historyList.loadUrl(jsCode);
+
+            color = Color.parseColor(theme.getStyle("resultColor"));
+            inputText.setTextColor(color);
+            color =  Color.parseColor(theme.getStyle("msgColor"));
+            msgText.setTextColor(color);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
