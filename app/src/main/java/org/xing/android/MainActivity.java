@@ -577,6 +577,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onThemeChange(Theme theme) {
         if(theme == null) return;
 
+        eventLogger.onEvent("theme-"+theme.getId());
         try {
             currentTheme = theme;
             AppConfig.setThemeId(theme.getId());

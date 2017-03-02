@@ -5,38 +5,49 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.xing.android.AppConfig;
+import org.xing.android.MainActivity;
+import org.xing.logger.impl.EventLogger;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Administrator on 2017/3/1 0001.
  */
 
 public class ThemeManager {
-    SQLiteDatabase database;
-    LinkedList<ThemeChangeListener> listeners;
+    private int nextTheme;
+    private SQLiteDatabase database;
+    private LinkedList<ThemeChangeListener> listeners;
+    private EventLogger eventLogger;
 
     public ThemeManager(Context ctx) {
+        nextTheme = 0;
         listeners = new LinkedList<>();
+        eventLogger = MainActivity.eventLogger;
+
         try {
             String databasePath = ctx.getFilesDir().getAbsolutePath() + "/theme.db";
             database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
-            database.execSQL("drop table themes");
 
-            String createTableSql = "create table if not exists themes (" +
-                    "id CHAR(32) PRIMARY KEY, " +
-                    "name CHAR(32), " +
-                    "style VARCHAR, " +
-                    "img_paths VARCHAR" +
-                    ")";
-            database.execSQL(createTableSql);
-            addTheme(new Theme("0", "测试风格1", "{'resultColor':'#000000', 'historyColor':'#444444', 'msgColor':'#555555', 'background':'#ffffff'}", null));
-            addTheme(new Theme("1", "测试风格2", "{'resultColor':'#ffffff', 'historyColor':'#e0e0e0', 'msgColor':'#a0a0a0', 'background':'#222222'}", null));
-            addTheme(new Theme("2", "测试风格4", "{'resultColor':'#FF3300', 'historyColor':'#ee3300', 'msgColor':'#aa3300'}", "theme/01.jpg"));
-            addTheme(new Theme("3", "测试风格5", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#aaaaaa'}", "theme/02.jpg"));
-            addTheme(new Theme("4", "测试风格6", "{'resultColor':'#ffa000', 'historyColor':'#ee9000', 'msgColor':'#cc7000'}", "theme/03.jpg"));
-            addTheme(new Theme("5", "测试风格7", "{'resultColor':'#3eb3ed', 'historyColor':'#2ea3dd', 'msgColor':'#00ddff'}", "theme/04.jpg"));
+            if(AppConfig.getIsFirstStart()) {
+                database.execSQL("drop table if exists themes");
+                String createTableSql = "create table if not exists themes (" +
+                        "id CHAR(32) PRIMARY KEY, " +
+                        "name CHAR(32), " +
+                        "style VARCHAR, " +
+                        "img_paths VARCHAR" +
+                        ")";
+                database.execSQL(createTableSql);
+
+                addTheme(new Theme("0", "白色", "{'resultColor':'#000000', 'historyColor':'#444444', 'msgColor':'#555555', 'background':'#ffffff'}", null));
+                addTheme(new Theme("1", "浅灰", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#eeeeee', 'background':'#909090'}", null));
+                addTheme(new Theme("2", "大鱼", "{'resultColor':'#FF3300', 'historyColor':'#ee3300', 'msgColor':'#aa3300'}", "theme/01.jpg"));
+                addTheme(new Theme("3", "银河", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#aaaaaa'}", "theme/02.jpg"));
+                addTheme(new Theme("4", "萌宠", "{'resultColor':'#ffa000', 'historyColor':'#ee9000', 'msgColor':'#cc7000'}", "theme/03.jpg"));
+                addTheme(new Theme("5", "雪景", "{'resultColor':'#3eb3ed', 'historyColor':'#2ea3dd', 'msgColor':'#ffa066'}", "theme/04.jpg"));
+            }
         }catch (Exception e) {
             e.printStackTrace();
             database = null;
@@ -133,14 +144,17 @@ public class ThemeManager {
     }
 
     public void randomTheme() {
+        eventLogger.onEvent("changeTheme");
+
         List<Theme> themes = getAllTheme();
         if(themes.size() > 0) {
-            Random random  = new Random();
+            if(nextTheme >= themes.size()) {
+                nextTheme %= themes.size();
+            }
+
             applyTheme(
-                    themes.get(
-                            random.nextInt(themes.size())
-                    )
-            );
+                    themes.get(nextTheme++)
+                        );
         }
     }
 }
