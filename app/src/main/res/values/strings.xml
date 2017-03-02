@@ -1,12 +1,7 @@
 <resources>
     <string name="app_name">星星声控计算器</string>
-    <string name="tips">请讲话</string>
 
     <string name="recordUrl">http://xingxing.zysoft.com/evaluation.php</string>
     <string name="updateCheckUrl">http://xingxing.zysoft.com/update/update.php</string>
-    <string name="title_activity_help">HelpActivity</string>
 
-    <!-- 腾讯联盟广告参数 -->
-    <string name="gdtAppid">1105840771</string>
-    <string name="gdtBannerPosID">8020817905129848</string>
 </resources>

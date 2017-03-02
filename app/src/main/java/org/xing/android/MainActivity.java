@@ -17,7 +17,6 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -30,7 +29,6 @@ import android.widget.Toast;
 import com.baidu.speech.VoiceRecognitionService;
 import com.umeng.analytics.MobclickAgent;
 
-import org.xing.ad.AdManager;
 import org.xing.calc.Calculator;
 import org.xing.calc.Tips;
 import org.xing.logger.impl.EventLogger;
@@ -71,11 +69,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 	 */
     private Stack<Double> historyResult;
     private Map<String, Integer> cmdName;
-
-    /*
-    腾讯联盟广告
-     */
-    private AdManager adManager;
 
     private Theme currentTheme;
     private ThemeManager themeManager;
@@ -150,12 +143,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     stopListening();
                     startButton.setBackgroundResource(R.mipmap.start);
                     msgText.setText("已暂停");
-                    adManager.showAd(0);
                 } else {
                     startListening(true);
                     startButton.setBackgroundResource(R.mipmap.stop);
                     msgText.setText("");
-                    adManager.postCloseAd(30);
                 }
             }
         });
@@ -242,13 +233,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         cmdName.put("主题", 5);
     }
 
-    private void initAd() {
-        adManager = new AdManager(this,
-                this.getString(R.string.gdtAppid),
-                this.getString(R.string.gdtBannerPosID),
-                (ViewGroup) this.findViewById(R.id.bannerContainer));
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -272,7 +256,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         initUserView();
         initCalculator();
         initCommand();
-        initAd();
 
         themeManager = new ThemeManager(this);
         themeManager.addThemeChangeListener(this);
@@ -292,8 +275,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         msgText.setText("试一下:‘"+tips.randomGet()+"’");
 
         MobclickAgent.onResume(this);
-        adManager.onResume();
-        adManager.postCloseAd(30);
     }
 
     @Override
@@ -304,7 +285,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         startButton.setBackgroundResource(R.mipmap.start);
 
         MobclickAgent.onPause(this);
-        adManager.onPause();
     }
 
     @Override
