@@ -1,5 +1,7 @@
 package org.xing.logger.impl;
 
+import android.os.Build;
+
 import org.xing.logger.AsyncLog;
 import org.xing.logger.Log;
 
@@ -29,6 +31,7 @@ public class EventLogger {
         params.put("_eventType", 1);
         params.put("version", version);
         params.put("userId", userId);
+        params.put("model", Build.BRAND + " " + Build.MODEL);
         params.put("event", event);
         eventLogger.log(params);
     }
