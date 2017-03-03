@@ -193,7 +193,7 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("副根号1.96", "-1.4"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("三平方", "9"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("三平方根", "1.732051"));
-        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("负二的零次方", "1.732051"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("负二的零次方", "1"));
 
         for(Map.Entry<String, String> en : contiExpr) {
             String expr = en.getKey();
