@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void showHelp() {
         MobclickAgent.onEvent(this, "help");
         eventLogger.onEvent("help");
-        String url = "file:///android_asset/help.html#example";
+        String url = "file:///android_asset/help.html#operation";
 
         Intent intent =new Intent(MainActivity.this, SimpleHelpActivity.class);
         intent.putExtra("url", url);

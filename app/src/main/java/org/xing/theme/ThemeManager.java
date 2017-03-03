@@ -42,11 +42,11 @@ public class ThemeManager {
                 database.execSQL(createTableSql);
 
                 addTheme(new Theme("0", "白色", "{'resultColor':'#000000', 'historyColor':'#444444', 'msgColor':'#555555', 'background':'#ffffff'}", null));
-                addTheme(new Theme("1", "浅灰", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#eeeeee', 'background':'#909090'}", null));
-                addTheme(new Theme("2", "大鱼", "{'resultColor':'#FF3300', 'historyColor':'#ee3300', 'msgColor':'#aa3300'}", "theme/01.jpg"));
-                addTheme(new Theme("3", "银河", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#aaaaaa'}", "theme/02.jpg"));
-                addTheme(new Theme("4", "萌宠", "{'resultColor':'#ffa000', 'historyColor':'#ee9000', 'msgColor':'#cc7000'}", "theme/03.jpg"));
-                addTheme(new Theme("5", "雪景", "{'resultColor':'#3eb3ed', 'historyColor':'#2ea3dd', 'msgColor':'#ffa066'}", "theme/04.jpg"));
+                addTheme(new Theme("1", "大鱼", "{'resultColor':'#FF3300', 'historyColor':'#ee3300', 'msgColor':'#aa3300'}", "theme/01.jpg"));
+                addTheme(new Theme("2", "银河", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#aaaaaa'}", "theme/02.jpg"));
+                addTheme(new Theme("3", "萌宠", "{'resultColor':'#ffa000', 'historyColor':'#ee9000', 'msgColor':'#cc7000'}", "theme/03.jpg"));
+                addTheme(new Theme("4", "雪景", "{'resultColor':'#3eb3ed', 'historyColor':'#2ea3dd', 'msgColor':'#ffa066'}", "theme/04.jpg"));
+                addTheme(new Theme("5", "银色", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#eeeeee', 'background':'#c0c0c0'}", null));
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -131,6 +131,16 @@ public class ThemeManager {
 
     public void applyTheme(String id) {
         if(id == null) return;
+
+        List<Theme> themes = getAllTheme();
+        nextTheme = 0;
+        for(Theme theme : themes) {
+            nextTheme ++;
+            if(theme.getId().equals(id)) {
+                break;
+            }
+        }
+
         applyTheme(getTheme(id));
     }
 
@@ -147,6 +157,7 @@ public class ThemeManager {
         eventLogger.onEvent("changeTheme");
 
         List<Theme> themes = getAllTheme();
+
         if(themes.size() > 0) {
             if(nextTheme >= themes.size()) {
                 nextTheme %= themes.size();

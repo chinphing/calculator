@@ -40,6 +40,7 @@ public class Tips {
         Tips tips = new Tips();
         tips.add("帮助");
         tips.add("升级");
+        tips.add("主题");
         tips.add("三分之一");
         tips.add("加一千");
         tips.add("删除");
