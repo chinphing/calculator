@@ -94,6 +94,8 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("括回", "括号");
 		addWord("对手", "对数");
 		addWord("开封", "开方");
+		addWord("次幂", "次方");
+
 		addWord("等于", "");
 		addWord("多少", "");
 		addWord("的差", "");
