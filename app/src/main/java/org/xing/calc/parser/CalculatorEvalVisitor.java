@@ -88,7 +88,11 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 
 	@Override
 	public Double visitAtom(calculatorParser.AtomContext ctx) {
-		if(ctx.getChildCount() == 3) {
+		if(ctx.MINUS() != null) {
+			return -visit(ctx.getChild(1));
+		}else if(ctx.PLUS() != null) {
+			return visit(ctx.getChild(1));
+		}if(ctx.getChildCount() == 3) {
 			if(ctx.FRAC() != null) {
 				if(ctx.FRAC().getText().equals("分之")) {
 					return visit(ctx.getChild(2)) / visit(ctx.getChild(0));
@@ -160,14 +164,24 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 		}else if(ctx.postFuncname() != null) {
 			PostFuncnameContext postFuncname = ctx.postFuncname();
 			Double exprValue = visit(ctx.getChild(0));
-			
-			if(postFuncname.KAIFANG() != null 
-					|| postFuncname.KAIPINGFANG() != null
-					|| postFuncname.PINGFANG() != null) {
+
+			if(postFuncname.KAIFANG() != null
+					|| postFuncname.KAIPINGFANG() != null) {
 				result =  Math.pow(exprValue, 0.5);
-			}else if(postFuncname.KAILIFANG() != null
-					|| postFuncname.LIFANG() != null) {
+			}else if(postFuncname.PINGFANG() != null){
+				if(postFuncname.GEN() != null) {
+					result =  Math.pow(exprValue, 0.5);
+				}else {
+					result =  Math.pow(exprValue, 2);
+				}
+			}else if(postFuncname.KAILIFANG() != null) {
 				result =  Math.pow(exprValue, 1.0/3);
+			}else if(postFuncname.LIFANG() != null) {
+				if(postFuncname.GEN() != null) {
+					result =  Math.pow(exprValue, 1.0/3);
+				}else {
+					result =  Math.pow(exprValue, 3);
+				}
 			}
 		}
 		
@@ -180,11 +194,7 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 			String expr = ctx.getText();
 			if(ctx.PAI() != null || ctx.DU() != null) {
 				if(ctx.DIGIT().isEmpty()) {
-					if(ctx.MINUS() != null) {
-						return -Math.PI;
-					}else {
-						return Math.PI;
-					}
+					return Math.PI;
 				}
 
 				numParser.parse(expr.substring(0, expr.length()-1));

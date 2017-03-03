@@ -183,7 +183,11 @@ public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
 
     @Override
     public String visitAtom(calculatorParser.AtomContext ctx) {
-        if(ctx.getChildCount() == 3) {
+        if(ctx.MINUS() != null) {
+            return "-" + visit(ctx.getChild(1));
+        }else if(ctx.PLUS() != null) {
+            return visit(ctx.getChild(1));
+        }if(ctx.getChildCount() == 3) {
             if(ctx.FRAC() != null) {
                 String expr0 = visit(ctx.getChild(0));
                 String expr2 = visit(ctx.getChild(2));
@@ -274,12 +278,22 @@ public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
             String[] brackExpr = getBrackExpr(expr);
 
             if(postFuncname.KAIFANG() != null
-                    || postFuncname.KAIPINGFANG() != null
-                    || postFuncname.PINGFANG() != null) {
+                    || postFuncname.KAIPINGFANG() != null) {
                 return "\\\\sqrt{"+brackExpr[1]+"}";
-            }else if(postFuncname.KAILIFANG() != null
-                    || postFuncname.LIFANG() != null) {
+            }else if(postFuncname.PINGFANG() != null) {
+                if(postFuncname.GEN() != null) {
+                    return "\\\\sqrt{"+brackExpr[1]+"}";
+                }else {
+                    return expr+"^2";
+                }
+            }else if(postFuncname.KAILIFANG() != null) {
                 return "\\\\sqrt[3]{"+brackExpr[1]+"}";
+            }else if(postFuncname.LIFANG() != null) {
+                if(postFuncname.GEN() != null) {
+                    return "\\\\sqrt[3]{"+brackExpr[1]+"}";
+                }else {
+                    return expr+"^3";
+                }
             }
         }
 
@@ -293,11 +307,7 @@ public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
             StringBuilder result = new StringBuilder();
             if(ctx.PAI() != null || ctx.DU() != null) {
                 if (ctx.DIGIT().isEmpty()) {
-                    if (ctx.MINUS() != null) {
-                        result.append("-\\\\pi");
-                    } else {
-                        result.append("\\\\pi");
-                    }
+                    result.append("\\\\pi");
                 }else {
                     numParser.parse(expr.substring(0, expr.length() - 1));
                     result.append(numParser.getReadExpr());
