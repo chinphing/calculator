@@ -540,9 +540,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onResults(Bundle results) {
 
         String expr = buildExpr(results);
-        expr = expr.replace("再", "");
-        expr = expr.replace("等于", "");
-        expr = expr.replace("多少", "");
 
         if(!handleCommand(expr)) {
             //结算结果

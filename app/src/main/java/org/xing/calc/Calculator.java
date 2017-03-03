@@ -180,9 +180,13 @@ public class Calculator implements ANTLRErrorListener{
 	public double eval(String expr)  {
 		errMsg = null;
 		Double result = Double.NaN;
-		orgExpr = expr;
 
 		if(expr == null || expr.length() == 0) return result;
+
+		expr = expr.replace("再", "");
+		expr = expr.replace("等于", "");
+		expr = expr.replace("多少", "");
+		orgExpr = expr;
 
 		try {
 			for (ExprFilter filter : filters) {
