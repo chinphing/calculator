@@ -228,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         cmdName.put("清除", 1);
 
         cmdName.put("撤销", 2);
+        cmdName.put("取消", 2);
         cmdName.put("倒退", 2);
         cmdName.put("后退", 2);
         cmdName.put("删除", 2);
