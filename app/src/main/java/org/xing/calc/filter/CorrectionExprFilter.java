@@ -49,6 +49,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("榴", "6");
 		addWord("亲", "7");
 		addWord("夕", "7");
+		addWord("欹", "7");
 		addWord("班", "8");
 		addWord("发", "8");
 		addWord("近", "9");
@@ -115,6 +116,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("成龙", "乘六");
 		addWord("成了", "乘六");
 		addWord("天气", "减七");
+		addWord("欹", "七");
 		addWord("成绩", "乘七");
 		addWord("长期", "乘七");
 		addWord("城西", "乘七");

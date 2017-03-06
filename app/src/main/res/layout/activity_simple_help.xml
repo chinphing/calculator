@@ -60,6 +60,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layerType="software" />
+            android:layerType="hardware" />
     </LinearLayout>
 </RelativeLayout>
