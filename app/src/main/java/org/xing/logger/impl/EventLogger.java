@@ -31,7 +31,7 @@ public class EventLogger {
         params.put("_eventType", 1);
         params.put("version", version);
         params.put("userId", userId);
-        params.put("model", Build.BRAND + " " + Build.MODEL);
+        params.put("model", Build.VERSION.SDK_INT + " " + Build.BRAND + " " + Build.MODEL);
         params.put("event", event);
         eventLogger.log(params);
     }
