@@ -17,6 +17,9 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("塑", "负");
 
 		addWord("僵", "加");
+		addWord("讲", "加");
+		addWord("将", "加");
+		addWord("奖", "加");
 
 		addWord("澄", "乘");
 		addWord("橙", "乘");

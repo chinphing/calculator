@@ -1,7 +1,6 @@
 package org.xing.android;
 
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -10,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
@@ -27,12 +25,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.speech.VoiceRecognitionService;
 import com.umeng.analytics.MobclickAgent;
 
 import org.xing.ad.AdManager;
 import org.xing.calc.Calculator;
 import org.xing.calc.Tips;
+import org.xing.engine.BaiduSpeechEngine;
+import org.xing.engine.IflySpeechEngine;
+import org.xing.engine.SpeechEngine;
+import org.xing.engine.SpeechListener;
 import org.xing.logger.impl.EventLogger;
 import org.xing.theme.Theme;
 import org.xing.theme.ThemeChangeListener;
@@ -48,12 +49,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-public class MainActivity extends AppCompatActivity implements RecognitionListener, ThemeChangeListener {
+public class MainActivity extends AppCompatActivity implements SpeechListener, ThemeChangeListener {
 
     private boolean isListening;
-    private SpeechRecognizer speechRecognizer;
+    private SpeechEngine speechEngine;
 
-    private String uniqueId;
     private Calculator calculator;
 
     public static EventLogger eventLogger;
@@ -120,9 +120,32 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private void initSpeechRecognizer() {
         isListening = false;
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(
-                this, new ComponentName(this, VoiceRecognitionService.class));
-        speechRecognizer.setRecognitionListener(this);
+
+        if(speechEngine != null) {
+            stopListening();
+            speechEngine.destroy();
+        }
+
+        String preferedEngine = AppConfig.getPreferedEngine();
+        if(preferedEngine.equals("ifly")) {
+            //速度快，准确性差一点
+            speechEngine = new IflySpeechEngine(this);
+        } else {
+            //准确性高，速度稍慢
+            speechEngine = new BaiduSpeechEngine(this);
+        }
+        speechEngine.setSpeechListener(this);
+    }
+
+    private void changeSpeechEngine() {
+        String preferedEngine = AppConfig.getPreferedEngine();
+        if(preferedEngine.equals("ifly")) {
+            AppConfig.setPreferedEngine("baidu");
+        }else {
+            AppConfig.setPreferedEngine("ifly");
+        }
+
+        initSpeechRecognizer();
     }
 
     private void initUserView() {
@@ -241,6 +264,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         cmdName.put("版本", 4);
 
         cmdName.put("主题", 5);
+
+        cmdName.put("引擎", 6);
     }
 
     private void initAd() {
@@ -257,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         
         AppConfig.loadConfig(this);
 
-        uniqueId = DeviceUtil.getUniqueId(this);
+        String uniqueId = DeviceUtil.getUniqueId(this);
         eventLogger = new EventLogger(uniqueId, AppConfig.getVersionName(),
                 this.getString(R.string.recordUrl));
         eventLogger.onEvent("start");
@@ -315,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     public synchronized void startListening(boolean resetInputCount) {
         if (isListening) return;
-        speechRecognizer.startListening(new Intent());
+        speechEngine.startListening();
         isListening = true;
         lastRmsdB = 0;
         if (resetInputCount) {
@@ -325,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     public  void stopListening() {
         if(isListening) {
-            speechRecognizer.cancel();
+            speechEngine.cancel();
         }
         listeningStopped();
     }
@@ -362,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         builder.show();
     }
 
-    public void onReadyForSpeech(Bundle params) {
+    public void onReadyForSpeech() {
         stateButton.setBackgroundResource(R.mipmap.input_ready);
     }
 
@@ -374,10 +399,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onRmsChanged(float rmsdB) {
         lastRmsdB = (rmsdB*3+lastRmsdB*7) /10;
         recordDynamic.setProgress((int) lastRmsdB);
-    }
-
-    public void onBufferReceived(byte[] buffer) {
-
     }
 
     public void onEndOfSpeech() {
@@ -451,9 +472,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 startButton.setBackgroundResource(R.mipmap.start);
                 break;
         }
-        if (sb.length() > 0) {
-            msgText.setText(sb.toString());
-        }
+
+        msgText.setText(sb.toString());
     }
 
     private String buildExpr(Bundle results) {
@@ -463,11 +483,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             expr.append(w);
         }
         return expr.toString();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
     }
 
     private void showResult(String expr, Double evalResult, String readExpr) {
@@ -528,6 +543,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 case 5:
                     themeManager.randomTheme();
                     break;
+                case 6:
+                    changeSpeechEngine();
+                    break;
                 default:
                     break;
             }
@@ -538,9 +556,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         return false;
     }
 
-    public void onResults(Bundle results) {
-
-        String expr = buildExpr(results);
+    public void onResults(String expr) {
+        if(expr == null || expr.length() == 0) return;
 
         if(!handleCommand(expr)) {
             //结算结果
@@ -563,13 +580,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         isListening = false;
         startListening(true);
-    }
-
-    public void onPartialResults(Bundle partialResults) {
-
-    }
-
-    public void onEvent(int eventType, Bundle params) {
     }
 
     public boolean isAlive() {

@@ -69,7 +69,7 @@
             <ProgressBar
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:id="@+id/recordDynamic"
-                    android:max="2000"
+                    android:max="100"
                     android:progress="0"
                     android:visibility="visible"
                     android:alpha="50"

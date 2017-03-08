@@ -10,22 +10,23 @@ android {
         versionCode 16
         versionName "1.3.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {
             manifestPlaceholders = [bd_speech_appid : "999999",
-                                    bd_speech_key :"8MAxI5o7VjKSZOKeBzS4XtxO",
+                                    bd_speech_key   : "8MAxI5o7VjKSZOKeBzS4XtxO",
                                     bd_speech_secret: "Ge5GXVdGQpaxOmLzc8fOM8309ATCz9Ha",
-                                    umeng_appkey : "none",
-                                    umeng_channel : "none"]
+                                    umeng_appkey    : "none",
+                                    umeng_channel   : "none"]
         }
         release {
             minifyEnabled false
             manifestPlaceholders = [bd_speech_appid : "9080060",
-                                    bd_speech_key :"TgEpVmjjELkIf3FKc1gj2jsj",
+                                    bd_speech_key   : "TgEpVmjjELkIf3FKc1gj2jsj",
                                     bd_speech_secret: "87c4d13cf12a83191e4b4ec23d98530e",
-                                    umeng_appkey : "586213d5ae1bf81811000768",
-                                    umeng_channel : "xing"]
+                                    umeng_appkey    : "586213d5ae1bf81811000768",
+                                    umeng_channel   : "xing"]
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             // 自定义输出配置
             applicationVariants.all { variant ->
@@ -52,11 +53,14 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
-    compile 'com.zhy:okhttputils:2.4.1'
-    compile 'com.android.support:appcompat-v7:25.1.0'
     compile files('libs/antlr-runtime-4.6.jar')
     compile files('libs/utdid4all-1.0.4.jar')
     compile files('libs/umeng-analytics-v6.0.7.jar')
     compile files('libs/GDTUnionSDK.4.9.542.min.jar')
+    compile files('libs/Msc.jar')
+    compile 'com.zhy:okhttputils:2.4.1'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:support-v4:25.1.0'
+    compile 'com.android.support:support-vector-drawable:25.1.0'
+    testCompile 'junit:junit:4.12'
 }

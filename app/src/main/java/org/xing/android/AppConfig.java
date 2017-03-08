@@ -17,6 +17,8 @@ public class AppConfig {
 
     private static String themeId;
 
+    private static String preferedEngine;
+
     private static boolean isFirstStart;
     private static boolean checkUpdate;
     private static Context mContext;
@@ -49,6 +51,7 @@ public class AppConfig {
             }
 
             themeId = prefs.getString("themeId", "0");
+            preferedEngine = prefs.getString("preferedEngine", "ifly");
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -71,6 +74,14 @@ public class AppConfig {
     public static void setThemeId(String themeId) {
         AppConfig.themeId = themeId;
         prefs.edit().putString("themeId", themeId).commit();
+    }
+    public static String getPreferedEngine() {
+        return preferedEngine;
+    }
+
+    public static void setPreferedEngine(String preferedEngine) {
+        AppConfig.preferedEngine = preferedEngine;
+        prefs.edit().putString("preferedEngine", preferedEngine).commit();
     }
     public static boolean getIsFirstStart() {
         return isFirstStart;
