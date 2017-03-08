@@ -10,6 +10,8 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechUtility;
 
+import org.xing.android.MainActivity;
+import org.xing.logger.impl.EventLogger;
 import org.xing.utils.JsonParser;
 
 import static com.iflytek.cloud.ErrorCode.ERROR_AUDIO_RECORD;
@@ -30,16 +32,20 @@ public class IflySpeechEngine implements SpeechEngine{
     private SpeechRecognizer speechRecognizer;
     private InternalRecognizerListener _listener;
 
+    private static EventLogger eventLogger;
+
     public IflySpeechEngine(Context ctx) {
         this.ctx = ctx;
         SpeechUtility.createUtility(ctx, SpeechConstant.APPID +"=585290e7");
 
         speechRecognizer= SpeechRecognizer.createRecognizer(ctx, null);
-        speechRecognizer.setParameter(SpeechConstant.DOMAIN, "iat");
+        speechRecognizer.setParameter(SpeechConstant.DOMAIN, "iat");          //{短信和日常用语：iat (默认) 视频：video 地图：poi 音乐：music
         speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
         speechRecognizer.setParameter(SpeechConstant.VAD_BOS, "10000");         //十秒超时
         speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "0");             //不带标点
+
+        eventLogger = MainActivity.eventLogger;
     }
 
     public void setSpeechListener(SpeechListener listener){
@@ -97,6 +103,7 @@ public class IflySpeechEngine implements SpeechEngine{
                     listener.onError(android.speech.SpeechRecognizer.ERROR_SPEECH_TIMEOUT);
                     break;
                 default:
+                    eventLogger.onEvent("ifly-error-"+error.getErrorCode()+": "+error.getErrorDescription());
                     listener.onError(android.speech.SpeechRecognizer.ERROR_CLIENT);
                     break;
             }
