@@ -141,8 +141,12 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         String preferedEngine = AppConfig.getPreferedEngine();
         if(preferedEngine.equals("ifly")) {
             AppConfig.setPreferedEngine("baidu");
+            Toast.makeText(this, "切换到百度语音引擎（更准确）", Toast.LENGTH_SHORT).show();
+            eventLogger.onEvent("changeEngine-baidu");
         }else {
             AppConfig.setPreferedEngine("ifly");
+            Toast.makeText(this, "切换到科大讯飞引擎（更快速）", Toast.LENGTH_SHORT).show();
+            eventLogger.onEvent("changeEngine-ifly");
         }
 
         initSpeechRecognizer();

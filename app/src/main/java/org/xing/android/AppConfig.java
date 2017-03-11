@@ -51,7 +51,7 @@ public class AppConfig {
             }
 
             themeId = prefs.getString("themeId", "0");
-            preferedEngine = prefs.getString("preferedEngine", "ifly");
+            preferedEngine = prefs.getString("preferedEngine", "baidu");
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
