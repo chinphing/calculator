@@ -4,6 +4,7 @@
 
     <string name="recordUrl">http://xingxing.zysoft.com/evaluation.php</string>
     <string name="updateCheckUrl">http://xingxing.zysoft.com/update/update.php</string>
+    <string name="helpUrl">http://xingxing.zysoft.com/help/index.html</string>
     <string name="title_activity_help">HelpActivity</string>
 
     <!-- 腾讯联盟广告参数 -->

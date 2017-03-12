@@ -71,6 +71,7 @@ public class SimpleHelpActivity extends AppCompatActivity {
                 } else {
                     if (View.INVISIBLE == progressBar.getVisibility()) {
                         progressBar.setVisibility(View.VISIBLE);
+                        titleText.setText("页面加载中...");
                     }
                     progressBar.setProgress(newProgress);
                 }

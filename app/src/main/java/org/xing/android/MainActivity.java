@@ -89,10 +89,9 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     protected void showHelp() {
         MobclickAgent.onEvent(this, "help");
         eventLogger.onEvent("help");
-        String url = "file:///android_asset/help.html#operation";
 
         Intent intent =new Intent(MainActivity.this, SimpleHelpActivity.class);
-        intent.putExtra("url", url);
+        intent.putExtra("url", getString(R.string.helpUrl));
         startActivity(intent);
     }
 
