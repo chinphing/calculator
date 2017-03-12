@@ -77,16 +77,6 @@ public class SimpleHelpActivity extends AppCompatActivity {
                 super.onProgressChanged(view, newProgress);
             }
 
-            @Override
-            public void onShowCustomView(View view, CustomViewCallback callback) {
-
-            }
-
-            @Override
-            public void onHideCustomView() {
-                LinearLayout toolBar = (LinearLayout) findViewById(R.id.toolBar);
-                toolBar.setVisibility(View.VISIBLE);
-            }
         };
         helpWeb.setWebChromeClient(chromeClient);
 
