@@ -90,6 +90,11 @@ public class AdManager {
             this.bv.setShowClose(true);
             this.bv.setADListener(new AbstractBannerADListener() {
                 @Override
+                public void onADClicked() {
+                    MobclickAgent.onEvent(mContext, "bannerClicked");
+                    eventLogger.onEvent("bannerClicked");
+                }
+                @Override
                 public void onNoAD(int arg0) {
                     MobclickAgent.onEvent(mContext, "bannerNoAD");
                     eventLogger.onEvent("bannerNoAD");
