@@ -199,6 +199,7 @@ public class UpdateManager {
                     public void onError(Call call, Exception e) {
                         //下载失败，是否重试
                         resterAlert();
+                        eventLogger.onEvent("updateError-"+e.getMessage());
                     }
 
                     @Override
