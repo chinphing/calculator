@@ -131,6 +131,7 @@
                         android:layout_height="25dp"
                         android:textColor="#777777"
                         android:textSize="12dp"
+                        android:padding="1dip"
                         android:gravity="bottom"
                         android:background="@android:color/transparent"
                         android:layout_gravity="bottom" />
