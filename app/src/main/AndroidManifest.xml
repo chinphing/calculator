@@ -53,7 +53,6 @@
         <activity
             android:name=".SimpleHelpActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-
         <!-- 腾讯广告联盟 -->
         <service
             android:name="com.qq.e.comm.DownloadService"
@@ -62,6 +61,7 @@
         <activity
             android:name="com.qq.e.ads.ADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+
     </application>
 
 </manifest>

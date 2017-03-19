@@ -36,6 +36,7 @@ import org.xing.engine.IflySpeechEngine;
 import org.xing.engine.SpeechEngine;
 import org.xing.engine.SpeechListener;
 import org.xing.logger.impl.EventLogger;
+import org.xing.share.ShareManager;
 import org.xing.theme.Theme;
 import org.xing.theme.ThemeChangeListener;
 import org.xing.theme.ThemeManager;
@@ -78,8 +79,17 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
      */
     private AdManager adManager;
 
+    /*
+    主题
+     */
     private Theme currentTheme;
     private ThemeManager themeManager;
+
+    /*
+    分享
+     */
+    private LinearLayout shareLayout;
+    private ShareManager shareManager;
 
     /*
     空闲状态计数，达到maxNoInputCount暂时停止工作
@@ -291,6 +301,49 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                 (ViewGroup) this.findViewById(R.id.bannerContainer));
     }
 
+    private void initTheme() {
+        themeManager = new ThemeManager(this);
+        themeManager.addThemeChangeListener(this);
+        themeManager.applyTheme(AppConfig.getThemeId());
+    }
+
+    private void initShare() {
+        shareManager = new ShareManager(this);
+
+        shareLayout = (LinearLayout) findViewById(R.id.share_board);
+        this.findViewById(R.id.share_mark).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        this.findViewById(R.id.cancel_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareLayout.setVisibility(View.GONE);
+            }
+        });
+        this.findViewById(R.id.share_weixin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareManager.shareToWeixin(0);
+            }
+        });
+        this.findViewById(R.id.share_pengyouquan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareManager.shareToWeixin(1);
+            }
+        });
+    }
+
+    private void initPermission() {
+        PermissionChecker.requestPermission(this, new String[] {
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        });
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -315,16 +368,9 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         initCalculator();
         initCommand();
         initAd();
-
-        themeManager = new ThemeManager(this);
-        themeManager.addThemeChangeListener(this);
-        themeManager.applyTheme(AppConfig.getThemeId());
-
-        PermissionChecker.requestPermission(this, new String[] {
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        });
+        initTheme();
+        initShare();
+        initPermission();
     }
 
 
