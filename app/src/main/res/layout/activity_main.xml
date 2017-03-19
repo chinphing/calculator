@@ -104,6 +104,12 @@
                     android:layout_gravity="center"
                     android:layerType="software" />
 
+            <FrameLayout android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_alignParentTop="true"
+                android:id="@+id/bannerContainer">
+            </FrameLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -157,11 +163,5 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
-        <FrameLayout android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_alignParentTop="true"
-            android:id="@+id/bannerContainer">
-        </FrameLayout>
     </LinearLayout>
 </RelativeLayout>

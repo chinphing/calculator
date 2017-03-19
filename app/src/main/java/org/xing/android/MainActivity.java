@@ -1,5 +1,6 @@
 package org.xing.android;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -95,20 +96,32 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         startActivity(intent);
     }
 
+    /*
+    新版本功能提示
+    延迟1s弹出对话框，大致实是在用户说了一句话之后弹出
+     */
     protected void showTips(int delaySecond) {
-        //延迟1s弹出对话框，大致实在用户说了一句话之后弹出
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("小技巧");
-                builder.setMessage("  说'帮助'、'说明'，查看使用教程。\n  " +
-                        "支持括号、分数、π、三角函数、对数函数。\n  立即查看教程？");
+                builder.setMessage("  说'引擎'，切换到讯飞识别引擎，计算速度更快。" +
+                        "立即切换？");
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        showHelp();
+                        stopListening();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                changeSpeechEngine();
+                                startListening(true);
+                            }
+                        }, 1000);
                     }
                 });
                 builder.setNegativeButton("知道", null);
@@ -118,12 +131,12 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     }
 
     private void initSpeechRecognizer() {
-        isListening = false;
-
         if(speechEngine != null) {
             stopListening();
             speechEngine.destroy();
         }
+
+        isListening = false;
 
         String preferedEngine = AppConfig.getPreferedEngine();
         if(preferedEngine.equals("ifly")) {
@@ -307,8 +320,11 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         themeManager.addThemeChangeListener(this);
         themeManager.applyTheme(AppConfig.getThemeId());
 
-        startListening(true);
-        startButton.setBackgroundResource(R.mipmap.stop);
+        PermissionChecker.requestPermission(this, new String[] {
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        });
     }
 
 
@@ -623,4 +639,5 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             e.printStackTrace();
         }
     }
+
 }
