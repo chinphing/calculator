@@ -161,9 +161,9 @@
                                 android:layout_height="25dp"
                                 android:textColor="#777777"
                                 android:clickable="true"
-                                android:background="@drawable/textview_help_selector"
-                                android:gravity="center"
-                                android:textSize="15dp" />
+                                android:layout_marginRight="5dp"
+                                android:background="@drawable/textview_share_selector"
+                                android:gravity="center" />
 
                             <Button
                                 android:id = "@+id/help_mark"
@@ -172,8 +172,7 @@
                                 android:textColor="#777777"
                                 android:clickable="true"
                                 android:background="@drawable/textview_help_selector"
-                                android:gravity="center"
-                                android:textSize="15dp" />
+                                android:gravity="center" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -186,6 +185,16 @@
                     android:visibility="gone"
                     android:orientation="vertical" >
 
+                    <TextView
+                        android:id = "@+id/share_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#777777"
+                        android:textSize="15dp"
+                        android:text="分享到" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -195,24 +204,28 @@
                             android:id="@+id/share_weixin"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
+                            android:background="@drawable/image_selector"
                             android:src = "@mipmap/socialize_wechat" />
 
                         <ImageView
                             android:id="@+id/share_pengyouquan"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
+                            android:background="@drawable/image_selector"
                             android:src = "@mipmap/socialize_wxcircle" />
 
                         <ImageView
                             android:id="@+id/share_qq"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
+                            android:background="@drawable/image_selector"
                             android:src = "@mipmap/socialize_qq" />
 
                         <ImageView
                             android:id="@+id/share_kongjian"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
+                            android:background="@drawable/image_selector"
                             android:src = "@mipmap/socialize_qzone" />
 
                     </LinearLayout>
