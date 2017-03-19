@@ -8,7 +8,8 @@
     <string name="title_activity_help">HelpActivity</string>
 
     <!-- 分享相关-->
-    <string name="shareDesc">真正的语音输入计算器，彻底解放双手。简单、快速、准确。</string>
+    <string name="shareTitle">真正的语音输入计算器，彻底解放双手</string>
+    <string name="shareDesc">怎么读就怎么计算，比键盘输入计算器更简单、更快速、更准确、更强大。</string>
     <string name="shareUrl">http://xingxing.zysoft.com/index.html</string>
     <string name="shareImage">http://xingxing.zysoft.com/img/share_icon.png</string>
 

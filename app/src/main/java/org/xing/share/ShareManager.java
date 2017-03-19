@@ -62,7 +62,7 @@ public class ShareManager {
         webpage.webpageUrl = activity.getString(R.string.shareUrl);
 
         WXMediaMessage msg = new WXMediaMessage(webpage);
-        msg.title = activity.getString(R.string.shareDesc);
+        msg.title = activity.getString(R.string.shareTitle);
         msg.description = activity.getString(R.string.shareDesc);
 
         //这里替换一张自己工程里的图片资源
@@ -81,14 +81,14 @@ public class ShareManager {
         final Bundle params = new Bundle();
         if(flag == 0) {
             params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-            params.putString(QQShare.SHARE_TO_QQ_TITLE, activity.getString(R.string.shareDesc));
+            params.putString(QQShare.SHARE_TO_QQ_TITLE, activity.getString(R.string.shareTitle));
             params.putString(QQShare.SHARE_TO_QQ_SUMMARY, activity.getString(R.string.shareDesc));
             params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, activity.getString(R.string.shareUrl));
             params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, activity.getString(R.string.shareImage));
             params.putString(QQShare.SHARE_TO_QQ_APP_NAME, activity.getString(R.string.app_name));
         } else {
             params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT );
-            params.putString(QzoneShare.SHARE_TO_QQ_TITLE, activity.getString(R.string.shareDesc));
+            params.putString(QzoneShare.SHARE_TO_QQ_TITLE, activity.getString(R.string.shareTitle));
             params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, activity.getString(R.string.shareDesc));
             params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, activity.getString(R.string.shareUrl));
             ArrayList<String> imageList = new ArrayList<>();
