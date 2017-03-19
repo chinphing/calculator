@@ -335,6 +335,18 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                 shareManager.shareToWeixin(1);
             }
         });
+        this.findViewById(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareManager.shareToQQ(0);
+            }
+        });
+        this.findViewById(R.id.share_kongjian).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareManager.shareToQQ(1);
+            }
+        });
     }
 
     private void initPermission() {
@@ -638,7 +650,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             showResult(expr.toString(), evalResult, readExpr);
 
             if(AppConfig.getIsFirstStart()) {
-                showTips(1);
+                showTips(10);
                 AppConfig.setIsFirstStart(false);
             }
         }
