@@ -143,6 +143,9 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("浙江", "撤销");
 		addWord("大腿", "倒退");
 		addWord("车享", "倒退");
+
+		addWord("阴茎", "引擎");
+		addWord("隐形", "引擎");
 	}
 	private void addWord(String tar, String with) {
 		if(regStr.length() > 0) {
