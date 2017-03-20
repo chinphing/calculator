@@ -2,6 +2,7 @@ package org.xing.android;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +10,14 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,10 +28,36 @@ import java.io.ByteArrayInputStream;
 
 public class SimpleHelpActivity extends AppCompatActivity {
     private WebView helpWeb;
+
     private View videoView;
+    private FrameLayout videoContainerView;
+
+    LinearLayout toolBar;
     private ProgressBar progressBar;
     private TextView titleText;
     private WebChromeClient chromeClient;
+
+    /**
+     * 设置全屏
+     */
+    private void setFullScreen() {
+        // 设置全屏的相关属性，获取当前的屏幕状态，然后设置全屏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // 全屏下的状态码：1098974464
+        // 窗口下的状态吗：1098973440
+    }
+
+    /**
+     * 退出全屏
+     */
+    private void quitFullScreen() {
+        // 声明当前屏幕状态的参数并获取
+        final WindowManager.LayoutParams attrs = getWindow().getAttributes();
+        attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setAttributes(attrs);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +65,9 @@ public class SimpleHelpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_simple_help);
 
         videoView = null;
+        videoContainerView = (FrameLayout) findViewById(R.id.video);
+
+        toolBar = (LinearLayout) findViewById(R.id.toolBar);
         progressBar = (ProgressBar) findViewById(R.id.webProgress);
         titleText = (TextView) findViewById(R.id.help_title);
 
@@ -63,6 +95,44 @@ public class SimpleHelpActivity extends AppCompatActivity {
 
         chromeClient = new WebChromeClient() {
             private CustomViewCallback callBack;
+
+            // 播放网络视频时全屏会被调用的方法
+            @Override
+            public void onShowCustomView(View view, CustomViewCallback callback) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+                toolBar.setVisibility(View.INVISIBLE);
+                helpWeb.setVisibility(View.INVISIBLE);
+
+                // 如果一个视图已经存在，那么立刻终止并新建一个
+                if (videoView != null) {
+                    callback.onCustomViewHidden();
+                    return;
+                }
+                videoContainerView.addView(view);
+                videoView = view;
+                callBack = callback;
+                videoContainerView.setVisibility(View.VISIBLE);
+                setFullScreen();
+            }
+
+            // 视频播放退出全屏会被调用的
+            @Override
+            public void onHideCustomView() {
+                if (videoView == null)// 不是全屏播放状态
+                    return;
+
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                videoView.setVisibility(View.GONE);
+                videoContainerView.removeView(videoView);
+                videoView = null;
+                videoContainerView.setVisibility(View.GONE);
+                callBack.onCustomViewHidden();
+
+                toolBar.setVisibility(View.VISIBLE);
+                helpWeb.setVisibility(View.VISIBLE);
+                quitFullScreen();
+            }
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -135,7 +205,6 @@ public class SimpleHelpActivity extends AppCompatActivity {
                     x2 = event.getX();
                     y2 = event.getY();
 
-                    LinearLayout toolBar = (LinearLayout) findViewById(R.id.toolBar);
                     if (y1 - y2 > 50) {
                         toolBar.setVisibility(View.GONE);
                     } else if (y2 - y1 > 50) {
@@ -155,12 +224,14 @@ public class SimpleHelpActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        helpWeb.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+        helpWeb.onPause();
     }
 
     @Override
@@ -180,5 +251,4 @@ public class SimpleHelpActivity extends AppCompatActivity {
             chromeClient.onHideCustomView();
         }
     }
-
 }
