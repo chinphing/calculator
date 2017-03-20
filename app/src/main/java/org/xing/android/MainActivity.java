@@ -437,33 +437,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         stateButton.setBackgroundResource(R.mipmap.input_sleep);
     }
 
-    public void startSetting(String msg) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("应用未授权");
-        builder.setMessage(msg);
-        builder.setPositiveButton("现在打开", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                eventLogger.onEvent("settingConfirm");
-                try {
-                    Intent intent = new Intent(Settings.ACTION_SETTINGS);
-                    startActivity(intent);
-                }catch (Exception ex) {
-                    Toast.makeText(MainActivity.this,
-                            "抱歉，无法自动跳转到设置页面，请手动操作。",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        builder.setNegativeButton("稍后打开", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                eventLogger.onEvent("seettingCancel");
-            }
-        });
-        builder.show();
-    }
-
     public void onReadyForSpeech() {
         stateButton.setBackgroundResource(R.mipmap.input_ready);
     }
@@ -492,8 +465,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                 sb.append("录音设备未授权");
                 startButton.setBackgroundResource(R.mipmap.start);
                 eventLogger.onEvent("errorAudio");
-                startSetting("需要录音(麦克风)权限，请打开设置界面授权。" +
-                        "参考步骤：'权限设置'->'录音'->'星星声控计算器'->'允许'。");
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                 noInputCount++;
@@ -513,16 +484,12 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                 sb.append("录音设备未授权");
                 startButton.setBackgroundResource(R.mipmap.start);
                 eventLogger.onEvent("errorPermissions");
-                startSetting("\t需要录音(麦克风)权限，请打开设置界面授权。" +
-                        "参考步骤：'权限设置'->'录音'->'星星声控计算器'->'允许'。");
                 break;
             case SpeechRecognizer.ERROR_NETWORK:
                 sb.append("请检查网络连接");
                 MobclickAgent.onEvent(this, "errorNetwork");
                 eventLogger.onEvent("errorNetwork");
                 startButton.setBackgroundResource(R.mipmap.start);
-                startSetting("\t需要连接网络，请打开设置界面授权。"+
-                        "参考步骤：'权限设置'->'移动数据'或者'WLAN'->'星星声控计算器'->'允许'。");
                 break;
             case SpeechRecognizer.ERROR_NO_MATCH:
                 sb.append("未识别");
