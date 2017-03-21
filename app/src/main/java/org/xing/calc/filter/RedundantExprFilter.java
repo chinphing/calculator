@@ -93,6 +93,9 @@ public class RedundantExprFilter implements ExprFilter{
 		} else if(result.endsWith("加上") || result.endsWith("减去")
 				|| result.endsWith("乘以") || result.endsWith("除以")) {
 			result = result.substring(0, result.length()-2);
+		} else if(result.startsWith("-")){
+			/*讯飞语音直接将‘负’改成了‘-’号，导致错误的识别为连续计算*/
+			result = "负" + result.substring(1, result.length());
 		}
 
 		return result;
