@@ -48,6 +48,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("市", "4");
 		addWord("世", "4");
 		addWord("师", "4");
+		addWord("我", "5");
 		addWord("陆", "6");
 		addWord("料", "6");
 		addWord("乐", "6");
