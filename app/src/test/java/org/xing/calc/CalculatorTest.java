@@ -171,10 +171,11 @@ public class CalculatorTest{
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("平方根", "0.880212"));
 
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("三又四分之一", "3.25"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("三又1/4", "3.25"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("负三又四分之一", "-3.25"));
 
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("一千万", "10000000"));
-        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("十六万亿", "16000000000000"));
+        contiExpr.add(new AbstractMap.SimpleEntry<String, String>("十万亿", "10000000000000"));
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("二对数三乘以二队戍午", "3.680169"));
 
         contiExpr.add(new AbstractMap.SimpleEntry<String, String>("一百除二等于多少", "50"));

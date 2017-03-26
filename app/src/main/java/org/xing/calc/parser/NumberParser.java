@@ -41,7 +41,8 @@ public class NumberParser extends Parser {
 		StringBuilder reversedInputNumber = new StringBuilder(inputNumber).reverse();
 		
 		int numDigits = 0;		//整数位的位数
-		int lastnumZero = 0;	//专门处理类似于三百万这种连续两个单位的数字
+		int maxNumZero = 0;					//专门处理类似于三百万这种连续两个单位的数字
+		int secondaryMaxNumZero = 0;		//二级最大值
 		int index = 0;		
 		while(index < reversedInputNumber.length()) {
 			char c = reversedInputNumber.charAt(index);
@@ -59,10 +60,16 @@ public class NumberParser extends Parser {
 				numDigits = 0;
 			} else if(numberDigitsMap.containsKey(c)){
 				int numZero = numberDigitsMap.get(c);
-				if(numZero < lastnumZero) {
-					numZero += lastnumZero;
+				if(numZero <= maxNumZero) {
+					if(numZero <= secondaryMaxNumZero) {
+						numZero += secondaryMaxNumZero;
+					} else {
+						secondaryMaxNumZero = numZero;
+					}
+					numZero += maxNumZero;
 				} else {
-					lastnumZero= numZero;
+					maxNumZero = numZero;
+					secondaryMaxNumZero = 0;
 				}
 				
 				if(index == 1

@@ -107,6 +107,13 @@ public class CalculatorEvalVisitor extends calculatorBaseVisitor<Double> {
 			Double firstNumber = visit(ctx.getChild(0));
 			Double secondNumber = visit(ctx.getChild(2));
 			Double thirdNumber = visit(ctx.getChild(4));
+
+			//三又2/3 这种被语音识别引擎处理过的表达方式
+			if(ctx.getChild(3).getText().equals("/")) {
+				secondNumber = visit(ctx.getChild(4));
+				thirdNumber = visit(ctx.getChild(2));
+			}
+
 			if(firstNumber < 0) {
 				return (firstNumber * secondNumber - thirdNumber) / secondNumber;
 			} else {

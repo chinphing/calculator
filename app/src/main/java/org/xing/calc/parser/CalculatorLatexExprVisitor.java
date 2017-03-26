@@ -220,6 +220,11 @@ public class CalculatorLatexExprVisitor extends calculatorBaseVisitor<String> {
             String expr0 = visit(ctx.getChild(0));
             String expr2 = visit(ctx.getChild(2));
             String expr4 = visit(ctx.getChild(4));
+            //三又2/3 这种被语音识别引擎处理过的表达方式
+            if(ctx.getChild(3).getText().equals("/")) {
+                expr2 = visit(ctx.getChild(4));
+                expr4 = visit(ctx.getChild(2));
+            }
             return expr0+"\\\\frac{"+expr4+"}{"+expr2+"}";
         }else {
             return visit(ctx.getChild(0));
