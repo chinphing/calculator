@@ -28,6 +28,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("盛", "乘");
 		addWord("重", "乘");
 		addWord("层", "乘");
+		addWord("曾", "乘");
 		addWord("城里", "乘以");
 		addWord("初一", "除以");
 
@@ -35,6 +36,9 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("褚", "除");
 
 		addWord("括弧", "括号");
+
+		//一块二这种金额的表达方式
+		addWord("块", "点");
 
 		addWord("两", "二");
 		addWord("俩", "二");
