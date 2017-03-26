@@ -98,8 +98,7 @@
                     android:background="@android:color/transparent"
                     android:layout_height="0dp"
                     android:layout_weight="97"
-                    android:padding="3dip"
-                    android:layout_margin="0dp"
+                    android:layout_margin="5dp"
                     android:layout_gravity="center"
                     android:layerType="software" />
 
