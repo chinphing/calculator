@@ -38,23 +38,26 @@ public class Tips {
 
     public static Tips createSimpleTips() {
         Tips tips = new Tips();
-        tips.add("帮助");
-        tips.add("升级");
-        tips.add("主题");
-        tips.add("三分之一");
-        tips.add("加一千");
-        tips.add("删除");
-        tips.add("对数三");
-        tips.add("三对数五");
-        tips.add("清空");
-        tips.add("二乘括号二加一括号");
-        tips.add("正弦零点二");
-        tips.add("正弦三分之派");
-        tips.add("正弦三十度");
-        tips.add("根号五");
-        tips.add("三根号五");
-        tips.add("三的平方");
-        tips.add("三的四次方");
+        tips.add("试一下：'帮助'");
+        tips.add("试一下：'升级'");
+        tips.add("试一下：'主题'");
+        tips.add("试一下：'三分之一'");
+        tips.add("试一下：'加一千'");
+        tips.add("试一下：'删除'");
+        tips.add("试一下：'对数三'");
+        tips.add("试一下：'三对数五'");
+        tips.add("试一下：'清空'");
+        tips.add("试一下：'二乘括号二加一括号'");
+        tips.add("试一下：'正弦零点二'");
+        tips.add("试一下：'正弦三分之派'");
+        tips.add("试一下：'正弦三十度'");
+        tips.add("试一下：'根号五'");
+        tips.add("试一下：'三根号五'");
+        tips.add("试一下：'三的平方'");
+        tips.add("试一下：'三的四次方'");
+        tips.add("试一下：'百度'");
+        tips.add("试一下：'讯飞'");
+        tips.add("试一下：'引擎'");
         return tips;
     }
 }

@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                changeSpeechEngine();
+                                changeSpeechEngine(null);
                                 startListening(true);
                             }
                         }, 1000);
@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         isListening = false;
 
         String preferedEngine = AppConfig.getPreferedEngine();
+        eventLogger.onEvent("engine-"+preferedEngine);
+
         if(preferedEngine.equals("ifly")) {
             //速度快，准确性差一点
             speechEngine = new IflySpeechEngine(this);
@@ -159,19 +161,28 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         speechEngine.setSpeechListener(this);
     }
 
-    private void changeSpeechEngine() {
+    private void changeSpeechEngine(String engine) {
+        eventLogger.onEvent("changeEngine");
         String preferedEngine = AppConfig.getPreferedEngine();
-        if(preferedEngine.equals("ifly")) {
+        if(preferedEngine.equals("ifly") && (engine == null || engine.equals("baidu"))){
             AppConfig.setPreferedEngine("baidu");
-            Toast.makeText(this, "切换到百度语音引擎（更准确）", Toast.LENGTH_SHORT).show();
-            eventLogger.onEvent("changeEngine-baidu");
-        }else {
+            Toast.makeText(this, "切换到百度语音引擎（更准确）\n" +
+                    "说'引擎'或'讯飞'可以切换", Toast.LENGTH_LONG).show();
+            initSpeechRecognizer();
+        }else if(preferedEngine.equals("baidu") && (engine == null || engine.equals("ifly"))){
             AppConfig.setPreferedEngine("ifly");
-            Toast.makeText(this, "切换到科大讯飞引擎（更快速）", Toast.LENGTH_SHORT).show();
-            eventLogger.onEvent("changeEngine-ifly");
+            Toast.makeText(this, "切换到科大讯飞引擎（更快速）\n" +
+                    "说'引擎'或'百度'可以切换", Toast.LENGTH_LONG).show();
+            initSpeechRecognizer();
+        } else {
+            if(preferedEngine.equals("baidu")) {
+                Toast.makeText(this, "已经是百度语音引擎，无需重新设置\n" +
+                        "说'引擎'或'讯飞'可以切换", Toast.LENGTH_LONG).show();
+            }else {
+                Toast.makeText(this, "已经是科大讯飞引擎，无需重新设置\n" +
+                        "说'引擎'或'百度'可以切换", Toast.LENGTH_LONG).show();
+            }
         }
-
-        initSpeechRecognizer();
     }
 
     private void initUserView() {
@@ -292,6 +303,8 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         cmdName.put("主题", 5);
 
         cmdName.put("引擎", 6);
+        cmdName.put("百度", 6);
+        cmdName.put("讯飞", 6);
     }
 
     private void initAd() {
@@ -375,14 +388,15 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
-        initSpeechRecognizer();
         initUserView();
         initCalculator();
         initCommand();
         initAd();
         initTheme();
         initShare();
+
         initPermission();
+        initSpeechRecognizer();
     }
 
 
@@ -392,7 +406,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
 
         startListening(true);
         startButton.setBackgroundResource(R.mipmap.stop);
-        msgText.setText("试一下:‘"+tips.randomGet()+"’");
+        msgText.setText(tips.randomGet());
 
         MobclickAgent.onResume(this);
         adManager.onResume();
@@ -588,7 +602,13 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                     themeManager.randomTheme();
                     break;
                 case 6:
-                    changeSpeechEngine();
+                    if(cmd.equals("引擎")) {
+                        changeSpeechEngine(null);
+                    }else if(cmd.equals("百度")){
+                        changeSpeechEngine("baidu");
+                    }else {
+                        changeSpeechEngine("ifly");
+                    }
                     break;
                 default:
                     break;
