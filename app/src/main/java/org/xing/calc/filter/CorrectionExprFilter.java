@@ -23,6 +23,7 @@ public class CorrectionExprFilter implements ExprFilter {
 
 		addWord("缉", "减");
 
+		addWord("倍", "乘");
 		addWord("澄", "乘");
 		addWord("橙", "乘");
 		addWord("盛", "乘");
@@ -42,6 +43,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord(":", "点");
 		addWord("：", "点");
 
+		addWord("幺", "一");
 		addWord("两", "二");
 		addWord("俩", "二");
 		addWord("山", "3");
@@ -107,6 +109,8 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("反正去", "反正切");
 
 		addWord("括回", "括号");
+		addWord("货号", "括号");
+
 		addWord("对手", "对数");
 		addWord("开封", "开方");
 		addWord("次幂", "次方");
@@ -147,6 +151,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("青苹", "清屏");
 		addWord("蜻蜓", "清屏");
 		addWord("金瓶", "清屏");
+		addWord("亲萍", "清屏");
 		addWord("星空", "清空");
 		addWord("净空", "清空");
 
