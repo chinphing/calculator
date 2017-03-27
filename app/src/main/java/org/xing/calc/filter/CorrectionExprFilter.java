@@ -39,6 +39,8 @@ public class CorrectionExprFilter implements ExprFilter {
 
 		//一块二这种金额的表达方式
 		addWord("块", "点");
+		addWord(":", "点");
+		addWord("：", "点");
 
 		addWord("两", "二");
 		addWord("俩", "二");
