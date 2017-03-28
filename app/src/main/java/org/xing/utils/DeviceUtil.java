@@ -2,6 +2,7 @@ package org.xing.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import java.util.UUID;
@@ -16,9 +17,9 @@ public class DeviceUtil {
 
         String tmDevice, tmSerial, tmPhone, androidId;
 
-        tmDevice = "";
-        tmSerial = "";
-        androidId = "";
+        tmDevice = Build.BRAND;
+        tmSerial = Build.SERIAL;
+        androidId = Build.MODEL;
 
         try {
             //部分机型这里会抛出异常

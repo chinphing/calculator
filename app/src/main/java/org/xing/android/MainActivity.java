@@ -212,6 +212,9 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                     msgText.setText("已暂停");
                     adManager.showAd(0);
                 } else {
+                    //再次检查录音设备授权，部分用户误操作禁止了录音授权，这行代码可以让用户再次授权
+                    PermissionChecker.requestAudioPermission(MainActivity.this);
+
                     startListening(true);
                     startButton.setBackgroundResource(R.mipmap.stop);
                     msgText.setText("");
@@ -286,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         cmdName.put("清屏", 1);
         cmdName.put("清空", 1);
         cmdName.put("清除", 1);
+        cmdName.put("全部删除", 1);
 
         cmdName.put("撤销", 2);
         cmdName.put("取消", 2);
@@ -365,8 +369,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     private void initPermission() {
         PermissionChecker.requestPermission(this, new String[] {
                 Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
         });
     }
     @Override
@@ -379,7 +381,12 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         String uniqueId = DeviceUtil.getUniqueId(this);
         eventLogger = new EventLogger(uniqueId, AppConfig.getVersionName(),
                 this.getString(R.string.recordUrl));
-        eventLogger.onEvent("start");
+
+        if(AppConfig.getIsFirstStart()) {
+            eventLogger.onEvent("new-start");
+        } else {
+            eventLogger.onEvent("start");
+        }
 
         tips = Tips.createSimpleTips();
 
@@ -388,14 +395,13 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
+        initPermission();
         initUserView();
         initCalculator();
         initCommand();
         initAd();
         initTheme();
         initShare();
-
-        initPermission();
         initSpeechRecognizer();
     }
 

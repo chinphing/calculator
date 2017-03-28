@@ -32,6 +32,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("曾", "乘");
 		addWord("城里", "乘以");
 		addWord("初一", "除以");
+		addWord("乘与", "除以");
 
 		addWord("区", "除");
 		addWord("褚", "除");
@@ -48,6 +49,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("俩", "二");
 		addWord("山", "3");
 		addWord("善", "3");
+		addWord("潘", "3");
 		addWord("仨", "三");
 		addWord("是", "4");
 		addWord("事", "4");
