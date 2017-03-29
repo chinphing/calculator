@@ -226,9 +226,9 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                                 Toast.makeText(MainActivity.this,
                                         "小技巧：每一次微信分享或QQ分享都可以减少广告，分享三次即可彻底删除广告。",
                                         Toast.LENGTH_LONG).show();
-                                shareTipsShowed = true;
                             }
                         }, 10 * 1000);
+                        shareTipsShowed = true;
                     }
                 } else {
                     //再次检查录音设备授权，部分用户误操作禁止了录音授权，这行代码可以让用户再次授权
