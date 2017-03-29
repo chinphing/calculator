@@ -9,6 +9,7 @@ import com.qq.e.ads.banner.AbstractBannerADListener;
 import com.qq.e.ads.banner.BannerView;
 import com.umeng.analytics.MobclickAgent;
 
+import org.xing.android.AppConfig;
 import org.xing.android.MainActivity;
 import org.xing.logger.impl.EventLogger;
 
@@ -39,7 +40,7 @@ public class AdManager {
     private boolean visible;
     private float showProb;
     private long lastShowTimestamp;
-    private static long showInterval = 60 * 1000;
+    private static long showInterval = 4 * 60 * 1000;
 
     public AdManager(Activity context,
                     String appid, String bannerPosID,
@@ -56,8 +57,10 @@ public class AdManager {
 
         random = new Random();
         visible = false;
-        showProb = 0.25f;
+        showProb = 1.0f;
         lastShowTimestamp = System.currentTimeMillis();
+
+        resetProb(AppConfig.getShareCount());
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -65,12 +68,8 @@ public class AdManager {
             public void run() {
                 long currentTimestamp = System.currentTimeMillis();
                 if(currentTimestamp - lastShowTimestamp > showInterval) {
-                    if(visible && random.nextFloat() < showProb) {
-                        mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {showAd(30);
-                                }
-                            });
+                    if(visible) {
+                        showAdProb(30);
                     } else {
                         lastShowTimestamp = currentTimestamp;
                     }
@@ -79,8 +78,17 @@ public class AdManager {
         }, 15 * 1000, 15* 1000);
     }
 
+    public void showAdProb(final int delaySeconds) {
+        if( random.nextFloat() < showProb) {
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {showAd(delaySeconds);
+                }
+            });
+        }
+    }
+
     public void showAd(int delaySeconds) {
-        showProb = 0.25f;
         lastShowTimestamp = System.currentTimeMillis();
 
         if(bv == null) {
@@ -170,5 +178,9 @@ public class AdManager {
 
     public void onPause() {
         visible = false;
+    }
+
+    public void resetProb(int shareCount) {
+        showProb = 1.0f / (shareCount*3+1);
     }
 }

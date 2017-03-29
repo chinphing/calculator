@@ -53,6 +53,7 @@ import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements SpeechListener, ThemeChangeListener {
 
+    private boolean hasAudioError;
     private boolean isListening;
     private SpeechEngine speechEngine;
 
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             speechEngine.destroy();
         }
 
+        hasAudioError = false;
         isListening = false;
 
         String preferedEngine = AppConfig.getPreferedEngine();
@@ -213,7 +215,9 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                     adManager.showAd(0);
                 } else {
                     //再次检查录音设备授权，部分用户误操作禁止了录音授权，这行代码可以让用户再次授权
-                    PermissionChecker.requestAudioPermission(MainActivity.this);
+                    if(hasAudioError) {
+                        PermissionChecker.requestAudioPermission(MainActivity.this);
+                    }
 
                     startListening(true);
                     startButton.setBackgroundResource(R.mipmap.stop);
@@ -309,6 +313,8 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         cmdName.put("引擎", 6);
         cmdName.put("百度", 6);
         cmdName.put("讯飞", 6);
+
+        cmdName.put("退出", 7);
     }
 
     private void initAd() {
@@ -316,6 +322,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                 this.getString(R.string.gdtAppid),
                 this.getString(R.string.gdtBannerPosID),
                 (ViewGroup) this.findViewById(R.id.bannerContainer));
+        adManager.showAd(0);
     }
 
     private void initTheme() {
@@ -324,6 +331,10 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         themeManager.applyTheme(AppConfig.getThemeId());
     }
 
+    private void adPolicyChanged() {
+        AppConfig.addShareCount();
+        adManager.resetProb(AppConfig.getShareCount());
+    }
     private void initShare() {
         shareManager = new ShareManager(this);
 
@@ -350,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             @Override
             public void onClick(View v) {
                 shareManager.shareToWeixin(1);
+                adPolicyChanged();
             }
         });
         this.findViewById(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
@@ -362,6 +374,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             @Override
             public void onClick(View v) {
                 shareManager.shareToQQ(1);
+                adPolicyChanged();
             }
         });
     }
@@ -394,7 +407,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         UpdateManager.postUpdate(this, 10);
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-
         initPermission();
         initUserView();
         initCalculator();
@@ -437,6 +449,8 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
 
     public synchronized void startListening(boolean resetInputCount) {
         if (isListening) return;
+
+        hasAudioError = false;
         speechEngine.startListening();
         isListening = true;
         lastRmsdB = 0;
@@ -485,6 +499,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                 sb.append("录音设备未授权");
                 startButton.setBackgroundResource(R.mipmap.start);
                 eventLogger.onEvent("errorAudio");
+                hasAudioError = true;
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                 noInputCount++;
@@ -504,6 +519,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                 sb.append("录音设备未授权");
                 startButton.setBackgroundResource(R.mipmap.start);
                 eventLogger.onEvent("errorPermissions");
+                hasAudioError = true;
                 break;
             case SpeechRecognizer.ERROR_NETWORK:
                 sb.append("请检查网络连接");
@@ -615,6 +631,10 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                     }else {
                         changeSpeechEngine("ifly");
                     }
+                    break;
+                case 7:
+                    stopListening();
+                    finish();
                     break;
                 default:
                     break;

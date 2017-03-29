@@ -18,6 +18,7 @@ public class AppConfig {
     private static String themeId;
 
     private static String preferedEngine;
+    private static int shareCount;
 
     private static boolean isFirstStart;
     private static boolean checkUpdate;
@@ -52,6 +53,7 @@ public class AppConfig {
 
             themeId = prefs.getString("themeId", "0");
             preferedEngine = prefs.getString("preferedEngine", "baidu");
+            shareCount = prefs.getInt("shareCount", 0);
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -83,6 +85,20 @@ public class AppConfig {
         AppConfig.preferedEngine = preferedEngine;
         prefs.edit().putString("preferedEngine", preferedEngine).commit();
     }
+
+    public static int getShareCount() {
+        return shareCount;
+    }
+
+    public static void setShareCount(int shareCount) {
+        AppConfig.shareCount = shareCount;
+        prefs.edit().putInt("shareCount", shareCount).commit();
+    }
+    public static void addShareCount() {
+        AppConfig.shareCount ++;
+        prefs.edit().putInt("shareCount", shareCount).commit();
+    }
+
     public static boolean getIsFirstStart() {
         return isFirstStart;
     }
@@ -96,4 +112,5 @@ public class AppConfig {
         checkUpdate = b;
         prefs.edit().putBoolean("checkUpdate", b).commit();
     }
+
 }
