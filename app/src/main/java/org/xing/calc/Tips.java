@@ -58,6 +58,8 @@ public class Tips {
         tips.add("试一下：'百度'");
         tips.add("试一下：'讯飞'");
         tips.add("试一下：'引擎'");
+        tips.add("试一下：'退出'");
+        tips.add("提示：分享三次可彻底删除广告");
         return tips;
     }
 }
