@@ -82,8 +82,7 @@ public class AdManager {
         if( random.nextFloat() < showProb) {
             mContext.runOnUiThread(new Runnable() {
                 @Override
-                public void run() {showAd(delaySeconds);
-                }
+                public void run() {showAd(delaySeconds);}
             });
             return true;
         }
