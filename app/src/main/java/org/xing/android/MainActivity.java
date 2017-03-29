@@ -59,7 +59,11 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
 
     private Calculator calculator;
 
+    private boolean newFeatureShowed;
+    private boolean shareTipsShowed;
+
     public static EventLogger eventLogger;
+
     private Tips tips;
 
     private EditText inputText;
@@ -212,7 +216,20 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                     stopListening();
                     startButton.setBackgroundResource(R.mipmap.start);
                     msgText.setText("已暂停");
-                    adManager.showAd(0);
+                    adManager.showAdProb(0);
+
+                    if(AppConfig.getIsFirstStart() && (!shareTipsShowed)) {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this,
+                                        "小技巧：每一次微信分享或QQ分享都可以减少广告，分享三次即可彻底删除广告。",
+                                        Toast.LENGTH_LONG).show();
+                                shareTipsShowed = true;
+                            }
+                        }, 10 * 1000);
+                    }
                 } else {
                     //再次检查录音设备授权，部分用户误操作禁止了录音授权，这行代码可以让用户再次授权
                     if(hasAudioError) {
@@ -242,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     }
 
     private void initCalculator() {
+        newFeatureShowed = false;
         calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
 
         historyList = (WebView) this.findViewById(R.id.historylist);
@@ -322,7 +340,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                 this.getString(R.string.gdtAppid),
                 this.getString(R.string.gdtBannerPosID),
                 (ViewGroup) this.findViewById(R.id.bannerContainer));
-        adManager.showAd(0);
     }
 
     private void initTheme() {
@@ -336,6 +353,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         adManager.resetProb(AppConfig.getShareCount());
     }
     private void initShare() {
+        shareTipsShowed = false;
         shareManager = new ShareManager(this);
 
         shareLayout = (LinearLayout) findViewById(R.id.share_board);
@@ -355,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             @Override
             public void onClick(View v) {
                 shareManager.shareToWeixin(0);
+                adPolicyChanged();
             }
         });
         this.findViewById(R.id.share_pengyouquan).setOnClickListener(new View.OnClickListener() {
@@ -368,6 +387,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             @Override
             public void onClick(View v) {
                 shareManager.shareToQQ(0);
+                adPolicyChanged();
             }
         });
         this.findViewById(R.id.share_kongjian).setOnClickListener(new View.OnClickListener() {
@@ -382,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     private void initPermission() {
         PermissionChecker.requestPermission(this, new String[] {
                 Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
         });
     }
     @Override
@@ -662,9 +683,9 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
 
             showResult(expr.toString(), evalResult, readExpr);
 
-            if(AppConfig.getIsFirstStart()) {
+            if(AppConfig.getIsFirstStart() && (!newFeatureShowed)) {
                 showTips(10);
-                AppConfig.setIsFirstStart(false);
+                newFeatureShowed = true;
             }
         }
 

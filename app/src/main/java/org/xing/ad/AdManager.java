@@ -78,14 +78,16 @@ public class AdManager {
         }, 15 * 1000, 15* 1000);
     }
 
-    public void showAdProb(final int delaySeconds) {
+    public boolean showAdProb(final int delaySeconds) {
         if( random.nextFloat() < showProb) {
             mContext.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {showAd(delaySeconds);
                 }
             });
+            return true;
         }
+        return false;
     }
 
     public void showAd(int delaySeconds) {
@@ -181,6 +183,10 @@ public class AdManager {
     }
 
     public void resetProb(int shareCount) {
-        showProb = 1.0f / (shareCount*3+1);
+        if(shareCount < 3) {
+            showProb = 1.0f / (shareCount * 3 + 1);
+        }else {
+            showProb = -1;
+        }
     }
 }
