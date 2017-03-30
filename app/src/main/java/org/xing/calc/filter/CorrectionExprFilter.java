@@ -31,8 +31,11 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("层", "乘");
 		addWord("曾", "乘");
 		addWord("城里", "乘以");
+		addWord("成语", "乘以");
+
 		addWord("初一", "除以");
 		addWord("乘与", "除以");
+
 
 		addWord("区", "除");
 		addWord("褚", "除");
