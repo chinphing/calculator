@@ -68,6 +68,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("乐", "6");
 		addWord("榴", "6");
 		addWord("亲", "7");
+		addWord("鸡", "7");
 		addWord("夕", "7");
 		addWord("欹", "7");
 		addWord("班", "8");
@@ -129,6 +130,7 @@ public class CorrectionExprFilter implements ExprFilter {
 
 		addWord("%", "/100");
 		addWord("％", "/100");
+		addWord("以前", "一千");
 		addWord("^2", "的平方");
 		addWord("佳茵", "加一");
 		addWord("捡漏", "减六");

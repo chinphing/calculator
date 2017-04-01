@@ -2,9 +2,11 @@ package org.xing.android;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 /**
  * Created by Administrator on 2017/1/9 0009.
@@ -14,6 +16,7 @@ public class AppConfig {
     private static String packageName;
     private static int versionCode;
     private static String versionName;
+    private static String channel;
 
     private static String themeId;
 
@@ -50,6 +53,8 @@ public class AppConfig {
             } else {
                 checkUpdate = prefs.getBoolean("checkUpdate", true);
             }
+
+            channel = getAppMetaData(mContext, "UMENG_CHANNEL");
 
             themeId = prefs.getString("themeId", "0");
             preferedEngine = prefs.getString("preferedEngine", "baidu");
@@ -113,4 +118,30 @@ public class AppConfig {
         prefs.edit().putBoolean("checkUpdate", b).commit();
     }
 
+    /**
+     * 获取application中指定的meta-data
+     * @return 如果没有获取成功(没有对应值，或者异常)，则返回值为空
+     */
+    public static String getAppMetaData(Context ctx, String key) {
+        if (ctx == null || TextUtils.isEmpty(key)) {
+            return null;
+        }
+        String resultData = null;
+        try {
+            PackageManager packageManager = ctx.getPackageManager();
+            if (packageManager != null) {
+                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(ctx.getPackageName(), PackageManager.GET_META_DATA);
+                if (applicationInfo != null) {
+                    if (applicationInfo.metaData != null) {
+                        resultData = applicationInfo.metaData.getString(key);
+                    }
+                }
+
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resultData;
+    }
 }
