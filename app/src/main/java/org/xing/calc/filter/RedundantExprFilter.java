@@ -41,6 +41,7 @@ public class RedundantExprFilter implements ExprFilter{
 		allowedCharsPinyin.put("qu", '除');
 		allowedCharsPinyin.put("ceng", '乘');
 		allowedCharsPinyin.put("xuan", '弦');
+		allowedCharsPinyin.put("yao", '一');
 	}
 
 	private Map<Character, String> loadTokens(InputStream input) throws IOException {

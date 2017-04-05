@@ -35,7 +35,7 @@ public class CorrectionExprFilter implements ExprFilter {
 
 		addWord("初一", "除以");
 		addWord("乘与", "除以");
-
+		addWord("完了", "");
 
 		addWord("区", "除");
 		addWord("褚", "除");
