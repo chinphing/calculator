@@ -250,7 +250,7 @@ public class Calculator implements ANTLRErrorListener{
 		String allowedChars =
 				"0123456789.零一二三四五六七八九点负个十百千万亿+-*/括号加上减去乘以除÷×根号开方的平方次方立方分之" +
 						"sincostanlglogln反正弦反余弦反正切对数()|^度°派π又清零归零" +
-						"屏空撤销后倒退删除帮助示例说明版本升级主题引擎讯飞出";
+						"屏空撤销后倒退删除帮助示例说明版本升级主题引擎讯飞出关闭";
 		
 		Calculator calc = new Calculator();
 		calc.addFilter(new CorrectionExprFilter());

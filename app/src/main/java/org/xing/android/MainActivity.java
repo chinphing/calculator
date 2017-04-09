@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
 
     /*
     新版本功能提示
-    延迟1s弹出对话框，大致实是在用户说了一句话之后弹出
+    延迟10s弹出对话框，大致实是在用户说了一句话之后弹出
      */
     protected void showTips(int delaySecond) {
 
@@ -121,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                //防止当前页面没有显示的时候显示对话框，从而导致程序崩溃
+                if(!isListening) return;
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("小技巧");
                 builder.setMessage("  说'引擎'，切换到讯飞识别引擎，计算速度更快。" +
@@ -333,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         cmdName.put("讯飞", 6);
 
         cmdName.put("退出", 7);
+        cmdName.put("关闭", 7);
     }
 
     private void initAd() {
