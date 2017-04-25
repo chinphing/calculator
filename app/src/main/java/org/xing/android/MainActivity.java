@@ -672,9 +672,8 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     }
 
     public void onResults(String expr) {
-        if(expr == null || expr.length() == 0) return;
 
-        if(!handleCommand(expr)) {
+        if(expr != null && (!expr.equals("。")) && (!handleCommand(expr))) {
             //结算结果
             String readExpr = null;
             Double evalResult = calculator.eval(expr.toString());

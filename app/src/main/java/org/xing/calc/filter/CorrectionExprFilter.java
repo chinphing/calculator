@@ -48,6 +48,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("：", "点");
 
 		addWord("幺", "一");
+		addWord("e", "一");
 		addWord("两", "二");
 		addWord("俩", "二");
 		addWord("山", "3");
