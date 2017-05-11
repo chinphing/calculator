@@ -4,23 +4,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class RedundantExprFilter implements ExprFilter{
+public class PinyinExprFilter implements ExprFilter{
 	private Set<Character> allowedChars;
 	private Map<String, Character> allowedCharsPinyin;
 
-	private Map<Character, String> pinyin;
+	private HashMap<Character, String> pinyin;
 
-	public RedundantExprFilter(String legalChars, InputStream tokenStream) {
-		try {
-			pinyin = loadTokens(tokenStream);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public PinyinExprFilter(String legalChars, HashMap<Character, String> pinyin) {
+		this.pinyin = (HashMap<Character, String> )pinyin.clone();
 
 		allowedChars = new HashSet<Character>();
 		allowedCharsPinyin = new HashMap<String, Character>();
@@ -36,7 +33,7 @@ public class RedundantExprFilter implements ExprFilter{
 				}
 			}
 		}
-		
+
 		//通过拼音来加入纠正一批由于用户读音不准确导致的识别错误
 		allowedCharsPinyin.put("qu", '除');
 		allowedCharsPinyin.put("ceng", '乘');
@@ -44,19 +41,23 @@ public class RedundantExprFilter implements ExprFilter{
 		allowedCharsPinyin.put("yao", '一');
 	}
 
-	private Map<Character, String> loadTokens(InputStream input) throws IOException {
-		Map<Character, String> pinyin = new HashMap<Character, String>();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(input, "utf-8"));
-		String line = null;
-		while((line = reader.readLine()) != null) {
-			if(line.length() > 0) {
-				String[] fields = line.split("\\s+");
-				String charPinyin = fields[1];
-				String chars = fields[2];
-				for(int i=0;i<chars.length();i++) {
-					pinyin.put(chars.charAt(i), charPinyin);
+	public static HashMap<Character, String> loadTokens(InputStream input) {
+		HashMap<Character, String> pinyin = new HashMap<Character, String>();
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(input, "utf-8"));
+			String line = null;
+			while((line = reader.readLine()) != null) {
+				if(line.length() > 0) {
+					String[] fields = line.split("\\s+");
+					String charPinyin = fields[1];
+					String chars = fields[2];
+					for(int i=0;i<chars.length();i++) {
+						pinyin.put(chars.charAt(i), charPinyin);
+					}
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return pinyin;
 	}

@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.xing.calc.filter.CorrectionExprFilter;
 import org.xing.calc.filter.ExprFilter;
-import org.xing.calc.filter.RedundantExprFilter;
+import org.xing.calc.filter.PinyinExprFilter;
 import org.xing.calc.parser.CalculatorEvalVisitor;
 import org.xing.calc.parser.CalculatorLatexExprVisitor;
 import org.xing.calc.parser.grammer.calculatorLexer;
@@ -20,6 +20,7 @@ import org.xing.utils.NumberUtil;
 
 import java.io.InputStream;
 import java.util.BitSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -246,15 +247,14 @@ public class Calculator implements ANTLRErrorListener{
 		return result;
 	}
 
-	public static Calculator createDefault(InputStream tokenStream) {
+	public static Calculator createDefault(HashMap<Character, String> pinyin) {
 		String allowedChars =
 				"0123456789.零一二三四五六七八九点负个十百千万亿+-*/括号加上减去乘以除÷×根号开方的平方次方立方分之" +
-						"sincostanlglogln反正弦反余弦反正切对数()|^度°派π又清零归零" +
-						"屏空撤销后倒退删除帮助示例说明版本升级主题引擎讯飞出关闭";
+						"sincostanlglogln反正弦反余弦反正切对数()|^度°派π又";
 		
 		Calculator calc = new Calculator();
 		calc.addFilter(new CorrectionExprFilter());
-		calc.addFilter(new RedundantExprFilter(allowedChars, tokenStream));
+		calc.addFilter(new PinyinExprFilter(allowedChars, pinyin));
 
 		return calc;
 	}

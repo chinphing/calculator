@@ -31,6 +31,8 @@ import com.umeng.analytics.MobclickAgent;
 import org.xing.ad.AdManager;
 import org.xing.calc.Calculator;
 import org.xing.calc.Tips;
+import org.xing.calc.filter.ExprFilterChain;
+import org.xing.calc.filter.PinyinExprFilter;
 import org.xing.engine.BaiduSpeechEngine;
 import org.xing.engine.IflySpeechEngine;
 import org.xing.engine.SpeechEngine;
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     private boolean isListening;
     private SpeechEngine speechEngine;
 
+    private ExprFilterChain cmdFilterChain;
     private Calculator calculator;
 
     private boolean newFeatureShowed;
@@ -261,9 +264,9 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         recordDynamic = (ProgressBar) this.findViewById(R.id.recordDynamic);
     }
 
-    private void initCalculator() {
+    private void initCalculator(HashMap<Character, String> pinyin) {
         newFeatureShowed = false;
-        calculator = Calculator.createDefault(getResources().openRawResource(R.raw.token));
+        calculator = Calculator.createDefault(pinyin);
 
         historyList = (WebView) this.findViewById(R.id.historylist);
         historyList.setBackgroundColor(0);
@@ -309,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         historyResult = new Stack<>();
     }
 
-    private void initCommand() {
+    private void initCommand(HashMap<Character, String> pinyin) {
         cmdName = new HashMap<String, Integer>();
         cmdName.put("清屏", 1);
         cmdName.put("清空", 1);
@@ -337,6 +340,12 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
 
         cmdName.put("退出", 7);
         cmdName.put("关闭", 7);
+
+        StringBuilder allowedChars = new StringBuilder();
+        for(String key : cmdName.keySet()) {
+            allowedChars.append(key);
+        }
+        cmdFilterChain = new ExprFilterChain(allowedChars.toString(), pinyin);
     }
 
     private void initAd() {
@@ -434,8 +443,12 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         initPermission();
         initUserView();
-        initCalculator();
-        initCommand();
+
+        HashMap<Character, String> pinyin =
+                PinyinExprFilter.loadTokens(getResources().openRawResource(R.raw.token));
+        initCalculator(pinyin);
+        initCommand(pinyin);
+
         initAd();
         initTheme();
         initShare();
@@ -613,7 +626,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     }
 
     public boolean handleCommand(String expr) {
-        String cmd = calculator.execFilter(expr);
+        String cmd = cmdFilterChain.call(expr);
         if(cmd != null && cmd.length() > 0
                 && cmdName.containsKey(cmd)) {
             int type = cmdName.get(cmd);
