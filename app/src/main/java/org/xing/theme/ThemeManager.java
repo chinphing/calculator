@@ -44,10 +44,10 @@ public class ThemeManager {
                 addTheme(new Theme("0", "白色", "{'resultColor':'#000000', 'historyColor':'#444444', 'msgColor':'#555555', 'background':'#ffffff'}", null));
                 addTheme(new Theme("1", "大鱼", "{'resultColor':'#FF3300', 'historyColor':'#ee3300', 'msgColor':'#aa3300'}", "theme/01.jpg"));
                 addTheme(new Theme("2", "银河", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#aaaaaa'}", "theme/02.jpg"));
-                addTheme(new Theme("3", "黑色", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#eeeeee', 'background':'#101010'}", null));
+                addTheme(new Theme("3", "黑色", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#eeeeee'}", "theme/06.jpg"));
                 addTheme(new Theme("4", "萌宠", "{'resultColor':'#ffa000', 'historyColor':'#ee9000', 'msgColor':'#cc7000'}", "theme/03.jpg"));
                 addTheme(new Theme("5", "雪景", "{'resultColor':'#3eb3ed', 'historyColor':'#2ea3dd', 'msgColor':'#ffa066'}", "theme/04.jpg"));
-                addTheme(new Theme("6", "银色", "{'resultColor':'#ffffff', 'historyColor':'#f0f0f0', 'msgColor':'#eeeeee', 'background':'#c0c0c0'}", null));
+                addTheme(new Theme("6", "银色", "{'resultColor':'#333333', 'historyColor':'#444444', 'msgColor':'#555555'}", "theme/05.jpg"));
             }
         }catch (Exception e) {
             e.printStackTrace();

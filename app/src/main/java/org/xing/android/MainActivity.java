@@ -31,6 +31,7 @@ import com.umeng.analytics.MobclickAgent;
 import org.xing.ad.AdManager;
 import org.xing.calc.Calculator;
 import org.xing.calc.Tips;
+import org.xing.calc.cmd.CmdParser;
 import org.xing.calc.filter.ExprFilterChain;
 import org.xing.calc.filter.PinyinExprFilter;
 import org.xing.engine.BaiduSpeechEngine;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     private boolean isListening;
     private SpeechEngine speechEngine;
 
-    private ExprFilterChain cmdFilterChain;
+
     private Calculator calculator;
 
     private boolean newFeatureShowed;
@@ -80,7 +81,10 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
 	命令
 	 */
     private Stack<Double> historyResult;
+    private ExprFilterChain cmdFilterChain;
     private Map<String, Integer> cmdName;
+    private CmdParser cmdParser;
+
 
     /*
     腾讯联盟广告
@@ -333,6 +337,8 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         cmdName.put("版本", 4);
 
         cmdName.put("主题", 5);
+        cmdName.put("背景", 5);
+        cmdName.put("风格", 5);
 
         cmdName.put("引擎", 6);
         cmdName.put("百度", 6);
@@ -346,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             allowedChars.append(key);
         }
         cmdFilterChain = new ExprFilterChain(allowedChars.toString(), pinyin);
+        cmdParser = new CmdParser();
     }
 
     private void initAd() {
@@ -622,14 +629,12 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                 msgText.setText("未识别，'"+expr+"'表达错误");
             }
         }
-
     }
 
     public boolean handleCommand(String expr) {
         String cmd = cmdFilterChain.call(expr);
-        if(cmd != null && cmd.length() > 0
-                && cmdName.containsKey(cmd)) {
-            int type = cmdName.get(cmd);
+        int type = cmdParser.parse(cmd);
+        if(type > 0) {
             this.eventLogger.onEvent("NaN", expr.toString(), "null", type);
             switch (type) {
                 case 1:
