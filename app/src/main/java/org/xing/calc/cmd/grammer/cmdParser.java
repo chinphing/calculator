@@ -19,23 +19,24 @@ public class cmdParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, WS=23;
+		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, WS=24;
 	public static final int
 		RULE_command = 0, RULE_qingping = 1, RULE_goback = 2, RULE_help = 3, RULE_update = 4, 
-		RULE_theme = 5, RULE_engine = 6, RULE_close = 7;
+		RULE_theme = 5, RULE_engine = 6, RULE_close = 7, RULE_stop = 8;
 	public static final String[] ruleNames = {
 		"command", "qingping", "goback", "help", "update", "theme", "engine", 
-		"close"
+		"close", "stop"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
 		null, "'清屏'", "'清空'", "'清除'", "'全部'", "'撤销'", "'取消'", "'倒退'", "'后退'", 
 		"'删除'", "'帮助'", "'示例'", "'说明'", "'升级'", "'版本'", "'主题'", "'风格'", "'背景'", 
-		"'引擎'", "'百度'", "'讯飞'", "'退出'", "'关闭'"
+		"'引擎'", "'百度'", "'讯飞'", "'退出'", "'关闭'", "'暂停'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, "WS"
+		null, null, null, null, null, null, null, null, null, null, null, null, 
+		"WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -108,6 +109,9 @@ public class cmdParser extends Parser {
 		public CloseContext close() {
 			return getRuleContext(CloseContext.class,0);
 		}
+		public StopContext stop() {
+			return getRuleContext(StopContext.class,0);
+		}
 		public CommandContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -123,7 +127,7 @@ public class cmdParser extends Parser {
 		CommandContext _localctx = new CommandContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_command);
 		try {
-			setState(23);
+			setState(26);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__0:
@@ -132,7 +136,7 @@ public class cmdParser extends Parser {
 			case T__3:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(16);
+				setState(18);
 				qingping();
 				}
 				break;
@@ -143,7 +147,7 @@ public class cmdParser extends Parser {
 			case T__8:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(17);
+				setState(19);
 				goback();
 				}
 				break;
@@ -152,7 +156,7 @@ public class cmdParser extends Parser {
 			case T__11:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(18);
+				setState(20);
 				help();
 				}
 				break;
@@ -160,7 +164,7 @@ public class cmdParser extends Parser {
 			case T__13:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(19);
+				setState(21);
 				update();
 				}
 				break;
@@ -169,7 +173,7 @@ public class cmdParser extends Parser {
 			case T__16:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(20);
+				setState(22);
 				theme();
 				}
 				break;
@@ -178,7 +182,7 @@ public class cmdParser extends Parser {
 			case T__19:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(21);
+				setState(23);
 				engine();
 				}
 				break;
@@ -186,8 +190,15 @@ public class cmdParser extends Parser {
 			case T__21:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(22);
+				setState(24);
 				close();
+				}
+				break;
+			case T__22:
+				enterOuterAlt(_localctx, 8);
+				{
+				setState(25);
+				stop();
 				}
 				break;
 			default:
@@ -224,27 +235,27 @@ public class cmdParser extends Parser {
 		QingpingContext _localctx = new QingpingContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_qingping);
 		try {
-			setState(30);
+			setState(33);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__0:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(25);
+				setState(28);
 				match(T__0);
 				}
 				break;
 			case T__1:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(26);
+				setState(29);
 				match(T__1);
 				}
 				break;
 			case T__2:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(27);
+				setState(30);
 				match(T__2);
 				}
 				break;
@@ -252,9 +263,9 @@ public class cmdParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				{
-				setState(28);
+				setState(31);
 				match(T__3);
-				setState(29);
+				setState(32);
 				goback();
 				}
 				}
@@ -293,7 +304,7 @@ public class cmdParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(32);
+			setState(35);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << T__7) | (1L << T__8))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -335,7 +346,7 @@ public class cmdParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(34);
+			setState(37);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__9) | (1L << T__10) | (1L << T__11))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -377,7 +388,7 @@ public class cmdParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(36);
+			setState(39);
 			_la = _input.LA(1);
 			if ( !(_la==T__12 || _la==T__13) ) {
 			_errHandler.recoverInline(this);
@@ -419,7 +430,7 @@ public class cmdParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(38);
+			setState(41);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__14) | (1L << T__15) | (1L << T__16))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -461,7 +472,7 @@ public class cmdParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(40);
+			setState(43);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__17) | (1L << T__18) | (1L << T__19))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -503,7 +514,7 @@ public class cmdParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(42);
+			setState(45);
 			_la = _input.LA(1);
 			if ( !(_la==T__20 || _la==T__21) ) {
 			_errHandler.recoverInline(this);
@@ -526,20 +537,55 @@ public class cmdParser extends Parser {
 		return _localctx;
 	}
 
+	public static class StopContext extends ParserRuleContext {
+		public StopContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stop; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof cmdVisitor ) return ((cmdVisitor<? extends T>)visitor).visitStop(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final StopContext stop() throws RecognitionException {
+		StopContext _localctx = new StopContext(_ctx, getState());
+		enterRule(_localctx, 16, RULE_stop);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(47);
+			match(T__22);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\31/\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\3\2\3\2\3\2\3\2\3\2"+
-		"\3\2\3\2\5\2\32\n\2\3\3\3\3\3\3\3\3\3\3\5\3!\n\3\3\4\3\4\3\5\3\5\3\6\3"+
-		"\6\3\7\3\7\3\b\3\b\3\t\3\t\3\t\2\2\n\2\4\6\b\n\f\16\20\2\b\3\2\7\13\3"+
-		"\2\f\16\3\2\17\20\3\2\21\23\3\2\24\26\3\2\27\30/\2\31\3\2\2\2\4 \3\2\2"+
-		"\2\6\"\3\2\2\2\b$\3\2\2\2\n&\3\2\2\2\f(\3\2\2\2\16*\3\2\2\2\20,\3\2\2"+
-		"\2\22\32\5\4\3\2\23\32\5\6\4\2\24\32\5\b\5\2\25\32\5\n\6\2\26\32\5\f\7"+
-		"\2\27\32\5\16\b\2\30\32\5\20\t\2\31\22\3\2\2\2\31\23\3\2\2\2\31\24\3\2"+
-		"\2\2\31\25\3\2\2\2\31\26\3\2\2\2\31\27\3\2\2\2\31\30\3\2\2\2\32\3\3\2"+
-		"\2\2\33!\7\3\2\2\34!\7\4\2\2\35!\7\5\2\2\36\37\7\6\2\2\37!\5\6\4\2 \33"+
-		"\3\2\2\2 \34\3\2\2\2 \35\3\2\2\2 \36\3\2\2\2!\5\3\2\2\2\"#\t\2\2\2#\7"+
-		"\3\2\2\2$%\t\3\2\2%\t\3\2\2\2&\'\t\4\2\2\'\13\3\2\2\2()\t\5\2\2)\r\3\2"+
-		"\2\2*+\t\6\2\2+\17\3\2\2\2,-\t\7\2\2-\21\3\2\2\2\4\31 ";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\32\64\4\2\t\2\4\3"+
+		"\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\3\2\3\2\3"+
+		"\2\3\2\3\2\3\2\3\2\3\2\5\2\35\n\2\3\3\3\3\3\3\3\3\3\3\5\3$\n\3\3\4\3\4"+
+		"\3\5\3\5\3\6\3\6\3\7\3\7\3\b\3\b\3\t\3\t\3\n\3\n\3\n\2\2\13\2\4\6\b\n"+
+		"\f\16\20\22\2\b\3\2\7\13\3\2\f\16\3\2\17\20\3\2\21\23\3\2\24\26\3\2\27"+
+		"\30\64\2\34\3\2\2\2\4#\3\2\2\2\6%\3\2\2\2\b\'\3\2\2\2\n)\3\2\2\2\f+\3"+
+		"\2\2\2\16-\3\2\2\2\20/\3\2\2\2\22\61\3\2\2\2\24\35\5\4\3\2\25\35\5\6\4"+
+		"\2\26\35\5\b\5\2\27\35\5\n\6\2\30\35\5\f\7\2\31\35\5\16\b\2\32\35\5\20"+
+		"\t\2\33\35\5\22\n\2\34\24\3\2\2\2\34\25\3\2\2\2\34\26\3\2\2\2\34\27\3"+
+		"\2\2\2\34\30\3\2\2\2\34\31\3\2\2\2\34\32\3\2\2\2\34\33\3\2\2\2\35\3\3"+
+		"\2\2\2\36$\7\3\2\2\37$\7\4\2\2 $\7\5\2\2!\"\7\6\2\2\"$\5\6\4\2#\36\3\2"+
+		"\2\2#\37\3\2\2\2# \3\2\2\2#!\3\2\2\2$\5\3\2\2\2%&\t\2\2\2&\7\3\2\2\2\'"+
+		"(\t\3\2\2(\t\3\2\2\2)*\t\4\2\2*\13\3\2\2\2+,\t\5\2\2,\r\3\2\2\2-.\t\6"+
+		"\2\2.\17\3\2\2\2/\60\t\7\2\2\60\21\3\2\2\2\61\62\7\31\2\2\62\23\3\2\2"+
+		"\2\4\34#";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

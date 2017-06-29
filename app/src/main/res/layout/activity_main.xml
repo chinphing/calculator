@@ -16,6 +16,7 @@
         android:layout_alignParentStart="true"
         android:background="@color/colorBackground" >
 
+        <!-- 计算结果显示区 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +26,7 @@
             >
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:background="@android:color/transparent"
                 android:orientation="horizontal" >
 
@@ -43,7 +44,7 @@
                     android:textColor="@color/colorText"
                     android:typeface="serif"
                     android:text="0"
-                    android:textSize="40dp"
+                    android:textSize="45dp"
                     android:duplicateParentState="false" />
 
                 <LinearLayout
@@ -57,8 +58,8 @@
                     >
                     <Button
                             android:id="@+id/stateButton"
-                            android:layout_height="35dp"
-                            android:layout_width="35dp"
+                            android:layout_height="30dp"
+                            android:layout_width="30dp"
                             android:background="@mipmap/input_sleep"
                             android:layout_alignParentRight="true"
                             android:layout_alignParentEnd="true"
@@ -92,6 +93,7 @@
             android:layout_alignParentStart="true"
             android:background="@android:color/transparent"
             >
+            <!-- 计算历史显示区 -->
                 <WebView
                     android:id="@+id/historylist"
                     android:layout_width="match_parent"
@@ -102,12 +104,7 @@
                     android:layout_gravity="center"
                     android:layerType="software" />
 
-            <FrameLayout android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_alignParentTop="true"
-                android:id="@+id/bannerContainer">
-            </FrameLayout>
-
+            <!-- 控制和状态显示区 -->
             <FrameLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
@@ -137,8 +134,8 @@
 
                     <Button
                         android:id = "@+id/ctrl_start"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:clickable="true"
                         android:background="@mipmap/start"
                         android:gravity="center"
@@ -176,6 +173,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- 分享操作区 -->
                 <LinearLayout
                     android:id="@+id/share_board"
                     android:layout_marginTop="10dp"

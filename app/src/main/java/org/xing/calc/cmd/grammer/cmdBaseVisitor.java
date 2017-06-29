@@ -67,4 +67,11 @@ public class cmdBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements cm
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitClose(cmdParser.CloseContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitStop(cmdParser.StopContext ctx) { return visitChildren(ctx); }
 }

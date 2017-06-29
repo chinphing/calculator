@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             }
         });
 
+        //设置单击和双击触发事件
         historyList.setOnTouchListener(new View.OnTouchListener() {
             GestureDetector detector = null;
             @Override
@@ -291,6 +292,14 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                                 public boolean onDoubleTap(MotionEvent e) {
                                     themeManager.randomTheme();
                                     return super.onDoubleTap(e);
+                                }
+
+                                @Override
+                                public boolean onSingleTapConfirmed(MotionEvent e) {
+                                    startListening(true);
+                                    startButton.setBackgroundResource(R.mipmap.stop);
+                                    msgText.setText("");
+                                    return super.onSingleTapConfirmed(e);
                                 }
                             }
                     );
@@ -337,6 +346,8 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
 
         cmdName.put("退出", 7);
         cmdName.put("关闭", 7);
+
+        cmdName.put("暂停", 8);
 
         StringBuilder allowedChars = new StringBuilder();
         for(String key : cmdName.keySet()) {
@@ -603,7 +614,7 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         }
     }
 
-    public boolean handleCommand(String expr) {
+    public int handleCommand(String expr) {
         String cmd = cmdFilterChain.call(expr);
         int type = cmdParser.parse(cmd);
         if(type > 0) {
@@ -651,19 +662,23 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                     stopListening();
                     finish();
                     break;
+                case 8:
+                    stopListening();
+                    startButton.setBackgroundResource(R.mipmap.start);
+                    msgText.setText("已暂停");
+                    break;
                 default:
                     break;
             }
             msgText.setText("");
-            return true;
         }
 
-        return false;
+        return type;
     }
 
     public void onResults(String expr) {
-
-        if(expr != null && (!expr.equals("。")) && (!handleCommand(expr))) {
+        int cmdType = handleCommand(expr);
+        if(expr != null && (!expr.equals("。")) && cmdType == 0) {
             //结算结果
             String readExpr = null;
             Double evalResult = calculator.eval(expr.toString());
@@ -682,8 +697,11 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             }
         }
 
-        isListening = false;
-        startListening(true);
+        //不是暂停命令的时候继续开启语音输入
+        if(cmdType != 8) {
+            isListening = false;
+            startListening(true);
+        }
     }
 
     public boolean isAlive() {

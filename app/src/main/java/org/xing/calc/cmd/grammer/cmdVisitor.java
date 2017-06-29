@@ -58,4 +58,10 @@ public interface cmdVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitClose(cmdParser.CloseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link cmdParser#stop}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStop(cmdParser.StopContext ctx);
 }

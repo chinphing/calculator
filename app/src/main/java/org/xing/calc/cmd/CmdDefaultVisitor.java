@@ -19,6 +19,8 @@ public class CmdDefaultVisitor extends cmdBaseVisitor<Integer>{
 			return 6;
 		}else if(ctx.close() != null) {
 			return 7;
+		}else if(ctx.stop() != null) {
+			return 8;
 		}
 		
 		return 0;
