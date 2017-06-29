@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 
-import org.xing.ad.AdManager;
 import org.xing.calc.Calculator;
 import org.xing.calc.Tips;
 import org.xing.calc.cmd.CmdParser;
@@ -84,12 +83,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     private ExprFilterChain cmdFilterChain;
     private Map<String, Integer> cmdName;
     private CmdParser cmdParser;
-
-
-    /*
-    腾讯联盟广告
-     */
-    private AdManager adManager;
 
     /*
     主题
@@ -226,7 +219,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                     stopListening();
                     startButton.setBackgroundResource(R.mipmap.start);
                     msgText.setText("已暂停");
-                    adManager.showAdProb(0);
 
                     if(AppConfig.getIsFirstStart() && (!shareTipsShowed)) {
                         Handler handler = new Handler();
@@ -249,7 +241,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                     startListening(true);
                     startButton.setBackgroundResource(R.mipmap.stop);
                     msgText.setText("");
-                    adManager.postCloseAd(30);
                 }
             }
         });
@@ -355,23 +346,12 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         cmdParser = new CmdParser();
     }
 
-    private void initAd() {
-        adManager = new AdManager(this,
-                this.getString(R.string.gdtAppid),
-                this.getString(R.string.gdtBannerPosID),
-                (ViewGroup) this.findViewById(R.id.bannerContainer));
-    }
-
     private void initTheme() {
         themeManager = new ThemeManager(this);
         themeManager.addThemeChangeListener(this);
         themeManager.applyTheme(AppConfig.getThemeId());
     }
 
-    private void adPolicyChanged() {
-        AppConfig.addShareCount();
-        adManager.resetProb(AppConfig.getShareCount());
-    }
     private void initShare() {
         shareTipsShowed = false;
         shareManager = new ShareManager(this);
@@ -393,28 +373,24 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
             @Override
             public void onClick(View v) {
                 shareManager.shareToWeixin(0);
-                adPolicyChanged();
             }
         });
         this.findViewById(R.id.share_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shareManager.shareToWeixin(1);
-                adPolicyChanged();
             }
         });
         this.findViewById(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shareManager.shareToQQ(0);
-                adPolicyChanged();
             }
         });
         this.findViewById(R.id.share_kongjian).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shareManager.shareToQQ(1);
-                adPolicyChanged();
             }
         });
     }
@@ -456,7 +432,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         initCalculator(pinyin);
         initCommand(pinyin);
 
-        initAd();
         initTheme();
         initShare();
         initSpeechRecognizer();
@@ -472,8 +447,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         msgText.setText(tips.randomGet());
 
         MobclickAgent.onResume(this);
-        adManager.onResume();
-        adManager.postCloseAd(30);
     }
 
     @Override
@@ -484,7 +457,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
         startButton.setBackgroundResource(R.mipmap.start);
 
         MobclickAgent.onPause(this);
-        adManager.onPause();
     }
 
     @Override

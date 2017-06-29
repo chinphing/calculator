@@ -12,15 +12,20 @@ public class CmdParser {
 	}
 	
 	public int parse(String expr) {
-		ANTLRInputStream input = new ANTLRInputStream(expr);
-		cmdLexer lexer = new cmdLexer(input);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		cmdParser parser = new cmdParser(tokens);
-		ParseTree tree = parser.command();
-		if(tree == null) return 0;
-		else {
-			CmdDefaultVisitor visitor = new CmdDefaultVisitor();
-			return visitor.visit(tree);
+		try {
+			ANTLRInputStream input = new ANTLRInputStream(expr);
+			cmdLexer lexer = new cmdLexer(input);
+			CommonTokenStream tokens = new CommonTokenStream(lexer);
+			cmdParser parser = new cmdParser(tokens);
+			ParseTree tree = parser.command();
+			if(tree == null) return 0;
+			else {
+				CmdDefaultVisitor visitor = new CmdDefaultVisitor();
+				return visitor.visit(tree);
+			}
+		}catch (Exception ex) {
+			ex.printStackTrace();
 		}
+		return 0;
 	}
 }
