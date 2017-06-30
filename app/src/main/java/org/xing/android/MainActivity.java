@@ -409,7 +409,6 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     private void initPermission() {
         PermissionChecker.requestPermission(this, new String[] {
                 Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
         });
     }
     @Override
@@ -650,9 +649,9 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                     themeManager.randomTheme();
                     break;
                 case 6:
-                    if(cmd.equals("引擎")) {
+                    if(cmd.contains("引擎")) {
                         changeSpeechEngine(null);
-                    }else if(cmd.equals("百度")){
+                    }else if(cmd.contains("百度")){
                         changeSpeechEngine("baidu");
                     }else {
                         changeSpeechEngine("ifly");
@@ -670,7 +669,10 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
                 default:
                     break;
             }
-            msgText.setText("");
+
+            if(type != 8) {
+                msgText.setText("");
+            }
         }
 
         return type;
