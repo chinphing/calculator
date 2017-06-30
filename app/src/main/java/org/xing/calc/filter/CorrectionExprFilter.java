@@ -159,6 +159,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("青苹", "清屏");
 		addWord("蜻蜓", "清屏");
 		addWord("金瓶", "清屏");
+		addWord("金平", "清屏");
 		addWord("亲萍", "清屏");
 		addWord("星空", "清空");
 		addWord("净空", "清空");
