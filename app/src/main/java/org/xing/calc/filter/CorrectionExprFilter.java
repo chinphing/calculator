@@ -152,6 +152,7 @@ public class CorrectionExprFilter implements ExprFilter {
 		addWord("图九", "除九");
 
 		addWord("圆周率", "派");
+		addWord("请您", "清零");
 
 		addWord("清平", "清屏");
 		addWord("青平", "清屏");
