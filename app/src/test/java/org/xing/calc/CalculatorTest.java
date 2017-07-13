@@ -1,6 +1,8 @@
 package org.xing.calc;
 
 import org.junit.Test;
+import org.xing.android.R;
+import org.xing.calc.filter.PinyinExprFilter;
 
 import java.io.FileInputStream;
 import java.util.AbstractMap;
@@ -17,7 +19,9 @@ public class CalculatorTest{
 
     @Test
     public void testEval() throws Exception {
-        Calculator calc = createDefault(new FileInputStream("src\\main\\res\\raw\\token"));
+        HashMap<Character, String> pinyin =
+                PinyinExprFilter.loadTokens(new FileInputStream("D:\\workspaces\\calculator\\app\\src\\main\\res\\raw\\token"));
+        Calculator calc = createDefault(pinyin);
 
         Map<String, String> chnMap = new HashMap<String, String>();
 
@@ -106,6 +110,8 @@ public class CalculatorTest{
         chnMap.put("括号1+3乘以括号1+2括号括号", "10.0");
         chnMap.put("|1+3乘以括号1+2|括号", "10.0");
         chnMap.put("log|1+3乘以括号1+2|括号", "3.321928");
+        chnMap.put("6/3×3派成语括号6+4括号", "188.49555922");
+
 
         //多重幂运算
         chnMap.put("根号四的负四分之三次方的二次方", "0.353553");
