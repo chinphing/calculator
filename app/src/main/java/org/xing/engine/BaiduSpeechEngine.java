@@ -9,6 +9,8 @@ import android.speech.SpeechRecognizer;
 
 import com.baidu.speech.VoiceRecognitionService;
 
+import org.xing.utils.Logger;
+
 import java.util.ArrayList;
 
 /**
@@ -93,6 +95,7 @@ public class BaiduSpeechEngine implements SpeechEngine{
         }
 
         public void onEvent(int eventType, Bundle params) {
+            Logger.info("xing", String.valueOf(eventType)+": "+params.toString());
         }
 
         public void onBufferReceived(byte[] buffer) {

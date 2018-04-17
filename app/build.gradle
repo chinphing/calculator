@@ -1,22 +1,22 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "org.xing.android"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 19
-        versionName "1.4.0"
+        versionName "1.4.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {
-            manifestPlaceholders = [bd_speech_appid : "999999",
-                                    bd_speech_key   : "8MAxI5o7VjKSZOKeBzS4XtxO",
-                                    bd_speech_secret: "Ge5GXVdGQpaxOmLzc8fOM8309ATCz9Ha",
+            manifestPlaceholders = [bd_speech_appid : "9080060",
+                                    bd_speech_key   : "TgEpVmjjELkIf3FKc1gj2jsj",
+                                    bd_speech_secret: "87c4d13cf12a83191e4b4ec23d98530e",
                                     umeng_appkey    : "none",
                                     umeng_channel   : "none"]
         }
@@ -59,9 +59,10 @@ dependencies {
     compile files('libs/Msc.jar')
     compile 'com.zhy:okhttputils:2.4.1'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:1.0.2'
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:support-v4:25.1.0'
-    compile 'com.android.support:support-vector-drawable:25.1.0'
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:support-v4:26.+'
+    compile 'com.android.support:support-vector-drawable:26.+'
     testCompile 'junit:junit:4.12'
     compile files('libs/open_sdk_r5785_lite.jar')
+    compile files('libs/bdasr_V3_20180320_9066860.jar')
 }

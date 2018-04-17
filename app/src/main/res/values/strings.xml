@@ -2,20 +2,15 @@
     <string name="app_name">星星声控计算器</string>
     <string name="tips">请讲话</string>
 
-    <string name="recordUrl">http://xingxing.zysoft.com/evaluation.php</string>
-    <string name="updateCheckUrl">http://xingxing.zysoft.com/update/update.php</string>
-    <string name="helpUrl">http://xingxing.zysoft.com/help/index.html</string>
+    <string name="recordUrl">http://xingxing.hongchazn.com/evaluation.php</string>
+    <string name="updateCheckUrl">http://xingxing.hongchazn.com/update/update.php</string>
+    <string name="helpUrl">http://xingxing.hongchazn.com/help/index.html</string>
     <string name="title_activity_help">HelpActivity</string>
 
     <!-- 分享相关-->
     <string name="shareTitle">真正的语音输入计算器，彻底解放双手</string>
     <string name="shareDesc">怎么读就怎么计算，比键盘输入计算器更简单、更快速、更准确、更强大。</string>
-    <string name="shareUrl">http://xingxing.zysoft.com/index.html</string>
-    <string name="shareImage">http://xingxing.zysoft.com/img/share_icon.png</string>
-
-    <!-- 腾讯联盟广告参数 -->
-    <string name="gdtAppid">1105840771</string>
-    <string name="gdtBannerPosID">8020817905129848</string>
-    <string name="title_activity_settings">设置</string>
+    <string name="shareUrl">http://xingxing.hongchazn.com/index.html</string>
+    <string name="shareImage">http://xingxing.hongchazn.com/img/share_icon.png</string>
 
 </resources>

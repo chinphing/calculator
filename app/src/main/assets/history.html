@@ -18,7 +18,9 @@
         }
 
         .list li {
-            margin: 5px 0px;
+            word-break : break-all;
+            word-wrap: break-word;
+            margin: 5px 5px;
         }
 
         #history ul {
@@ -60,6 +62,11 @@
         function addItem(item) {
             var li = document.createElement("li");
             li.innerHTML = replaceMultiply(katex.renderToString(item));
+
+            //删除多余的标签，防止复制操作得到重复的数据
+            var span = li.childNodes[0];
+            span.removeChild(span.childNodes[0]);
+
             var list = document.getElementById("list");
             if(list.childNodes == null || list.childNodes.length == 0) {
                 list.appendChild(li);

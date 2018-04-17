@@ -409,6 +409,9 @@ public class MainActivity extends AppCompatActivity implements SpeechListener, T
     private void initPermission() {
         PermissionChecker.requestPermission(this, new String[] {
                 Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.INTERNET,
+                Manifest.permission.READ_PHONE_STATE
         });
     }
     @Override

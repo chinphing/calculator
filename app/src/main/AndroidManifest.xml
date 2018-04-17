@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -50,14 +51,6 @@
         <activity
             android:name=".SimpleHelpActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-
-        <!-- 腾讯广告联盟 -->
-        <service
-            android:name="com.qq.e.comm.DownloadService"
-            android:exported="false" />
-        <activity
-            android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
 
         <!--腾讯QQ分享 -->
         <activity
